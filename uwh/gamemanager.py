@@ -222,9 +222,6 @@ class GameManager(object):
             mgr.restartOutstandingPenalties()
 
     def deleteServedPenalties(self):
-        print("removing {}".format([p for p in self._penalties[TeamColor.white] if p.servedCompletely(self)]))
-        print("removing {}".format([p for p in self._penalties[TeamColor.black] if p.servedCompletely(self)]))
-
         self._penalties[TeamColor.white] = [p for p in self._penalties[TeamColor.white] if not p.servedCompletely(self)]
         self._penalties[TeamColor.black] = [p for p in self._penalties[TeamColor.black] if not p.servedCompletely(self)]
         for mgr in self._observers:
