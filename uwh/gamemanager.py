@@ -271,6 +271,8 @@ class Penalty(object):
         return max(remaining, 0)
 
     def servedCompletely(self, mgr):
+        if self._duration == -1:
+            return False
         return self.timeRemaining(mgr) <= 0
 
     def player(self):
