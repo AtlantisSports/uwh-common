@@ -120,6 +120,6 @@ class XBeeServer(UWHProtoHandler):
 
     def broadcast_thread(self, client_addrs):
         thread = threading.Thread(target=self.broadcast_loop,
-                                  args=(client_addrs))
+                                  args=(client_addrs,))
         thread.daemon = True
         thread.start()
