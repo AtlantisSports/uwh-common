@@ -297,5 +297,5 @@ class Penalty(object):
         self._start_time = None
 
     def restart(self, mgr):
-        self._start_time = self._duration
+        self._start_time = mgr.gameClock()
 
