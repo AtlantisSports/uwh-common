@@ -15,6 +15,7 @@ def ts_from_proto_enum(proto_enum):
              messages_pb2.TimeoutState_RefTimeout   : TimeoutState.ref,
              messages_pb2.TimeoutState_WhiteTimeout : TimeoutState.white,
              messages_pb2.TimeoutState_BlackTimeout : TimeoutState.black,
+             messages_pb2.TimeoutState_PenaltyShot  : TimeoutState.penalty_shot,
            }[proto_enum]
 
 def l_from_proto_enum(proto_enum):
@@ -35,6 +36,7 @@ def ts_to_proto_enum(gamemanager_enum):
              TimeoutState.ref      : messages_pb2.TimeoutState_RefTimeout,
              TimeoutState.white    : messages_pb2.TimeoutState_WhiteTimeout,
              TimeoutState.black    : messages_pb2.TimeoutState_BlackTimeout,
+             TimeoutState.penalty_shot : messages_pb2.TimeoutState_PenaltyShot,
            }[gamemanager_enum]
 
 def l_to_proto_enum(gamemanager_enum):

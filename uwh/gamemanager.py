@@ -13,6 +13,7 @@ class TimeoutState(object):
     ref = 1
     white = 2
     black = 3
+    penalty_shot = 4
 
 
 class TeamColor(object):
@@ -166,6 +167,14 @@ class GameManager(object):
         self._timeout_state = TimeoutState.ref
         for mgr in self._observers:
             mgr.setTimeoutStateRef()
+
+    def timeoutStatePenaltyShot(self):
+        return self._timeout_state == TimeoutState.penalty_shot
+
+    def setTimeoutStatePenaltyShot(self):
+        self._timeout_state = TimeoutState.penalty_shot
+        for mgr in self._observers:
+            mgr.setTimeoutStatePenaltyShot()
 
     def timeoutStateWhite(self):
         return self._timeout_state == TimeoutState.white

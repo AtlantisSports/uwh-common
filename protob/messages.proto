@@ -31,6 +31,7 @@ enum TimeoutState {
   TimeoutState_RefTimeout = 1;
   TimeoutState_BlackTimeout = 2;
   TimeoutState_WhiteTimeout = 3;
+  TimeoutState_PenaltyShot = 4;
 }
 
 enum PoolLayout {

@@ -19,7 +19,7 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='messages.proto',
   package='',
-  serialized_pb=_b('\n\x0emessages.proto\"\x14\n\x04Ping\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"\x14\n\x04Pong\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"@\n\x07Penalty\x12\x10\n\x08PlayerNo\x18\x01 \x01(\r\x12\x11\n\tStartTime\x18\x02 \x01(\r\x12\x10\n\x08\x44uration\x18\x03 \x01(\r\"\xfb\x01\n\x0cGameKeyFrame\x12\x14\n\x0c\x43lockRunning\x18\x01 \x01(\x08\x12\x10\n\x08TimeLeft\x18\x02 \x01(\r\x12\x12\n\nBlackScore\x18\x03 \x01(\r\x12\x12\n\nWhiteScore\x18\x04 \x01(\r\x12\x1a\n\x06Period\x18\x05 \x01(\x0e\x32\n.GameState\x12\x1e\n\x07Timeout\x18\x06 \x01(\x0e\x32\r.TimeoutState\x12 \n\x0e\x42lackPenalties\x18\x07 \x03(\x0b\x32\x08.Penalty\x12 \n\x0eWhitePenalties\x18\x08 \x03(\x0b\x32\x08.Penalty\x12\x1b\n\x06Layout\x18\t \x01(\x0e\x32\x0b.PoolLayout*W\n\x0bMessageType\x12\x14\n\x10MessageType_Ping\x10\x01\x12\x14\n\x10MessageType_Pong\x10\x02\x12\x1c\n\x18MessageType_GameKeyFrame\x10\x03*\x87\x01\n\tGameState\x12\x17\n\x13GameState_WallClock\x10\x00\x12\x17\n\x13GameState_FirstHalf\x10\x01\x12\x18\n\x14GameState_SecondHalf\x10\x02\x12\x16\n\x12GameState_HalfTime\x10\x03\x12\x16\n\x12GameState_GameOver\x10\x04*\x80\x01\n\x0cTimeoutState\x12\x15\n\x11TimeoutState_None\x10\x00\x12\x1b\n\x17TimeoutState_RefTimeout\x10\x01\x12\x1d\n\x19TimeoutState_BlackTimeout\x10\x02\x12\x1d\n\x19TimeoutState_WhiteTimeout\x10\x03*/\n\nPoolLayout\x12\x0f\n\x0bWhiteOnLeft\x10\x00\x12\x10\n\x0cWhiteOnRight\x10\x01')
+  serialized_pb=_b('\n\x0emessages.proto\"\x14\n\x04Ping\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"\x14\n\x04Pong\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"@\n\x07Penalty\x12\x10\n\x08PlayerNo\x18\x01 \x01(\r\x12\x11\n\tStartTime\x18\x02 \x01(\r\x12\x10\n\x08\x44uration\x18\x03 \x01(\r\"\xfb\x01\n\x0cGameKeyFrame\x12\x14\n\x0c\x43lockRunning\x18\x01 \x01(\x08\x12\x10\n\x08TimeLeft\x18\x02 \x01(\r\x12\x12\n\nBlackScore\x18\x03 \x01(\r\x12\x12\n\nWhiteScore\x18\x04 \x01(\r\x12\x1a\n\x06Period\x18\x05 \x01(\x0e\x32\n.GameState\x12\x1e\n\x07Timeout\x18\x06 \x01(\x0e\x32\r.TimeoutState\x12 \n\x0e\x42lackPenalties\x18\x07 \x03(\x0b\x32\x08.Penalty\x12 \n\x0eWhitePenalties\x18\x08 \x03(\x0b\x32\x08.Penalty\x12\x1b\n\x06Layout\x18\t \x01(\x0e\x32\x0b.PoolLayout*W\n\x0bMessageType\x12\x14\n\x10MessageType_Ping\x10\x01\x12\x14\n\x10MessageType_Pong\x10\x02\x12\x1c\n\x18MessageType_GameKeyFrame\x10\x03*\x87\x01\n\tGameState\x12\x17\n\x13GameState_WallClock\x10\x00\x12\x17\n\x13GameState_FirstHalf\x10\x01\x12\x18\n\x14GameState_SecondHalf\x10\x02\x12\x16\n\x12GameState_HalfTime\x10\x03\x12\x16\n\x12GameState_GameOver\x10\x04*\x9e\x01\n\x0cTimeoutState\x12\x15\n\x11TimeoutState_None\x10\x00\x12\x1b\n\x17TimeoutState_RefTimeout\x10\x01\x12\x1d\n\x19TimeoutState_BlackTimeout\x10\x02\x12\x1d\n\x19TimeoutState_WhiteTimeout\x10\x03\x12\x1c\n\x18TimeoutState_PenaltyShot\x10\x04*/\n\nPoolLayout\x12\x0f\n\x0bWhiteOnLeft\x10\x00\x12\x10\n\x0cWhiteOnRight\x10\x01')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -107,11 +107,15 @@ _TIMEOUTSTATE = _descriptor.EnumDescriptor(
       name='TimeoutState_WhiteTimeout', index=3, number=3,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='TimeoutState_PenaltyShot', index=4, number=4,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
   serialized_start=610,
-  serialized_end=738,
+  serialized_end=768,
 )
 _sym_db.RegisterEnumDescriptor(_TIMEOUTSTATE)
 
@@ -133,8 +137,8 @@ _POOLLAYOUT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=740,
-  serialized_end=787,
+  serialized_start=770,
+  serialized_end=817,
 )
 _sym_db.RegisterEnumDescriptor(_POOLLAYOUT)
 
@@ -151,6 +155,7 @@ TimeoutState_None = 0
 TimeoutState_RefTimeout = 1
 TimeoutState_BlackTimeout = 2
 TimeoutState_WhiteTimeout = 3
+TimeoutState_PenaltyShot = 4
 WhiteOnLeft = 0
 WhiteOnRight = 1
 
