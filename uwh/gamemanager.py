@@ -85,7 +85,9 @@ class GameManager(object):
 
         if b:
             self._time_at_start = now()
-            if self._game_state != GameState.half_time:
+            if (not self.gameStateHalfTime() and
+                not self.timeoutStateWhite() and
+                not self.timeoutStateBlack()):
                 self._start_unstarted_penalties(self.gameClock())
         else:
             self._duration -= now() - self._time_at_start
@@ -264,9 +266,9 @@ class Penalty(object):
         return self._start_time
 
     def timeRemaining(self, mgr):
-        game_clock = mgr.gameClock()
-        if not self._start_time:
+        if self._start_time is None:
             return self._duration_remaining
+        game_clock = mgr.gameClock()
         remaining = self._duration_remaining - (self._start_time - game_clock)
         return max(remaining, 0)
 
@@ -295,9 +297,11 @@ class Penalty(object):
         return self._duration == -1
 
     def pause(self, mgr):
-        self._duration_remaining = self.timeRemaining(mgr)
-        self._start_time = None
+        if self._start_time is not None:
+            self._duration_remaining = self.timeRemaining(mgr)
+            self._start_time = None
 
     def restart(self, mgr):
-        self._start_time = mgr.gameClock()
+        if self._start_time is None:
+            self._start_time = mgr.gameClock()
 
