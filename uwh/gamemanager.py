@@ -185,16 +185,22 @@ class GameManager(object):
         self._penalties[p.team()].append(p)
         if self.gameClockRunning():
             p.setStartTime(self.gameClock())
+        for mgr in self._observers:
+            mgr.addPenalty(p)
 
     def delPenalty(self, p):
         if p in self._penalties[p.team()]:
             self._penalties[p.team()].remove(p)
+        for mgr in self._observers:
+            mgr.delPenalty(p)
 
     def penalties(self, team_color):
         return self._penalties[team_color]
 
     def deleteAllPenalties(self):
         self._penalties = [[],[]]
+        for mgr in self._observers:
+            mgr.deleteAllPenalties()
 
     def _start_unstarted_penalties(self, game_clock):
         for p in self._penalties[TeamColor.white] + self._penalties[TeamColor.black]:
@@ -203,18 +209,26 @@ class GameManager(object):
 
     def pauseOutstandingPenalties(self):
         for p in self._penalties[TeamColor.white] + self._penalties[TeamColor.black]:
-            if not p.servedCompletely(0):
-                p._duration_remaining = p.timeRemaining(0)
-                p._start_time = None
+            if not p.servedCompletely(self):
+                p.pause(self)
+        for mgr in self._observers:
+            mgr.pauseOutstandingPenalties()
 
     def restartOutstandingPenalties(self):
         for p in self._penalties[TeamColor.white] + self._penalties[TeamColor.black]:
-            if not p.servedCompletely(0):
-                p._start_time = self._duration
+            if not p.servedCompletely(self):
+                p.restart(self)
+        for mgr in self._observers:
+            mgr.restartOutstandingPenalties()
 
     def deleteServedPenalties(self):
-        map(self.delPenalty, [p for p in self._penalties[TeamColor.white] if p.servedCompletely(0)]);
-        map(self.delPenalty, [p for p in self._penalties[TeamColor.black] if p.servedCompletely(0)]);
+        print("removing {}".format([p for p in self._penalties[TeamColor.white] if p.servedCompletely(self)]))
+        print("removing {}".format([p for p in self._penalties[TeamColor.black] if p.servedCompletely(self)]))
+
+        self._penalties[TeamColor.white] = [p for p in self._penalties[TeamColor.white] if not p.servedCompletely(self)]
+        self._penalties[TeamColor.black] = [p for p in self._penalties[TeamColor.black] if not p.servedCompletely(self)]
+        for mgr in self._observers:
+            mgr.deleteServedPenalties()
 
     def setPassive(self):
         self._is_passive = True
@@ -224,6 +238,8 @@ class GameManager(object):
 
     def setLayout(self, layout):
         self._layout = layout
+        for mgr in self._observers:
+            mgr.setLayout(layout)
 
     def layout(self):
         return self._layout
@@ -250,14 +266,15 @@ class Penalty(object):
     def startTime(self):
         return self._start_time
 
-    def timeRemaining(self, game_clock):
+    def timeRemaining(self, mgr):
+        game_clock = mgr.gameClock()
         if not self._start_time:
             return self._duration_remaining
         remaining = self._duration_remaining - (self._start_time - game_clock)
         return max(remaining, 0)
 
-    def servedCompletely(self, game_clock):
-        return self.timeRemaining(game_clock) <= 0
+    def servedCompletely(self, mgr):
+        return self.timeRemaining(mgr) <= 0
 
     def player(self):
         return self._player
@@ -277,4 +294,11 @@ class Penalty(object):
 
     def dismissed(self):
         return self._duration == -1
+
+    def pause(self, mgr):
+        self._duration_remaining = self.timeRemaining(mgr)
+        self._start_time = None
+
+    def restart(self, mgr):
+        self._start_time = self._duration
 
