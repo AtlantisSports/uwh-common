@@ -76,8 +76,8 @@ message GameKeyFrame {
   optional uint32 WhiteScore = 4;
   optional GameState Period = 5;
   optional TimeoutState Timeout = 6;
-  reserved 7; // repeated Penalty BlackPenalties = 7;
-  reserved 8; // repeated Penalty WhitePenalties = 8;
+  repeated Penalty BlackPenalties = 7; // Deprecated
+  repeated Penalty WhitePenalties = 8; // Deprecated
   optional PoolLayout Layout = 9;
   optional int32 tid = 10;
   optional int32 gid = 11;
