@@ -115,17 +115,22 @@ class UWHProtoHandler(object):
 
         for p in msg.BlackPenalties:
             if p.PlayerNo and p.Duration:
-                self._mgr.addPenalty(Penalty(p.PlayerNo, TeamColor.black,
+                self._mgr.addPenalty(Penalty(self.as_int(p.PlayerNo), TeamColor.black,
                                              p.Duration, p.StartTime))
 
         for p in msg.WhitePenalties:
             if p.PlayerNo and p.Duration:
-                self._mgr.addPenalty(Penalty(p.PlayerNo, TeamColor.white,
+                self._mgr.addPenalty(Penalty(self.as_int(p.PlayerNo), TeamColor.white,
                                              p.Duration, p.StartTime))
 
         if msg.Layout is not None:
             self._mgr.setLayout(l_from_proto_enum(msg.Layout))
 
+    def as_int(self, n):
+        try:
+            return int(n)
+        except ValueError:
+            return -1
 
     def send_GameKeyFrame(self, recipient):
         kind = messages_pb2.MessageType_GameKeyFrame
@@ -139,12 +144,12 @@ class UWHProtoHandler(object):
         msg.Layout = l_to_proto_enum(self._mgr.layout())
 
         for p in self._mgr.penalties(TeamColor.black):
-            msg.BlackPenalties.add(PlayerNo=p.player(),
+            msg.BlackPenalties.add(PlayerNo=self.as_int(p.player()),
                                    Duration=p.duration(),
                                    StartTime=p.startTime());
 
         for p in self._mgr.penalties(TeamColor.white):
-            msg.WhitePenalties.add(PlayerNo=p.player(),
+            msg.WhitePenalties.add(PlayerNo=self.as_int(p.player()),
                                    Duration=p.duration(),
                                    StartTime=p.startTime());
 
