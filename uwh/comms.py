@@ -13,8 +13,8 @@ def ts_from_proto_enum(proto_enum):
     return {
              messages_pb2.TimeoutState_None         : TimeoutState.none,
              messages_pb2.TimeoutState_RefTimeout   : TimeoutState.ref,
-             messages_pb2.TimeoutState_WhiteTimeout : TimeoutState.ref, # bold-faced lie
-             messages_pb2.TimeoutState_BlackTimeout : TimeoutState.ref # bold-faced lie
+             messages_pb2.TimeoutState_WhiteTimeout : TimeoutState.white,
+             messages_pb2.TimeoutState_BlackTimeout : TimeoutState.black,
            }[proto_enum]
 
 def l_from_proto_enum(proto_enum):
@@ -32,7 +32,9 @@ def gs_to_proto_enum(gamemanager_enum):
 
 def ts_to_proto_enum(gamemanager_enum):
     return { TimeoutState.none     : messages_pb2.TimeoutState_None,
-             TimeoutState.ref      : messages_pb2.TimeoutState_RefTimeout
+             TimeoutState.ref      : messages_pb2.TimeoutState_RefTimeout,
+             TimeoutState.white    : messages_pb2.TimeoutState_WhiteTimeout,
+             TimeoutState.black    : messages_pb2.TimeoutState_BlackTimeout,
            }[gamemanager_enum]
 
 def l_to_proto_enum(gamemanager_enum):
