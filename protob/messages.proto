@@ -1,0 +1,46 @@
+syntax = "proto2";
+
+import "types.proto";
+
+/**
+ * Mapping between wire identifiers (uint) and protobuf messages
+ */
+enum MessageType {
+  MessageType_GameKeyframe = 0 [(wire_in) = true];
+  MessageType_GameParams = 1 [(wire_in) = true];
+  MessageType_WhiteScored = 2 [(wire_in) = true];
+  MessageType_BlackScored = 3 [(wire_in) = true];
+  MessageType_TimeoutStart = 4 [(wire_in) = true];
+  MessageType_PenaltyStart = 5 [(wire_in) = true];
+}
+
+enum PeriodKind {
+  PeriodKind_WallClock = 0;
+  PeriodKind_FirstHalf = 1;
+  PeriodKind_SecondHalf = 2;
+  PeriodKind_HalfTime = 3;
+  PeriodKind_GameOver = 4;
+}
+
+enum TimeoutKind {
+  TimeoutKind_None = 0;
+  TimeoutKind_RefTimeout = 1;
+  TimeoutKind_BlackTimeout = 2;
+  TimeoutKind_WhiteTimeout = 3;
+}
+
+message GameKeyFrame {
+  optional uint32 TimeLeft = 1;
+  optional uint32 BlackScore = 2;
+  optional uint32 WhiteScore = 3;
+  optional PeriodKind Period = 4;
+  optional TimeoutKind Timeout = 5;
+}
+
+message GameParams {
+  // How long does a half last?
+  optional uint32 HalfDuration = 1;
+
+  // How much time is there between halves?
+  optional uint32 HalfTime = 2;
+}
