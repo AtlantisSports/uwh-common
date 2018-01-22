@@ -50,6 +50,9 @@ def test_gameStateFirstHalf():
     mgr = GameManager(_observers)
     assert mgr.gameStateFirstHalf() is True
 
+    mgr.setGameStateFirstHalf()
+    assert mgr.gameStateFirstHalf() is True
+
     mgr.setGameStateSecondHalf()
     assert mgr.gameStateFirstHalf() is False
 
@@ -148,7 +151,7 @@ def test_penalty_getters():
 
 def test_addPenalty():
     p = Penalty(24, TeamColor.white, 5 * 60)
-    mgr = GameManager()
+    mgr = GameManager(_observers)
 
     mgr.addPenalty(p)
     assert len(mgr.penalties(TeamColor.white)) == 1
@@ -160,7 +163,7 @@ def test_addPenalty():
 
 
 def test_penaltyStateChange():
-    mgr = GameManager()
+    mgr = GameManager(_observers)
     p = Penalty(24, TeamColor.white, 5 * 60)
     mgr.addPenalty(p)
 
@@ -178,7 +181,7 @@ def test_penaltyStateChange():
 
 def test_penalty_start():
     p = Penalty(24, TeamColor.white, 5 * 60)
-    mgr = GameManager()
+    mgr = GameManager(_observers)
 
     mgr.setGameClock(10 * 60)
 
@@ -205,7 +208,7 @@ def test_penalty_duration():
     assert p.duration() == 4 * 60
 
 def test_penalty_addWhileRunning():
-    mgr = GameManager()
+    mgr = GameManager(_observers)
     mgr.setGameClock(5*60)
     mgr.setGameClockRunning(True)
     p = Penalty(24, TeamColor.white, 5 * 60)
