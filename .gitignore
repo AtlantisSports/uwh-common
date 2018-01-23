@@ -2,5 +2,7 @@
 .coverage
 .tox
 coverage.xml
+timeshark/*.pyc
+timeshark/__pycache__
 uwh/__pycache__
 uwh_common.egg-info
