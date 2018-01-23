@@ -30,7 +30,7 @@ class XBeeClient(UWHProtoHandler):
                 time.sleep(0.1)
 
     def listen_thread(self):
-        thread = threading.Thread(target=XBeeClient.listen_loop, args=(self))
+        thread = threading.Thread(target=self.listen_loop, args=())
         thread.daemon = True
         thread.start()
 
@@ -98,7 +98,7 @@ class XBeeServer(UWHProtoHandler):
             time.sleep(0.1)
 
     def broadcast_thread(self, client_addrs):
-        thread = threading.Thread(target=XBeeServer.broadcast_loop,
-                                  args=(self, client_addrs))
+        thread = threading.Thread(target=self.broadcast_loop,
+                                  args=(client_addrs))
         thread.daemon = True
         thread.start()
