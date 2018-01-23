@@ -73,3 +73,26 @@ def test_GameKeyFrame():
     assert c_mgr.blackScore() == 7
     assert c_mgr.gameStateFirstHalf()
     assert c_mgr.timeoutStateRef()
+
+def test_pack_unpack():
+    mgr = GameManager()
+    handler = UWHProtoHandler(mgr)
+
+    msg = messages_pb2.Ping()
+    msg.Data = 37
+
+    data = handler.pack_message(messages_pb2.MessageType_Ping, msg)
+    data[1] = data[1] + 1
+
+    threw = 0
+    try:
+        handler.unpack_message(data)
+    except ValueError:
+        threw += 1
+    assert threw == 1
+
+    try:
+        handler.pack_message(256, None)
+    except ValueError:
+        threw += 1
+    assert threw == 2

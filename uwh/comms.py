@@ -49,16 +49,19 @@ class UWHProtoHandler(object):
                }[msg_kind]()
 
     def pack_message(self, msg_kind, msg):
+        if 255 < msg_kind:
+            raise ValueError("Message kind doesn't fit in one byte")
         length = msg.ByteSize()
-        assert length < 255 # XBee can't handle huge messages
-        assert msg_kind < 255 # Only reserved two hex digits for it
+        if 255 < length:
+            raise ValueError("Message is too long to send over the wire")
         data = msg.SerializeToString()
         return bytearray([int(msg_kind), int(length)]) + data
 
     def unpack_message(self, data):
         msg_kind = data[0]
         msg_len = data[1]
-        assert msg_len + 2 == len(data)
+        if msg_len + 2 != len(data):
+            raise ValueError("Malformed message: lengths do not match")
         msg = self.message_for_msg_kind(msg_kind)
         msg.ParseFromString(data[2:])
         return (msg_kind, msg)

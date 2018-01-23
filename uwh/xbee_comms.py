@@ -19,7 +19,10 @@ class XBeeClient(UWHProtoHandler):
         while True:
             xbee_msg = self._xbee.read_data()
             if xbee_msg:
-                self.recv_raw(xbee_msg.remote_device, xbee_msg.data)
+                try:
+                    self.recv_raw(xbee_msg.remote_device, xbee_msg.data)
+                except ValueError:
+                    logging.exception("Problem parsing xbee packet")
                 time.sleep(0.1)
 
 class XBeeServer(UWHProtoHandler):
