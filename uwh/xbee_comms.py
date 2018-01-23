@@ -7,9 +7,9 @@ from .comms import UWHProtoHandler
 import time
 
 class XBeeClient(UWHProtoHandler):
-    def __init__(self, mgr):
+    def __init__(self, mgr, serial_port, baud):
         UWHProtoHandler.__init__(self, mgr)
-        self._xbee = XBeeDevice('/dev/tty.usbserial-DN040E8Y', 9600)
+        self._xbee = XBeeDevice(serial_port, baud)
         self._xbee.open()
 
     def send_raw(self, recipient, data):
@@ -26,9 +26,9 @@ class XBeeClient(UWHProtoHandler):
                 time.sleep(0.1)
 
 class XBeeServer(UWHProtoHandler):
-    def __init__(self, mgr):
+    def __init__(self, mgr, serial_port, baud):
         UWHProtoHandler.__init__(self, mgr)
-        self._xbee = XBeeDevice('/dev/tty.usbserial-DN03ZRU8', 9600)
+        self._xbee = XBeeDevice(serial_port, baud)
         self._xbee.open()
 
     def client_discovery(self, cb_found_client):
