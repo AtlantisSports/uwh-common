@@ -1,8 +1,29 @@
 from . import messages_pb2
+from .gamemanager import GameState, TimeoutState
+
+def to_proto_enum(gamemanager_enum):
+    return { messages_pb2.GameState_GameOver        : GameState.game_over,
+             messages_pb2.GameState_FirstHalf       : GameState.first_half,
+             messages_pb2.GameState_HalfTime        : GameState.half_time,
+             messages_pb2.GameState_SecondHalf      : GameState.second_half,
+             messages_pb2.TimeoutState_RefTimeout   : TimeoutState.ref,
+             messages_pb2.TimeoutState_WhiteTimeout : TimeoutState.ref, # bold-faced lie
+             messages_pb2.TimeoutState_BlackTimeout : TimeoutState.ref # bold-faced lie
+           }[gamemanager_enum]
+
+
+def from_proto_enum(proto_enum):
+    return { GameState.game_over   : messages_pb2.GameState_GameOver,
+             GameState.first_half  : messages_pb2.GameState_FirstHalf,
+             GameState.half_time   : messages_pb2.GameState_HalfTime,
+             GameState.second_half : messages_pb2.GameState_SecondHalf,
+             TimeoutState.ref      : messages_pb2.TimeoutState_RefTimeout,
+           }[proto_enum]
+
 
 class UWHProtoHandler(object):
-    def __init__(self):
-        pass
+    def __init__(self, mgr):
+        self._mgr = mgr
 
     def send_message(self, recipient, msg_kind, msg):
         self.send_raw(recipient, self.pack_message(msg_kind, msg))
@@ -14,6 +35,8 @@ class UWHProtoHandler(object):
     def recv_message(self, sender, kind, msg):
         if kind == messages_pb2.MessageType_Ping:
             self.handle_Ping(sender, msg)
+        elif kind == messages_pb2.MessageType_GameKeyFrame:
+            self.handle_GameKeyFrame(sender, msg)
 
     def recv_raw(self, sender, data):
         (kind, msg) = self.unpack_message(data)
@@ -21,7 +44,8 @@ class UWHProtoHandler(object):
 
     def message_for_msg_kind(self, msg_kind):
         return { messages_pb2.MessageType_Ping : messages_pb2.Ping,
-                 messages_pb2.MessageType_Pong : messages_pb2.Pong
+                 messages_pb2.MessageType_Pong : messages_pb2.Pong,
+                 messages_pb2.MessageType_GameKeyFrame : messages_pb2.GameKeyFrame
                }[msg_kind]()
 
     def pack_message(self, msg_kind, msg):
@@ -40,7 +64,37 @@ class UWHProtoHandler(object):
         return (msg_kind, msg)
 
     def handle_Ping(self, sender, msg):
-        pong_kind = messages_pb2.MessageType_Pong
-        pong = self.message_for_msg_kind(pong_kind)
+        kind = messages_pb2.MessageType_Pong
+        pong = self.message_for_msg_kind(kind)
         pong.Data = msg.Data
-        self.send_message(sender, pong_kind, pong)
+        self.send_message(sender, kind, pong)
+
+    def handle_GameKeyFrame(self, sender, msg):
+        if msg.ClockRunning is not None:
+            self._mgr.setGameClockRunning(msg.ClockRunning)
+
+        if msg.TimeLeft is not None:
+            self._mgr.setGameClock(msg.TimeLeft)
+
+        if msg.BlackScore is not None:
+            self._mgr.setBlackScore(msg.BlackScore)
+
+        if msg.WhiteScore is not None:
+            self._mgr.setWhiteScore(msg.WhiteScore)
+
+        if msg.Period is not None:
+            self._mgr.setGameState(from_proto_enum(msg.Period))
+
+        if msg.Timeout is not None:
+            self._mgr.setTimeoutState(from_proto_enum(msg.Timeout))
+
+    def send_GameKeyFrame(self, recipient):
+        kind = messages_pb2.MessageType_GameKeyFrame
+        msg = self.message_for_msg_kind(kind)
+        msg.ClockRunning = self._mgr.gameClockRunning()
+        msg.TimeLeft = self._mgr.gameClock()
+        msg.BlackScore = self._mgr.blackScore()
+        msg.WhiteScore = self._mgr.whiteScore()
+        msg.Period = to_proto_enum(self._mgr.gameState())
+        msg.Timeout = to_proto_enum(self._mgr.timeoutState())
+        self.send_message(recipient, kind, msg)

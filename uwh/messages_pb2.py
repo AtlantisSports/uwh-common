@@ -19,7 +19,7 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='messages.proto',
   package='',
-  serialized_pb=_b('\n\x0emessages.proto\"\x14\n\x04Ping\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"\x14\n\x04Pong\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r*9\n\x0bMessageType\x12\x14\n\x10MessageType_Ping\x10\x01\x12\x14\n\x10MessageType_Pong\x10\x02')
+  serialized_pb=_b('\n\x0emessages.proto\"\x14\n\x04Ping\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"\x14\n\x04Pong\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"\x9a\x01\n\x0cGameKeyFrame\x12\x14\n\x0c\x43lockRunning\x18\x01 \x01(\x08\x12\x10\n\x08TimeLeft\x18\x02 \x01(\r\x12\x12\n\nBlackScore\x18\x03 \x01(\r\x12\x12\n\nWhiteScore\x18\x04 \x01(\r\x12\x1a\n\x06Period\x18\x05 \x01(\x0e\x32\n.GameState\x12\x1e\n\x07Timeout\x18\x06 \x01(\x0e\x32\r.TimeoutState*W\n\x0bMessageType\x12\x14\n\x10MessageType_Ping\x10\x01\x12\x14\n\x10MessageType_Pong\x10\x02\x12\x1c\n\x18MessageType_GameKeyFrame\x10\x03*\x87\x01\n\tGameState\x12\x17\n\x13GameState_WallClock\x10\x00\x12\x17\n\x13GameState_FirstHalf\x10\x01\x12\x18\n\x14GameState_SecondHalf\x10\x02\x12\x16\n\x12GameState_HalfTime\x10\x03\x12\x16\n\x12GameState_GameOver\x10\x04*\x80\x01\n\x0cTimeoutState\x12\x15\n\x11TimeoutState_None\x10\x00\x12\x1b\n\x17TimeoutState_RefTimeout\x10\x01\x12\x1d\n\x19TimeoutState_BlackTimeout\x10\x02\x12\x1d\n\x19TimeoutState_WhiteTimeout\x10\x03')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -37,17 +37,97 @@ _MESSAGETYPE = _descriptor.EnumDescriptor(
       name='MessageType_Pong', index=1, number=2,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='MessageType_GameKeyFrame', index=2, number=3,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=62,
-  serialized_end=119,
+  serialized_start=219,
+  serialized_end=306,
 )
 _sym_db.RegisterEnumDescriptor(_MESSAGETYPE)
 
 MessageType = enum_type_wrapper.EnumTypeWrapper(_MESSAGETYPE)
+_GAMESTATE = _descriptor.EnumDescriptor(
+  name='GameState',
+  full_name='GameState',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='GameState_WallClock', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='GameState_FirstHalf', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='GameState_SecondHalf', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='GameState_HalfTime', index=3, number=3,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='GameState_GameOver', index=4, number=4,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=309,
+  serialized_end=444,
+)
+_sym_db.RegisterEnumDescriptor(_GAMESTATE)
+
+GameState = enum_type_wrapper.EnumTypeWrapper(_GAMESTATE)
+_TIMEOUTSTATE = _descriptor.EnumDescriptor(
+  name='TimeoutState',
+  full_name='TimeoutState',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='TimeoutState_None', index=0, number=0,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='TimeoutState_RefTimeout', index=1, number=1,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='TimeoutState_BlackTimeout', index=2, number=2,
+      options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='TimeoutState_WhiteTimeout', index=3, number=3,
+      options=None,
+      type=None),
+  ],
+  containing_type=None,
+  options=None,
+  serialized_start=447,
+  serialized_end=575,
+)
+_sym_db.RegisterEnumDescriptor(_TIMEOUTSTATE)
+
+TimeoutState = enum_type_wrapper.EnumTypeWrapper(_TIMEOUTSTATE)
 MessageType_Ping = 1
 MessageType_Pong = 2
+MessageType_GameKeyFrame = 3
+GameState_WallClock = 0
+GameState_FirstHalf = 1
+GameState_SecondHalf = 2
+GameState_HalfTime = 3
+GameState_GameOver = 4
+TimeoutState_None = 0
+TimeoutState_RefTimeout = 1
+TimeoutState_BlackTimeout = 2
+TimeoutState_WhiteTimeout = 3
 
 
 
@@ -110,9 +190,79 @@ _PONG = _descriptor.Descriptor(
   serialized_end=60,
 )
 
+
+_GAMEKEYFRAME = _descriptor.Descriptor(
+  name='GameKeyFrame',
+  full_name='GameKeyFrame',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='ClockRunning', full_name='GameKeyFrame.ClockRunning', index=0,
+      number=1, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='TimeLeft', full_name='GameKeyFrame.TimeLeft', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='BlackScore', full_name='GameKeyFrame.BlackScore', index=2,
+      number=3, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='WhiteScore', full_name='GameKeyFrame.WhiteScore', index=3,
+      number=4, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='Period', full_name='GameKeyFrame.Period', index=4,
+      number=5, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='Timeout', full_name='GameKeyFrame.Timeout', index=5,
+      number=6, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=63,
+  serialized_end=217,
+)
+
+_GAMEKEYFRAME.fields_by_name['Period'].enum_type = _GAMESTATE
+_GAMEKEYFRAME.fields_by_name['Timeout'].enum_type = _TIMEOUTSTATE
 DESCRIPTOR.message_types_by_name['Ping'] = _PING
 DESCRIPTOR.message_types_by_name['Pong'] = _PONG
+DESCRIPTOR.message_types_by_name['GameKeyFrame'] = _GAMEKEYFRAME
 DESCRIPTOR.enum_types_by_name['MessageType'] = _MESSAGETYPE
+DESCRIPTOR.enum_types_by_name['GameState'] = _GAMESTATE
+DESCRIPTOR.enum_types_by_name['TimeoutState'] = _TIMEOUTSTATE
 
 Ping = _reflection.GeneratedProtocolMessageType('Ping', (_message.Message,), dict(
   DESCRIPTOR = _PING,
@@ -127,6 +277,13 @@ Pong = _reflection.GeneratedProtocolMessageType('Pong', (_message.Message,), dic
   # @@protoc_insertion_point(class_scope:Pong)
   ))
 _sym_db.RegisterMessage(Pong)
+
+GameKeyFrame = _reflection.GeneratedProtocolMessageType('GameKeyFrame', (_message.Message,), dict(
+  DESCRIPTOR = _GAMEKEYFRAME,
+  __module__ = 'messages_pb2'
+  # @@protoc_insertion_point(class_scope:GameKeyFrame)
+  ))
+_sym_db.RegisterMessage(GameKeyFrame)
 
 
 # @@protoc_insertion_point(module_scope)

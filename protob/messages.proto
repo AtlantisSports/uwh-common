@@ -6,6 +6,7 @@ syntax = "proto2";
 enum MessageType {
   MessageType_Ping = 1;
   MessageType_Pong = 2;
+  MessageType_GameKeyFrame = 3;
 }
 
 message Ping {
@@ -15,4 +16,28 @@ message Ping {
 // Response to a Ping
 message Pong {
   required uint32 Data = 1;
+}
+
+enum GameState {
+  GameState_WallClock = 0;
+  GameState_FirstHalf = 1;
+  GameState_SecondHalf = 2;
+  GameState_HalfTime = 3;
+  GameState_GameOver = 4;
+}
+
+enum TimeoutState {
+  TimeoutState_None = 0;
+  TimeoutState_RefTimeout = 1;
+  TimeoutState_BlackTimeout = 2;
+  TimeoutState_WhiteTimeout = 3;
+}
+
+message GameKeyFrame {
+  optional bool ClockRunning = 1;
+  optional uint32 TimeLeft = 2;
+  optional uint32 BlackScore = 3;
+  optional uint32 WhiteScore = 4;
+  optional GameState Period = 5;
+  optional TimeoutState Timeout = 6;
 }
