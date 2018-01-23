@@ -47,13 +47,6 @@ class XBeeServer(UWHProtoHandler):
     def send_raw(self, recipient, data):
         self._xbee.send_data_async(recipient, data)
 
-    def unicast_send_raw(self, remote, data):
-        self.send_raw(remote, data)
-
-    def multicast_send_raw(self, remotes, data):
-        for remote in remotes:
-            self.send_raw(remote, data)
-
     def time_ping(self, remote, val):
         ping_kind = messages_pb2.MessageType_Ping
         ping = self.message_for_msg_kind(ping_kind)
