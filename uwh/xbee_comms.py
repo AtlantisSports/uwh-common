@@ -5,10 +5,32 @@ from digi.xbee.models.address import XBee64BitAddress
 from . import messages_pb2
 from .comms import UWHProtoHandler
 
-import logging
+from configparser import ConfigParser
 from functools import partial
+import json
+import logging
 import threading
 import time
+
+def XBeeConfigParser():
+    defaults = {
+        'port': '/dev/tty.usbserial-DN03ZRU8',
+        'baud': '9600',
+        'clients': '[]',
+    }
+    parser = ConfigParser(defaults=defaults)
+    parser.add_section('xbee')
+    return parser
+
+def xbee_port(cfg):
+    return cfg.get('xbee', 'port')
+
+def xbee_baud(cfg):
+    return cfg.getint('xbee', 'baud')
+
+def xbee_clients(cfg):
+    return json.loads(cfg.get('xbee', 'clients'))
+
 
 class XBeeClient(UWHProtoHandler):
     def __init__(self, mgr, serial_port, baud):
