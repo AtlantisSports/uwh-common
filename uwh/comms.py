@@ -1,24 +1,26 @@
 from . import messages_pb2
 from .gamemanager import GameState, TimeoutState
 
-def to_proto_enum(gamemanager_enum):
+def from_proto_enum(proto_enum):
     return { messages_pb2.GameState_GameOver        : GameState.game_over,
              messages_pb2.GameState_FirstHalf       : GameState.first_half,
              messages_pb2.GameState_HalfTime        : GameState.half_time,
              messages_pb2.GameState_SecondHalf      : GameState.second_half,
+             messages_pb2.TimeoutState_None         : TimeoutState.none,
              messages_pb2.TimeoutState_RefTimeout   : TimeoutState.ref,
              messages_pb2.TimeoutState_WhiteTimeout : TimeoutState.ref, # bold-faced lie
              messages_pb2.TimeoutState_BlackTimeout : TimeoutState.ref # bold-faced lie
-           }[gamemanager_enum]
+           }[proto_enum]
 
 
-def from_proto_enum(proto_enum):
+def to_proto_enum(gamemanager_enum):
     return { GameState.game_over   : messages_pb2.GameState_GameOver,
              GameState.first_half  : messages_pb2.GameState_FirstHalf,
              GameState.half_time   : messages_pb2.GameState_HalfTime,
              GameState.second_half : messages_pb2.GameState_SecondHalf,
+             TimeoutState.none     : messages_pb2.TimeoutState_None,
              TimeoutState.ref      : messages_pb2.TimeoutState_RefTimeout,
-           }[proto_enum]
+           }[gamemanager_enum]
 
 
 class UWHProtoHandler(object):

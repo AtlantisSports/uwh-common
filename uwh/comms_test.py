@@ -1,6 +1,7 @@
-from .comms import UWHProtoHandler
+from .comms import UWHProtoHandler, to_proto_enum, from_proto_enum
+
 from . import messages_pb2
-from .gamemanager import GameManager
+from .gamemanager import GameManager, TimeoutState
 
 def test_PingPong():
     class Client(UWHProtoHandler):
@@ -34,6 +35,7 @@ def test_PingPong():
     msg.Data = 42
     s.send_message(c, messages_pb2.MessageType_Ping, msg)
     assert s.received
+
 
 def test_GameKeyFrame():
     class Client(UWHProtoHandler):
@@ -74,6 +76,7 @@ def test_GameKeyFrame():
     assert c_mgr.gameStateFirstHalf()
     assert c_mgr.timeoutStateRef()
 
+
 def test_pack_unpack():
     mgr = GameManager()
     handler = UWHProtoHandler(mgr)
@@ -96,3 +99,8 @@ def test_pack_unpack():
     except ValueError:
         threw += 1
     assert threw == 2
+
+
+def test_enum_conversion():
+    assert from_proto_enum(messages_pb2.TimeoutState_None) == TimeoutState.none
+    assert to_proto_enum(TimeoutState.none) == messages_pb2.TimeoutState_None
