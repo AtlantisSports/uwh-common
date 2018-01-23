@@ -5,6 +5,9 @@ from digi.xbee.models.address import XBee64BitAddress
 from . import messages_pb2
 from .comms import UWHProtoHandler
 
+import logging
+from functools import partial
+import threading
 import time
 
 class XBeeClient(UWHProtoHandler):
@@ -25,6 +28,11 @@ class XBeeClient(UWHProtoHandler):
                 except ValueError:
                     logging.exception("Problem parsing xbee packet")
                 time.sleep(0.1)
+
+    def listen_thread(self):
+        thread = threading.Thread(target=XBeeClient.listen_loop, args=(self))
+        thread.daemon = True
+        thread.start()
 
 class XBeeServer(UWHProtoHandler):
     def __init__(self, mgr, serial_port, baud):
@@ -77,5 +85,20 @@ class XBeeServer(UWHProtoHandler):
                 self.time_ping(c, x)
             end = time.time()
             results.append((c, (end - start) / repetitions))
-
         return results
+
+    def multicast_GameKeyFrame(self, client_addrs):
+        for addr in client_addrs:
+            client = self.recipient_from_address(addr)
+            self.send_GameKeyFrame(client)
+
+    def broadcast_loop(self, client_addrs):
+        while True:
+            self.multicast_GameKeyFrame(client_addrs)
+            time.sleep(0.1)
+
+    def broadcast_thread(self, client_addrs):
+        thread = threading.Thread(target=XBeeServer.broadcast_loop,
+                                  args=(self, client_addrs))
+        thread.daemon = True
+        thread.start()
