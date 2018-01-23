@@ -1,5 +1,6 @@
-from digi.xbee.devices import XBeeDevice
+from digi.xbee.devices import XBeeDevice, RemoteXBeeDevice
 from digi.xbee.exception import TimeoutException
+from digi.xbee.models.address import XBee64BitAddress
 
 from . import messages_pb2
 from .comms import UWHProtoHandler
@@ -43,6 +44,10 @@ class XBeeServer(UWHProtoHandler):
 
         while xnet.is_discovery_running():
             time.sleep(0.1)
+
+    def recipient_from_address(self, address):
+        return RemoteXBeeDevice(self._xbee,
+                                XBee64BitAddress.from_hex_string(address))
 
     def send_raw(self, recipient, data):
         self._xbee.send_data_async(recipient, data)
