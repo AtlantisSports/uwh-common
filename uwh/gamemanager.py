@@ -76,12 +76,10 @@ class GameManager(object):
             return
 
         if b:
-            print('game clock resumed')
             self._time_at_start = now()
             if self._game_state != GameState.half_time:
                 self._start_unstarted_penalties(self.gameClock())
         else:
-            print('game clock paused')
             self._duration -= now() - self._time_at_start
             self._time_at_start = None
 

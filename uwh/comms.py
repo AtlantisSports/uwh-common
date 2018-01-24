@@ -95,7 +95,6 @@ class UWHProtoHandler(object):
             self._mgr.setWhiteScore(msg.WhiteScore)
 
         if msg.Period is not None:
-            print("GS: " + str(gs_from_proto_enum(msg.Period)))
             self._mgr.setGameState(gs_from_proto_enum(msg.Period))
 
         if msg.Timeout is not None:
