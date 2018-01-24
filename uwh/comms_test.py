@@ -1,7 +1,7 @@
-from .comms import UWHProtoHandler, to_proto_enum, from_proto_enum
+from .comms import UWHProtoHandler, gs_to_proto_enum, gs_from_proto_enum, ts_to_proto_enum, ts_from_proto_enum
 
 from . import messages_pb2
-from .gamemanager import GameManager, TimeoutState
+from .gamemanager import GameManager, TimeoutState, GameState
 
 def test_PingPong():
     class Client(UWHProtoHandler):
@@ -102,5 +102,23 @@ def test_pack_unpack():
 
 
 def test_enum_conversion():
-    assert from_proto_enum(messages_pb2.TimeoutState_None) == TimeoutState.none
-    assert to_proto_enum(TimeoutState.none) == messages_pb2.TimeoutState_None
+    assert ts_from_proto_enum(messages_pb2.TimeoutState_None) == TimeoutState.none
+    assert ts_to_proto_enum(TimeoutState.none) == messages_pb2.TimeoutState_None
+
+    assert ts_from_proto_enum(messages_pb2.TimeoutState_None) == TimeoutState.none
+    assert ts_from_proto_enum(messages_pb2.TimeoutState_RefTimeout) == TimeoutState.ref
+    assert ts_from_proto_enum(messages_pb2.TimeoutState_BlackTimeout) == TimeoutState.ref
+    assert ts_from_proto_enum(messages_pb2.TimeoutState_WhiteTimeout) == TimeoutState.ref
+
+    assert ts_to_proto_enum(TimeoutState.none) == messages_pb2.TimeoutState_None
+    assert ts_to_proto_enum(TimeoutState.ref) == messages_pb2.TimeoutState_RefTimeout
+
+    assert gs_from_proto_enum(messages_pb2.GameState_GameOver) == GameState.game_over
+    assert gs_from_proto_enum(messages_pb2.GameState_FirstHalf) == GameState.first_half
+    assert gs_from_proto_enum(messages_pb2.GameState_HalfTime) == GameState.half_time
+    assert gs_from_proto_enum(messages_pb2.GameState_SecondHalf) == GameState.second_half
+
+    assert gs_to_proto_enum(GameState.game_over) == messages_pb2.GameState_GameOver
+    assert gs_to_proto_enum(GameState.first_half) == messages_pb2.GameState_FirstHalf
+    assert gs_to_proto_enum(GameState.half_time) == messages_pb2.GameState_HalfTime
+    assert gs_to_proto_enum(GameState.second_half) == messages_pb2.GameState_SecondHalf

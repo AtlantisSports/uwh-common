@@ -1,25 +1,31 @@
 from . import messages_pb2
 from .gamemanager import GameState, TimeoutState
 
-def from_proto_enum(proto_enum):
+def gs_from_proto_enum(proto_enum):
     return { messages_pb2.GameState_GameOver        : GameState.game_over,
              messages_pb2.GameState_FirstHalf       : GameState.first_half,
              messages_pb2.GameState_HalfTime        : GameState.half_time,
-             messages_pb2.GameState_SecondHalf      : GameState.second_half,
+             messages_pb2.GameState_SecondHalf      : GameState.second_half
+           }[proto_enum]
+
+def ts_from_proto_enum(proto_enum):
+    return {
              messages_pb2.TimeoutState_None         : TimeoutState.none,
              messages_pb2.TimeoutState_RefTimeout   : TimeoutState.ref,
              messages_pb2.TimeoutState_WhiteTimeout : TimeoutState.ref, # bold-faced lie
              messages_pb2.TimeoutState_BlackTimeout : TimeoutState.ref # bold-faced lie
            }[proto_enum]
 
-
-def to_proto_enum(gamemanager_enum):
+def gs_to_proto_enum(gamemanager_enum):
     return { GameState.game_over   : messages_pb2.GameState_GameOver,
              GameState.first_half  : messages_pb2.GameState_FirstHalf,
              GameState.half_time   : messages_pb2.GameState_HalfTime,
              GameState.second_half : messages_pb2.GameState_SecondHalf,
-             TimeoutState.none     : messages_pb2.TimeoutState_None,
-             TimeoutState.ref      : messages_pb2.TimeoutState_RefTimeout,
+           }[gamemanager_enum]
+
+def ts_to_proto_enum(gamemanager_enum):
+    return { TimeoutState.none     : messages_pb2.TimeoutState_None,
+             TimeoutState.ref      : messages_pb2.TimeoutState_RefTimeout
            }[gamemanager_enum]
 
 
@@ -88,10 +94,11 @@ class UWHProtoHandler(object):
             self._mgr.setWhiteScore(msg.WhiteScore)
 
         if msg.Period is not None:
-            self._mgr.setGameState(from_proto_enum(msg.Period))
+            print("GS: " + str(gs_from_proto_enum(msg.Period)))
+            self._mgr.setGameState(gs_from_proto_enum(msg.Period))
 
         if msg.Timeout is not None:
-            self._mgr.setTimeoutState(from_proto_enum(msg.Timeout))
+            self._mgr.setTimeoutState(ts_from_proto_enum(msg.Timeout))
 
     def send_GameKeyFrame(self, recipient):
         kind = messages_pb2.MessageType_GameKeyFrame
@@ -100,6 +107,6 @@ class UWHProtoHandler(object):
         msg.TimeLeft = self._mgr.gameClock()
         msg.BlackScore = self._mgr.blackScore()
         msg.WhiteScore = self._mgr.whiteScore()
-        msg.Period = to_proto_enum(self._mgr.gameState())
-        msg.Timeout = to_proto_enum(self._mgr.timeoutState())
+        msg.Period = gs_to_proto_enum(self._mgr.gameState())
+        msg.Timeout = ts_to_proto_enum(self._mgr.timeoutState())
         self.send_message(recipient, kind, msg)
