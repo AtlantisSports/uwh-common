@@ -5,7 +5,8 @@ def gs_from_proto_enum(proto_enum):
     return { messages_pb2.GameState_GameOver        : GameState.game_over,
              messages_pb2.GameState_FirstHalf       : GameState.first_half,
              messages_pb2.GameState_HalfTime        : GameState.half_time,
-             messages_pb2.GameState_SecondHalf      : GameState.second_half
+             messages_pb2.GameState_SecondHalf      : GameState.second_half,
+             messages_pb2.GameState_WallClock       : GameState.game_over # bold-faced lie
            }[proto_enum]
 
 def ts_from_proto_enum(proto_enum):
