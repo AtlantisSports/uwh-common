@@ -46,6 +46,20 @@ def test_gameClockRunning():
     mgr.setGameClock(1)
     assert mgr._time_at_start
 
+def test_passive():
+    mgr = GameManager(_observers)
+    mgr.setPassive()
+
+    assert mgr.passive()
+    assert not _observers[0].passive()
+
+    mgr.setGameClockRunning(True)
+    mgr.setGameClock(42)
+
+    time.sleep(1)
+
+    assert mgr.gameClock() == 42
+
 def test_gameStateFirstHalf():
     mgr = GameManager(_observers)
     assert mgr.gameStateFirstHalf() is True

@@ -32,9 +32,10 @@ class GameManager(object):
         self._timeout_state = TimeoutState.none
         self._penalties = [[],[]]
         self._observers = observers or []
+        self._is_passive = False
 
     def gameClock(self):
-        if not self.gameClockRunning():
+        if not self.gameClockRunning() or self._is_passive:
             return self._duration
 
         game_clock = self._duration - (now() - self._time_at_start)
@@ -189,6 +190,11 @@ class GameManager(object):
             if not p.servedCompletely(0):
                 p._start_time = self._duration
 
+    def setPassive(self):
+        self._is_passive = True
+
+    def passive(self):
+        return self._is_passive
 
 class Penalty(object):
 
