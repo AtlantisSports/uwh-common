@@ -49,7 +49,7 @@ class XBeeClient(UWHProtoHandler):
                     self.recv_raw(xbee_msg.remote_device, xbee_msg.data)
                 except ValueError:
                     logging.exception("Problem parsing xbee packet")
-                time.sleep(0.1)
+                time.sleep(0.5)
 
     def listen_thread(self):
         thread = threading.Thread(target=self.listen_loop, args=())
@@ -117,7 +117,7 @@ class XBeeServer(UWHProtoHandler):
     def broadcast_loop(self, client_addrs):
         while True:
             self.multicast_GameKeyFrame(client_addrs)
-            time.sleep(0.1)
+            time.sleep(0.5)
 
     def broadcast_thread(self, client_addrs):
         thread = threading.Thread(target=self.broadcast_loop,
