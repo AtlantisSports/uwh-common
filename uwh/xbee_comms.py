@@ -6,7 +6,6 @@ from . import messages_pb2
 from .comms import UWHProtoHandler
 
 from configparser import ConfigParser
-from functools import partial
 import json
 import logging
 import threading
