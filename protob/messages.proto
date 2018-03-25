@@ -33,6 +33,12 @@ enum TimeoutState {
   TimeoutState_WhiteTimeout = 3;
 }
 
+message Penalty {
+  optional uint32 PlayerNo = 1;
+  optional uint32 StartTime = 2;
+  optional uint32 Duration = 3;
+}
+
 message GameKeyFrame {
   optional bool ClockRunning = 1;
   optional uint32 TimeLeft = 2;
@@ -40,4 +46,7 @@ message GameKeyFrame {
   optional uint32 WhiteScore = 4;
   optional GameState Period = 5;
   optional TimeoutState Timeout = 6;
+  repeated Penalty BlackPenalties = 7;
+  repeated Penalty WhitePenalties = 8;
 }
+

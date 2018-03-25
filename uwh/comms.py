@@ -1,5 +1,5 @@
 from . import messages_pb2
-from .gamemanager import GameState, TimeoutState
+from .gamemanager import GameState, TimeoutState, TeamColor, Penalty
 
 def gs_from_proto_enum(proto_enum):
     return { messages_pb2.GameState_GameOver        : GameState.game_over,
@@ -100,6 +100,19 @@ class UWHProtoHandler(object):
         if msg.Timeout is not None:
             self._mgr.setTimeoutState(ts_from_proto_enum(msg.Timeout))
 
+        self._mgr.deleteAllPenalties()
+
+        for p in msg.BlackPenalties:
+            if p.PlayerNo and p.Duration:
+                self._mgr.addPenalty(Penalty(p.PlayerNo, TeamColor.black,
+                                             p.Duration, p.StartTime))
+
+        for p in msg.WhitePenalties:
+            if p.PlayerNo and p.Duration:
+                self._mgr.addPenalty(Penalty(p.PlayerNo, TeamColor.white,
+                                             p.Duration, p.StartTime))
+
+
     def send_GameKeyFrame(self, recipient):
         kind = messages_pb2.MessageType_GameKeyFrame
         msg = self.message_for_msg_kind(kind)
@@ -109,4 +122,15 @@ class UWHProtoHandler(object):
         msg.WhiteScore = self._mgr.whiteScore()
         msg.Period = gs_to_proto_enum(self._mgr.gameState())
         msg.Timeout = ts_to_proto_enum(self._mgr.timeoutState())
+
+        for p in self._mgr.penalties(TeamColor.black):
+            msg.BlackPenalties.add(PlayerNo=p.player(),
+                                   Duration=p.duration(),
+                                   StartTime=p.startTime());
+
+        for p in self._mgr.penalties(TeamColor.white):
+            msg.WhitePenalties.add(PlayerNo=p.player(),
+                                   Duration=p.duration(),
+                                   StartTime=p.startTime());
+
         self.send_message(recipient, kind, msg)

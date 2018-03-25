@@ -1,7 +1,7 @@
 from .comms import UWHProtoHandler, gs_to_proto_enum, gs_from_proto_enum, ts_to_proto_enum, ts_from_proto_enum
 
 from . import messages_pb2
-from .gamemanager import GameManager, TimeoutState, GameState
+from .gamemanager import GameManager, TimeoutState, GameState, Penalty, TeamColor
 
 def test_PingPong():
     class Client(UWHProtoHandler):
@@ -67,6 +67,9 @@ def test_GameKeyFrame():
     s_mgr.setGameStateFirstHalf()
     s_mgr.setTimeoutStateRef()
 
+    sp = Penalty(24, TeamColor.white, 5 * 60)
+    s_mgr.addPenalty(sp)
+
     s.send_GameKeyFrame(c)
 
     assert c_mgr.gameClockRunning() == False
@@ -75,6 +78,12 @@ def test_GameKeyFrame():
     assert c_mgr.blackScore() == 7
     assert c_mgr.gameStateFirstHalf()
     assert c_mgr.timeoutStateRef()
+    assert len(c_mgr.penalties(TeamColor.black)) == 0
+    assert len(c_mgr.penalties(TeamColor.white)) == 1
+    cp = c_mgr.penalties(TeamColor.white)[0]
+    assert cp.player() == sp.player()
+    assert cp.duration() == sp.duration()
+    assert cp.startTime() == (sp.startTime() or 0)
 
 
 def test_pack_unpack():
