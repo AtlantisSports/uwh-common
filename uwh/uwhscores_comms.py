@@ -14,6 +14,15 @@ class Transaction():
 
 
 class UWHScores(object):
+    '''
+    Class to communicate with UWHScores.com in the background. When
+    initialized, sets all attributes to None. The get calls start a
+    second thread which tries to reach the server and fetch get the
+    requested information. When the get is complete, the information
+    is stored in the associated attribute. If a second get is started
+    before an ongoing one is complete, the original one will be aborted.
+    waiting_for_server can be used to poll wether a get is complete.
+    '''
 
     def __init__(self, base_address='https://uwhscores.com/api/v1/'):
         self._base_address = base_address
@@ -26,6 +35,7 @@ class UWHScores(object):
         self.game_list = None
         self.current_gid = None
         self.current_game = None
+        self.team_list = None
 
     def __getattribute__(self, attr):
         if ((object.__getattribute__(self, '_thread') is not None)
@@ -34,12 +44,25 @@ class UWHScores(object):
         return object.__getattribute__(self, attr)
 
     def get_tournament_list(self):
+        '''
+        Start a GET of the tournament list from the server. When the
+        GET is complete, the list will be stored as a dict in
+        tournament_list, with the tids as keys, and dicts of the
+        tournaments as values.
+        '''
         self._transaction_type = Transaction.get_tournament_list
         self._thread = threading.Thread(target=self._get,
                                         args=(self._base_address + 'tournaments',))
         self._thread.start()
 
     def get_tournament(self):
+        '''
+        Start a get of the tournament with current_tid from the server.
+        When the GET is complete, the tournament will be stored as a dict
+        in current_tournament.
+
+        current_tid must be set before this funcion is called
+        '''
         if self.current_tid is None:
             raise ValueError('current_tid must be set before get_tournament is called')
         self._transaction_type = Transaction.get_tournament
@@ -49,6 +72,14 @@ class UWHScores(object):
         self._thread.start()
 
     def get_game_list(self):
+        '''
+        Start a get of the game list for the tournament with current_tid
+        from the server. When the GET is complete, the list will be stored
+        as a dict in game_list with the gids as keys and dicts of the games
+        as values.
+
+        current_tid must be set before this funcion is called
+        '''
         if self.current_tid is None:
             raise ValueError('current_tid must be set before get_game_list is called')
         self._transaction_type = Transaction.get_game_list
@@ -58,6 +89,12 @@ class UWHScores(object):
         self._thread.start()
 
     def get_game(self):
+        '''
+        Start a get of the game with current_gid from the server. When the
+        GET is complete, the game will be stored as a dict in current_game.
+
+        current_tid and current_gid must be set before this funcion is called
+        '''
         if self.current_tid is None:
             raise ValueError('current_tid must be set before get_game is called')
         if self.current_gid is None:
@@ -70,6 +107,13 @@ class UWHScores(object):
         self._thread.start()
 
     def get_team_list(self):
+        '''
+        Start a get of the team list from the server. When the GET is complete,
+        the list will be stored as a dict in team_list, with the team_ids as
+        keys, and dicts of the teams as values.
+
+        current_tid must be set before this funcion is called
+        '''
         if self.current_tid is None:
             raise ValueError('current_tid must be set before get_team_list is called')
         self._transaction_type = Transaction.get_team_list
