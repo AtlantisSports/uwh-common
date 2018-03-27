@@ -21,8 +21,9 @@ class UWHScores(object):
         self._reply = None
         self._transaction_type = None
         self.tournament_list = None
-        self.active_tid = None
-        self.active_tournament = None
+        self.current_tid = None
+        self.current_tournament = None
+        self.game_list = None
 
     def __getattribute__(self, attr):
         if ((object.__getattribute__(self, '_thread') is not None)
@@ -33,14 +34,21 @@ class UWHScores(object):
     def get_tournament_list(self):
         self._transaction_type = Transaction.get_tournament_list
         self._thread = threading.Thread(target=self._get,
-                                        args=(self._base_address + "tournaments",))
+                                        args=(self._base_address + 'tournaments',))
         self._thread.start()
 
     def get_tournament(self):
         self._transaction_type = Transaction.get_tournament
         self._thread = threading.Thread(
                 target=self._get,
-                args=(self._base_address + "tournaments/" + str(self.active_tid),))
+                args=(self._base_address + 'tournaments/' + str(self.current_tid),))
+        self._thread.start()
+
+    def get_game_list(self):
+        self._transaction_type = Transaction.get_game_list
+        self._thread = threading.Thread(
+                target=self._get,
+                args=(self._base_address + 'tournaments/' + str(self.current_tid) + '/games',))
         self._thread.start()
 
     def _get(self, loc):
@@ -50,11 +58,13 @@ class UWHScores(object):
         json = object.__getattribute__(self, '_reply').json()
         transaction_type = object.__getattribute__(self, '_transaction_type')
         if transaction_type is Transaction.get_tournament_list:
-            object.__setattr__(self, 'tournament_list', 
-                               {json['tournaments'][i]['tid']: json['tournaments'][i]
-                                        for i in range(len(json['tournaments']))})
+            self.tournament_list = {json['tournaments'][i]['tid']: json['tournaments'][i]
+                                        for i in range(len(json['tournaments']))}
         elif transaction_type is Transaction.get_tournament:
-            object.__setattr__(self, 'active_tournament', json['tournament'])
+            self.current_tournament = json['tournament']
+        elif transaction_type is Transaction.get_game_list:
+            self.game_list = {json['games'][i]['gid']: json['games'][i]
+                                  for i in range(len(json['games']))}
         object.__setattr__(self, '_thread', None)
         object.__setattr__(self, '_transaction_type', None)
         object.__setattr__(self, '_reply', None)

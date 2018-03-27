@@ -24,7 +24,7 @@ def test_get_tournament_list():
 
 def test_get_tournament():
     uwhscores = UWHScores()
-    uwhscores.active_tid = 14
+    uwhscores.current_tid = 14
     uwhscores.get_tournament()
 
     repeats = 0
@@ -36,9 +36,30 @@ def test_get_tournament():
         repeats += 1
         sleep(REPEAT_DELAY)
 
-    assert uwhscores.active_tournament['tid'] == 14
-    assert uwhscores.active_tournament['name'] == 'Battle@Altitude 2018'
-    assert uwhscores.active_tournament['location'] == 'Denver, CO'
-    assert uwhscores.active_tournament['is_active'] == False
+    assert uwhscores.current_tournament['tid'] == 14
+    assert uwhscores.current_tournament['name'] == 'Battle@Altitude 2018'
+    assert uwhscores.current_tournament['location'] == 'Denver, CO'
+    assert uwhscores.current_tournament['is_active'] == False
 
+def test_get_game_list():
+    uwhscores = UWHScores()
+    uwhscores.current_tid = 14
+    uwhscores.get_game_list()
 
+    repeats = 0
+    while True:
+        if not uwhscores.waiting_for_server:
+            break
+        elif repeats > REPEAT_COUNT:
+            assert False
+        repeats += 1
+        sleep(REPEAT_DELAY)
+
+    assert uwhscores.game_list[1]['black'] == 'LA'
+    assert uwhscores.game_list[1]['black_id'] == 1
+    assert uwhscores.game_list[1]['pool'] == '1'
+    assert uwhscores.game_list[4]['white'] == ' Seattle'
+    assert uwhscores.game_list[4]['white_id'] == 6
+    assert uwhscores.game_list[4]['start_time'] == '2018-01-27T09:02:00'
+    assert uwhscores.game_list[4]['score_w'] == 1
+ 
