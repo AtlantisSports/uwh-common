@@ -24,6 +24,8 @@ class UWHScores(object):
         self.current_tid = None
         self.current_tournament = None
         self.game_list = None
+        self.current_gid = None
+        self.current_game = None
 
     def __getattribute__(self, attr):
         if ((object.__getattribute__(self, '_thread') is not None)
@@ -51,6 +53,14 @@ class UWHScores(object):
                 args=(self._base_address + 'tournaments/' + str(self.current_tid) + '/games',))
         self._thread.start()
 
+    def get_game(self):
+        self._transaction_type = Transaction.get_game
+        self._thread = threading.Thread(
+                target=self._get,
+                args=(self._base_address + 'tournaments/' + str(self.current_tid)
+                      + '/games/' + str(self.current_gid),))
+        self._thread.start()
+
     def _get(self, loc):
         self._reply = requests.get(loc)
 
@@ -65,6 +75,8 @@ class UWHScores(object):
         elif transaction_type is Transaction.get_game_list:
             self.game_list = {json['games'][i]['gid']: json['games'][i]
                                   for i in range(len(json['games']))}
+        elif transaction_type is Transaction.get_game:
+            self.current_game = json['game']
         object.__setattr__(self, '_thread', None)
         object.__setattr__(self, '_transaction_type', None)
         object.__setattr__(self, '_reply', None)

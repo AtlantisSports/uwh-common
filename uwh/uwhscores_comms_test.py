@@ -61,5 +61,25 @@ def test_get_game_list():
     assert uwhscores.game_list[4]['white'] == ' Seattle'
     assert uwhscores.game_list[4]['white_id'] == 6
     assert uwhscores.game_list[4]['start_time'] == '2018-01-27T09:02:00'
-    assert uwhscores.game_list[4]['score_w'] == 1
  
+def test_get_game():
+    uwhscores = UWHScores()
+    uwhscores.current_tid = 14
+    uwhscores.current_gid = 6
+    uwhscores.get_game()
+
+    repeats = 0
+    while True:
+        if not uwhscores.waiting_for_server:
+            break
+        elif repeats > REPEAT_COUNT:
+            assert False
+        repeats += 1
+        sleep(REPEAT_DELAY)
+
+    assert uwhscores.current_game['black'] == ' U19 Girls'
+    assert uwhscores.current_game['black_id'] == 14
+    assert uwhscores.current_game['day'] == 'Sat'
+    assert uwhscores.current_game['start_time'] == '2018-01-27T09:34:00'
+    assert uwhscores.current_game['white'] == ' US Elite Women'
+    assert uwhscores.current_game['white_id'] == 17
