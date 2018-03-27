@@ -83,3 +83,24 @@ def test_get_game():
     assert uwhscores.current_game['start_time'] == '2018-01-27T09:34:00'
     assert uwhscores.current_game['white'] == ' US Elite Women'
     assert uwhscores.current_game['white_id'] == 17
+
+def test_get_team_list():
+    uwhscores = UWHScores()
+    uwhscores.current_tid = 14
+    uwhscores.get_team_list()
+
+    repeats = 0
+    while True:
+        if not uwhscores.waiting_for_server:
+            break
+        elif repeats > REPEAT_COUNT:
+            assert False
+        repeats += 1
+        sleep(REPEAT_DELAY)
+
+    assert uwhscores.team_list[1]['name'] == 'LA'
+    assert uwhscores.team_list[3]['name'] == ' Rainbow Raptors'
+    assert uwhscores.team_list[7]['name'] == ' Cupcake Crocodiles'
+    assert uwhscores.team_list[11]['name'] == ' Chicago'
+    assert uwhscores.team_list[13]['name'] == ' Colorado B'
+    assert uwhscores.team_list[17]['name'] == ' US Elite Women'

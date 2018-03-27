@@ -7,7 +7,7 @@ class Transaction():
     get_game_list = 2
     get_game = 3
     send_game_score = 4
-    get_teams = 5
+    get_team_list = 5
     get_standings = 6
     get_user_token = 7
     logout = 8
@@ -61,6 +61,13 @@ class UWHScores(object):
                       + '/games/' + str(self.current_gid),))
         self._thread.start()
 
+    def get_team_list(self):
+        self._transaction_type = Transaction.get_team_list
+        self._thread = threading.Thread(
+                target=self._get,
+                args=(self._base_address + 'tournaments/' + str(self.current_tid) + '/teams',))
+        self._thread.start()
+
     def _get(self, loc):
         self._reply = requests.get(loc)
 
@@ -77,6 +84,9 @@ class UWHScores(object):
                                   for i in range(len(json['games']))}
         elif transaction_type is Transaction.get_game:
             self.current_game = json['game']
+        elif transaction_type is Transaction.get_team_list:
+            self.team_list = {json['teams'][i]['team_id']: json['teams'][i]
+                                  for i in range(len(json['teams']))}
         object.__setattr__(self, '_thread', None)
         object.__setattr__(self, '_transaction_type', None)
         object.__setattr__(self, '_reply', None)
