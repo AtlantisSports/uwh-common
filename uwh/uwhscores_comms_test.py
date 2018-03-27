@@ -1,3 +1,4 @@
+import pytest
 from .uwhscores_comms import UWHScores
 from time import sleep
 
@@ -104,3 +105,19 @@ def test_get_team_list():
     assert uwhscores.team_list[11]['name'] == ' Chicago'
     assert uwhscores.team_list[13]['name'] == ' Colorado B'
     assert uwhscores.team_list[17]['name'] == ' US Elite Women'
+
+def test_throw_errors_without_ids():
+    uwhscores = UWHScores()
+
+    with pytest.raises(ValueError):
+        uwhscores.get_tournament()
+    with pytest.raises(ValueError):
+        uwhscores.get_game_list()
+    with pytest.raises(ValueError):
+        uwhscores.get_game()
+    with pytest.raises(ValueError):
+        uwhscores.get_team_list()
+
+    uwhscores.current_tid = 14
+    with pytest.raises(ValueError):
+        uwhscores.get_game()

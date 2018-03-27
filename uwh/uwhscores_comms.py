@@ -40,6 +40,8 @@ class UWHScores(object):
         self._thread.start()
 
     def get_tournament(self):
+        if self.current_tid is None:
+            raise ValueError('current_tid must be set before get_tournament is called')
         self._transaction_type = Transaction.get_tournament
         self._thread = threading.Thread(
                 target=self._get,
@@ -47,6 +49,8 @@ class UWHScores(object):
         self._thread.start()
 
     def get_game_list(self):
+        if self.current_tid is None:
+            raise ValueError('current_tid must be set before get_game_list is called')
         self._transaction_type = Transaction.get_game_list
         self._thread = threading.Thread(
                 target=self._get,
@@ -54,6 +58,10 @@ class UWHScores(object):
         self._thread.start()
 
     def get_game(self):
+        if self.current_tid is None:
+            raise ValueError('current_tid must be set before get_game is called')
+        if self.current_gid is None:
+            raise ValueError('current_gid must be set before get_game is called')
         self._transaction_type = Transaction.get_game
         self._thread = threading.Thread(
                 target=self._get,
@@ -62,6 +70,8 @@ class UWHScores(object):
         self._thread.start()
 
     def get_team_list(self):
+        if self.current_tid is None:
+            raise ValueError('current_tid must be set before get_team_list is called')
         self._transaction_type = Transaction.get_team_list
         self._thread = threading.Thread(
                 target=self._get,
