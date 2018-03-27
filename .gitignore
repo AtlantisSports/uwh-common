@@ -7,3 +7,4 @@ timeshark/__pycache__
 uwh/__pycache__
 uwh_common.egg-info
 .pytest_cache
+*.swp
