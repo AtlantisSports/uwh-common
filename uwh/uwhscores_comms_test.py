@@ -81,6 +81,20 @@ def test_get_team_list():
     assert uwhscores.team_list[13]['name'] == ' Colorado B'
     assert uwhscores.team_list[17]['name'] == ' US Elite Women'
 
+def test_get_standings():
+    uwhscores = UWHScores(SERVER_ADDRESS)
+    uwhscores.current_tid = 12
+    uwhscores.get_standings()
+    wait_for_server(uwhscores)
+
+    assert uwhscores.standings[0]['team'] == 'Team Sexy'
+    assert uwhscores.standings[0]['team_id'] == 2
+    assert uwhscores.standings[0]['stats']['points'] == 21
+    assert uwhscores.standings[2]['team'] == 'UF'
+    assert uwhscores.standings[4]['team'] == 'Orlando'
+    assert uwhscores.standings[6]['team'] == 'Swordfish'
+    assert uwhscores.standings[7]['team'] == 'George Mason'
+
 def test_throw_errors_without_ids():
     uwhscores = UWHScores(SERVER_ADDRESS)
 
@@ -92,6 +106,8 @@ def test_throw_errors_without_ids():
         uwhscores.get_game()
     with pytest.raises(ValueError):
         uwhscores.get_team_list()
+    with pytest.raises(ValueError):
+        uwhscores.get_standings()
 
     uwhscores.current_tid = 14
     with pytest.raises(ValueError):

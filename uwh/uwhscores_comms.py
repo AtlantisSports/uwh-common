@@ -122,6 +122,22 @@ class UWHScores(object):
                 args=(self._base_address + 'tournaments/' + str(self.current_tid) + '/teams',))
         self._thread.start()
 
+    def get_standings(self):
+        '''
+        Start a get of the standings from the server. When the GET is complete,
+        the list will be stored as an array of dicts in standings.
+
+        current_tid must be set before this funcion is called
+        '''
+        if self.current_tid is None:
+            raise ValueError('current_tid must be set before get_standings is called')
+        self._transaction_type = Transaction.get_standings
+        self._thread = threading.Thread(
+                target=self._get,
+                args=(self._base_address + 'tournaments/' + str(self.current_tid)
+                      + '/standings',))
+        self._thread.start()
+
     def _get(self, loc):
         self._reply = requests.get(loc)
 
@@ -141,9 +157,11 @@ class UWHScores(object):
         elif transaction_type is Transaction.get_team_list:
             self.team_list = {json['teams'][i]['team_id']: json['teams'][i]
                                   for i in range(len(json['teams']))}
-        object.__setattr__(self, '_thread', None)
-        object.__setattr__(self, '_transaction_type', None)
-        object.__setattr__(self, '_reply', None)
+        elif transaction_type is Transaction.get_standings:
+            self.standings = json['standings']
+        self._thread = None
+        self._transaction_type = None
+        self._reply = None
 
     @property
     def waiting_for_server(self):
