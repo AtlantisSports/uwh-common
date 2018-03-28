@@ -5,56 +5,47 @@ from time import sleep
 REPEAT_COUNT = 500
 REPEAT_DELAY = 0.01
 
-def test_get_tournament_list():
-    uwhscores = UWHScores()
-    uwhscores.get_tournament_list()
+# Select either the local server or remote server below
+USE_LOCAL_SERVER = True
 
-    repeats = 0
-    while True:
+if USE_LOCAL_SERVER:
+    SERVER_ADDRESS = 'http://127.0.0.1:5000/api/v1/'
+else:
+    SERVER_ADDRESS = 'https://uwhscores.com/api/v1/'
+
+def wait_for_server(uwhscores):
+    for i in range(REPEAT_COUNT):
         if not uwhscores.waiting_for_server:
-            break
-        elif repeats > REPEAT_COUNT:
-            assert False
-        repeats += 1
+            return
         sleep(REPEAT_DELAY)
+    assert False
+
+def test_get_tournament_list():
+    uwhscores = UWHScores(SERVER_ADDRESS)
+    uwhscores.get_tournament_list()
+    wait_for_server(uwhscores)
 
     assert len(uwhscores.tournament_list) is 13
     assert uwhscores.tournament_list[14]['name'] == 'Battle@Altitude 2018'
     assert uwhscores.tournament_list[14]['location'] == 'Denver, CO'
-    assert uwhscores.tournament_list[14]['is_active'] == False
+    assert uwhscores.tournament_list[14]['is_active'] == (True if USE_LOCAL_SERVER else False)
 
 def test_get_tournament():
-    uwhscores = UWHScores()
+    uwhscores = UWHScores(SERVER_ADDRESS)
     uwhscores.current_tid = 14
     uwhscores.get_tournament()
-
-    repeats = 0
-    while True:
-        if not uwhscores.waiting_for_server:
-            break
-        elif repeats > REPEAT_COUNT:
-            assert False
-        repeats += 1
-        sleep(REPEAT_DELAY)
+    wait_for_server(uwhscores)
 
     assert uwhscores.current_tournament['tid'] == 14
     assert uwhscores.current_tournament['name'] == 'Battle@Altitude 2018'
     assert uwhscores.current_tournament['location'] == 'Denver, CO'
-    assert uwhscores.current_tournament['is_active'] == False
+    assert uwhscores.current_tournament['is_active'] == (True if USE_LOCAL_SERVER else False)
 
 def test_get_game_list():
-    uwhscores = UWHScores()
+    uwhscores = UWHScores(SERVER_ADDRESS)
     uwhscores.current_tid = 14
     uwhscores.get_game_list()
-
-    repeats = 0
-    while True:
-        if not uwhscores.waiting_for_server:
-            break
-        elif repeats > REPEAT_COUNT:
-            assert False
-        repeats += 1
-        sleep(REPEAT_DELAY)
+    wait_for_server(uwhscores)
 
     assert uwhscores.game_list[1]['black'] == 'LA'
     assert uwhscores.game_list[1]['black_id'] == 1
@@ -64,19 +55,11 @@ def test_get_game_list():
     assert uwhscores.game_list[4]['start_time'] == '2018-01-27T09:02:00'
  
 def test_get_game():
-    uwhscores = UWHScores()
+    uwhscores = UWHScores(SERVER_ADDRESS)
     uwhscores.current_tid = 14
     uwhscores.current_gid = 6
     uwhscores.get_game()
-
-    repeats = 0
-    while True:
-        if not uwhscores.waiting_for_server:
-            break
-        elif repeats > REPEAT_COUNT:
-            assert False
-        repeats += 1
-        sleep(REPEAT_DELAY)
+    wait_for_server(uwhscores)
 
     assert uwhscores.current_game['black'] == ' U19 Girls'
     assert uwhscores.current_game['black_id'] == 14
@@ -86,18 +69,10 @@ def test_get_game():
     assert uwhscores.current_game['white_id'] == 17
 
 def test_get_team_list():
-    uwhscores = UWHScores()
+    uwhscores = UWHScores(SERVER_ADDRESS)
     uwhscores.current_tid = 14
     uwhscores.get_team_list()
-
-    repeats = 0
-    while True:
-        if not uwhscores.waiting_for_server:
-            break
-        elif repeats > REPEAT_COUNT:
-            assert False
-        repeats += 1
-        sleep(REPEAT_DELAY)
+    wait_for_server(uwhscores) 
 
     assert uwhscores.team_list[1]['name'] == 'LA'
     assert uwhscores.team_list[3]['name'] == ' Rainbow Raptors'
@@ -107,7 +82,7 @@ def test_get_team_list():
     assert uwhscores.team_list[17]['name'] == ' US Elite Women'
 
 def test_throw_errors_without_ids():
-    uwhscores = UWHScores()
+    uwhscores = UWHScores(SERVER_ADDRESS)
 
     with pytest.raises(ValueError):
         uwhscores.get_tournament()
