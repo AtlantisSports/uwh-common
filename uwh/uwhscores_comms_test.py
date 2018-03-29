@@ -146,6 +146,31 @@ if USE_LOCAL_SERVER:
         with pytest.raises(ValueError):
             uwhscores.send_score(white=15, black=9)
 
+    def test_logout():
+        uwhscores = UWHScores(SERVER_ADDRESS)
+
+        assert not uwhscores.is_loggedin
+        uwhscores.login(USERNAME, PASSWORD)
+        wait_for_server(uwhscores)
+        assert uwhscores.is_loggedin
+
+        uwhscores._base_address = IMPOSSIBLE_SERVER_ADDRESS
+        uwhscores.logout()
+        wait_for_server(uwhscores)
+        assert uwhscores.is_loggedin
+
+        uwhscores._base_address = SERVER_ADDRESS
+        token = uwhscores._user_token
+        uwhscores._user_token = 'jddsf'
+        uwhscores.logout()
+        wait_for_server(uwhscores)
+        assert uwhscores.is_loggedin
+
+        uwhscores._user_token = token
+        uwhscores.logout()
+        wait_for_server(uwhscores)
+        assert not uwhscores.is_loggedin
+
 def test_not_waiting_when_failed():
     uwhscores = UWHScores(IMPOSSIBLE_SERVER_ADDRESS)
     uwhscores.current_tid = 14
@@ -186,8 +211,11 @@ def test_not_waiting_when_failed():
     wait_for_server(uwhscores)
     assert not uwhscores.is_loggedin
 
-def test_throw_errors_without_ids():
+def test_throw_errors_without_ids_or_login():
     uwhscores = UWHScores(SERVER_ADDRESS)
+
+    with pytest.raises(ValueError):
+        uwhscores.logout()
 
     with pytest.raises(ValueError):
         uwhscores.get_tournament()

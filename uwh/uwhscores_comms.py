@@ -153,6 +153,20 @@ class UWHScores(object):
                                         args=((self._base_address + 'login', (uname, passwd))))
         object.__getattribute__(self, '_thread').start()
 
+    def logout(self):
+        '''
+        logs the user out from the server.
+
+        The user must be logged in before this method is called.
+        '''
+        if not self.is_loggedin:
+            raise ValueError('user must be logged in before logout() is called')
+        self._transaction_type = Transaction.logout
+        self._thread = threading.Thread(target=self._get,
+                                        args=((self._base_address + 'logout',
+                                               (self._user_token, ''))))
+        object.__getattribute__(self, '_thread').start()
+
     def send_score(self, white, black):
         '''
         Send given scores to the server for current tid and gid. after an
@@ -194,8 +208,11 @@ class UWHScores(object):
 
     def _process_reply(self):
         transaction_type = object.__getattribute__(self, '_transaction_type')
-        if transaction_type is not Transaction.send_score:
+        try:
             json = object.__getattribute__(self, '_reply').json()
+        except ValueError:
+            object.__getattribute__(self, '_process_failure')()
+            return
         if transaction_type is Transaction.get_tournament_list:
             self.tournament_list = {json['tournaments'][i]['tid']: json['tournaments'][i]
                                         for i in range(len(json['tournaments']))}
@@ -214,6 +231,8 @@ class UWHScores(object):
             self.standings = json['standings']
         elif transaction_type is Transaction.login:
             self._user_token = json['token']
+        elif transaction_type is Transaction.logout:
+            self._user_token = None
         self._thread = None
         self._transaction_type = None
         self._reply = None
@@ -235,6 +254,8 @@ class UWHScores(object):
             self.standings = None
         elif transaction_type is Transaction.login:
             self._user_token = None
+        elif transaction_type is Transaction.logout:
+            pass
         self._thread = None
         self._transaction_type = None
         self._reply = None
