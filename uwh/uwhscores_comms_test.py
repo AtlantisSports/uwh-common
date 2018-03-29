@@ -15,6 +15,8 @@ if USE_LOCAL_SERVER:
 else:
     SERVER_ADDRESS = 'https://uwhscores.com/api/v1/'
 
+IMPOSSIBLE_SERVER_ADDRESS = 'http://127.0.0.1:83492'
+
 def wait_for_server(uwhscores):
     for i in range(REPEAT_COUNT):
         if not uwhscores.waiting_for_server:
@@ -143,6 +145,46 @@ if USE_LOCAL_SERVER:
 
         with pytest.raises(ValueError):
             uwhscores.send_score(white=15, black=9)
+
+def test_not_waiting_when_failed():
+    uwhscores = UWHScores(IMPOSSIBLE_SERVER_ADDRESS)
+    uwhscores.current_tid = 14
+    uwhscores.current_gid = 6
+
+    assert uwhscores.tournament_list is None
+    uwhscores.get_tournament_list()
+    wait_for_server(uwhscores)
+    assert uwhscores.tournament_list is None
+
+    assert uwhscores.current_tournament is None
+    uwhscores.get_tournament()
+    wait_for_server(uwhscores)
+    assert uwhscores.current_tournament is None
+
+    assert uwhscores.game_list is None
+    uwhscores.get_game()
+    wait_for_server(uwhscores)
+    assert uwhscores.game_list is None
+
+    assert uwhscores.current_game is None
+    uwhscores.get_game()
+    wait_for_server(uwhscores)
+    assert uwhscores.current_game is None
+    
+    assert uwhscores.team_list is None
+    uwhscores.get_team_list()
+    wait_for_server(uwhscores)
+    assert uwhscores.team_list is None
+
+    assert uwhscores.standings is None
+    uwhscores.get_standings()
+    wait_for_server(uwhscores)
+    assert uwhscores.standings is None
+    
+    assert not uwhscores.is_loggedin
+    uwhscores.login(USERNAME, PASSWORD)
+    wait_for_server(uwhscores)
+    assert not uwhscores.is_loggedin
 
 def test_throw_errors_without_ids():
     uwhscores = UWHScores(SERVER_ADDRESS)

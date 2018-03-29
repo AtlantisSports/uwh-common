@@ -41,9 +41,11 @@ class UWHScores(object):
         self._game_up_to_date = False
 
     def __getattribute__(self, attr):
-        if ((object.__getattribute__(self, '_thread') is not None)
-                and (object.__getattribute__(self, '_reply') is not None)):
-            object.__getattribute__(self, '_process_reply')()
+        if object.__getattribute__(self, '_thread') is not None:
+            if object.__getattribute__(self, '_reply') is not None:
+                object.__getattribute__(self, '_process_reply')()
+            elif not object.__getattribute__(self, '_thread').is_alive():
+                object.__getattribute__(self, '_process_failure')()
         return object.__getattribute__(self, attr)
 
     def get_tournament_list(self):
@@ -56,7 +58,7 @@ class UWHScores(object):
         self._transaction_type = Transaction.get_tournament_list
         self._thread = threading.Thread(target=self._get,
                                         args=(self._base_address + 'tournaments',))
-        self._thread.start()
+        object.__getattribute__(self, '_thread').start()
 
     def get_tournament(self):
         '''
@@ -72,7 +74,7 @@ class UWHScores(object):
         self._thread = threading.Thread(
                 target=self._get,
                 args=(self._base_address + 'tournaments/' + str(self._current_tid),))
-        self._thread.start()
+        object.__getattribute__(self, '_thread').start()
 
     def get_game_list(self):
         '''
@@ -89,7 +91,7 @@ class UWHScores(object):
         self._thread = threading.Thread(
                 target=self._get,
                 args=(self._base_address + 'tournaments/' + str(self._current_tid) + '/games',))
-        self._thread.start()
+        object.__getattribute__(self, '_thread').start()
 
     def get_game(self):
         '''
@@ -107,7 +109,7 @@ class UWHScores(object):
                 target=self._get,
                 args=(self._base_address + 'tournaments/' + str(self._current_tid)
                       + '/games/' + str(self._current_gid),))
-        self._thread.start()
+        object.__getattribute__(self, '_thread').start()
 
     def get_team_list(self):
         '''
@@ -123,7 +125,7 @@ class UWHScores(object):
         self._thread = threading.Thread(
                 target=self._get,
                 args=(self._base_address + 'tournaments/' + str(self._current_tid) + '/teams',))
-        self._thread.start()
+        object.__getattribute__(self, '_thread').start()
 
     def get_standings(self):
         '''
@@ -139,7 +141,7 @@ class UWHScores(object):
                 target=self._get,
                 args=(self._base_address + 'tournaments/' + str(self._current_tid)
                       + '/standings',))
-        self._thread.start()
+        object.__getattribute__(self, '_thread').start()
 
     def login(self, uname, passwd):
         '''
@@ -149,7 +151,7 @@ class UWHScores(object):
         self._transaction_type = Transaction.login
         self._thread = threading.Thread(target=self._get,
                                         args=((self._base_address + 'login', (uname, passwd))))
-        self._thread.start()
+        object.__getattribute__(self, '_thread').start()
 
     def send_score(self, white, black):
         '''
@@ -179,7 +181,7 @@ class UWHScores(object):
                 args=(self._base_address + 'tournaments/' + str(self._current_tid)
                           + '/games/' + str(self._current_gid),
                       info))
-        self._thread.start()
+        object.__getattribute__(self, '_thread').start()
 
     def _get(self, loc, authorization=None):
         if authorization is None:
@@ -215,6 +217,28 @@ class UWHScores(object):
         self._thread = None
         self._transaction_type = None
         self._reply = None
+
+    def _process_failure(self):
+        transaction_type = object.__getattribute__(self, '_transaction_type')
+        if transaction_type is Transaction.get_tournament_list:
+            self.tournament_list = None
+        elif transaction_type is Transaction.get_tournament:
+            self.current_tournament = None
+        elif transaction_type is Transaction.get_game_list:
+            self.game_list = None
+        elif transaction_type is Transaction.get_game:
+            self.current_game = None
+            self._game_up_to_date = False
+        elif transaction_type is Transaction.get_team_list:
+            self.team_list = None
+        elif transaction_type is Transaction.get_standings:
+            self.standings = None
+        elif transaction_type is Transaction.login:
+            self._user_token = None
+        self._thread = None
+        self._transaction_type = None
+        self._reply = None
+
 
     @property
     def waiting_for_server(self):
