@@ -6,10 +6,10 @@ class Transaction():
     get_tournament = 1
     get_game_list = 2
     get_game = 3
-    send_game_score = 4
+    send_score = 4
     get_team_list = 5
     get_standings = 6
-    get_user_token = 7
+    login = 7
     logout = 8
 
 
@@ -30,12 +30,15 @@ class UWHScores(object):
         self._reply = None
         self._transaction_type = None
         self.tournament_list = None
-        self.current_tid = None
+        self._current_tid = None
         self.current_tournament = None
         self.game_list = None
-        self.current_gid = None
+        self._current_gid = None
         self.current_game = None
         self.team_list = None
+        self.standings = None
+        self._user_token = None
+        self._game_up_to_date = False
 
     def __getattribute__(self, attr):
         if ((object.__getattribute__(self, '_thread') is not None)
@@ -63,12 +66,12 @@ class UWHScores(object):
 
         current_tid must be set before this funcion is called
         '''
-        if self.current_tid is None:
+        if self._current_tid is None:
             raise ValueError('current_tid must be set before get_tournament is called')
         self._transaction_type = Transaction.get_tournament
         self._thread = threading.Thread(
                 target=self._get,
-                args=(self._base_address + 'tournaments/' + str(self.current_tid),))
+                args=(self._base_address + 'tournaments/' + str(self._current_tid),))
         self._thread.start()
 
     def get_game_list(self):
@@ -80,12 +83,12 @@ class UWHScores(object):
 
         current_tid must be set before this funcion is called
         '''
-        if self.current_tid is None:
+        if self._current_tid is None:
             raise ValueError('current_tid must be set before get_game_list is called')
         self._transaction_type = Transaction.get_game_list
         self._thread = threading.Thread(
                 target=self._get,
-                args=(self._base_address + 'tournaments/' + str(self.current_tid) + '/games',))
+                args=(self._base_address + 'tournaments/' + str(self._current_tid) + '/games',))
         self._thread.start()
 
     def get_game(self):
@@ -95,15 +98,15 @@ class UWHScores(object):
 
         current_tid and current_gid must be set before this funcion is called
         '''
-        if self.current_tid is None:
+        if self._current_tid is None:
             raise ValueError('current_tid must be set before get_game is called')
-        if self.current_gid is None:
+        if self._current_gid is None:
             raise ValueError('current_gid must be set before get_game is called')
         self._transaction_type = Transaction.get_game
         self._thread = threading.Thread(
                 target=self._get,
-                args=(self._base_address + 'tournaments/' + str(self.current_tid)
-                      + '/games/' + str(self.current_gid),))
+                args=(self._base_address + 'tournaments/' + str(self._current_tid)
+                      + '/games/' + str(self._current_gid),))
         self._thread.start()
 
     def get_team_list(self):
@@ -114,12 +117,12 @@ class UWHScores(object):
 
         current_tid must be set before this funcion is called
         '''
-        if self.current_tid is None:
+        if self._current_tid is None:
             raise ValueError('current_tid must be set before get_team_list is called')
         self._transaction_type = Transaction.get_team_list
         self._thread = threading.Thread(
                 target=self._get,
-                args=(self._base_address + 'tournaments/' + str(self.current_tid) + '/teams',))
+                args=(self._base_address + 'tournaments/' + str(self._current_tid) + '/teams',))
         self._thread.start()
 
     def get_standings(self):
@@ -129,21 +132,68 @@ class UWHScores(object):
 
         current_tid must be set before this funcion is called
         '''
-        if self.current_tid is None:
+        if self._current_tid is None:
             raise ValueError('current_tid must be set before get_standings is called')
         self._transaction_type = Transaction.get_standings
         self._thread = threading.Thread(
                 target=self._get,
-                args=(self._base_address + 'tournaments/' + str(self.current_tid)
+                args=(self._base_address + 'tournaments/' + str(self._current_tid)
                       + '/standings',))
         self._thread.start()
 
-    def _get(self, loc):
-        self._reply = requests.get(loc)
+    def login(self, uname, passwd):
+        '''
+        Login to the server. If login is sucessfull, the returned user token
+        will be used for future send_score calls.
+        '''
+        self._transaction_type = Transaction.login
+        self._thread = threading.Thread(target=self._get,
+                                        args=((self._base_address + 'login', (uname, passwd))))
+        self._thread.start()
+
+    def send_score(self, white, black):
+        '''
+        Send given scores to the server for current tid and gid. after an
+        update of current_tid or current_gid, get_game() must sucessfully
+        complete before send_score() can be called. login() must sucessfully
+        complete before send_score() can be called.
+
+        current_tid and current_gid must be set before this function is called
+        '''
+        if self._current_tid is None:
+            raise ValueError('current_tid must be set before send_score is called')
+        if self._current_gid is None:
+            raise ValueError('current_gid must be set before send_score is called')
+        if not self.is_loggedin:
+            raise ValueError('user must be logged in before send_score is called')
+        if not self._game_up_to_date:
+            raise ValueError('get_game must be caleed before send_score is called')
+
+        info = {'tid': self._current_tid, 'gid': self._current_gid, 'score_w': white,
+                'score_b': black, 'white_id': self.current_game['white_id'],
+                'black_id': self.current_game['black_id']}
+
+        self._transaction_type = Transaction.send_score
+        self._thread = threading.Thread(
+                target=self._post,
+                args=(self._base_address + 'tournaments/' + str(self._current_tid)
+                          + '/games/' + str(self._current_gid),
+                      info))
+        self._thread.start()
+
+    def _get(self, loc, authorization=None):
+        if authorization is None:
+            self._reply = requests.get(loc)
+        else:
+            self._reply = requests.get(loc, auth=authorization)
+
+    def _post(self, loc, payload):
+        self._reply = requests.post(loc, json=payload, auth=(self._user_token, ''))
 
     def _process_reply(self):
-        json = object.__getattribute__(self, '_reply').json()
         transaction_type = object.__getattribute__(self, '_transaction_type')
+        if transaction_type is not Transaction.send_score:
+            json = object.__getattribute__(self, '_reply').json()
         if transaction_type is Transaction.get_tournament_list:
             self.tournament_list = {json['tournaments'][i]['tid']: json['tournaments'][i]
                                         for i in range(len(json['tournaments']))}
@@ -154,11 +204,14 @@ class UWHScores(object):
                                   for i in range(len(json['games']))}
         elif transaction_type is Transaction.get_game:
             self.current_game = json['game']
+            self._game_up_to_date = True
         elif transaction_type is Transaction.get_team_list:
             self.team_list = {json['teams'][i]['team_id']: json['teams'][i]
                                   for i in range(len(json['teams']))}
         elif transaction_type is Transaction.get_standings:
             self.standings = json['standings']
+        elif transaction_type is Transaction.login:
+            self._user_token = json['token']
         self._thread = None
         self._transaction_type = None
         self._reply = None
@@ -166,3 +219,25 @@ class UWHScores(object):
     @property
     def waiting_for_server(self):
         return self._thread is not None and self._reply is None
+
+    @property
+    def is_loggedin(self):
+        return self._user_token is not None
+
+    @property
+    def current_tid(self):
+        return self._current_tid
+
+    @current_tid.setter
+    def current_tid(self, val):
+        self._game_up_to_date = False
+        self._current_tid = val
+
+    @property
+    def current_gid(self):
+        return self._current_gid
+
+    @current_gid.setter
+    def current_gid(self, val):
+        self._game_up_to_date = False
+        self._current_gid = val

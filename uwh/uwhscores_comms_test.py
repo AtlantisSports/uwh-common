@@ -10,6 +10,8 @@ USE_LOCAL_SERVER = True
 
 if USE_LOCAL_SERVER:
     SERVER_ADDRESS = 'http://127.0.0.1:5000/api/v1/'
+    USERNAME = 'test@jimlester.net'
+    PASSWORD = 'temp123!@#'
 else:
     SERVER_ADDRESS = 'https://uwhscores.com/api/v1/'
 
@@ -77,7 +79,7 @@ def test_get_team_list():
     assert uwhscores.team_list[1]['name'] == 'LA'
     assert uwhscores.team_list[3]['name'] == ' Rainbow Raptors'
     assert uwhscores.team_list[7]['name'] == ' Cupcake Crocodiles'
-    assert uwhscores.team_list[11]['name'] == ' Chicago'
+    assert uwhscores.team_list[11 ]['name'] == ' Chicago'
     assert uwhscores.team_list[13]['name'] == ' Colorado B'
     assert uwhscores.team_list[17]['name'] == ' US Elite Women'
 
@@ -95,6 +97,53 @@ def test_get_standings():
     assert uwhscores.standings[6]['team'] == 'Swordfish'
     assert uwhscores.standings[7]['team'] == 'George Mason'
 
+if USE_LOCAL_SERVER:
+    def test_login_and_send_score():
+        uwhscores = UWHScores(SERVER_ADDRESS)
+        uwhscores.login(USERNAME, PASSWORD)
+        wait_for_server(uwhscores)
+
+        assert uwhscores.is_loggedin
+
+        uwhscores.current_tid = 14
+        uwhscores.current_gid = 6
+        uwhscores.get_game()
+        wait_for_server(uwhscores)
+        uwhscores.send_score(white=2, black=3)
+        wait_for_server(uwhscores)
+        uwhscores.get_game()
+        wait_for_server(uwhscores)
+
+        assert uwhscores.current_game['black'] == ' U19 Girls'
+        assert uwhscores.current_game['black_id'] == 14
+        assert uwhscores.current_game['white'] == ' US Elite Women'
+        assert uwhscores.current_game['white_id'] == 17
+        assert uwhscores.current_game['score_w'] == 2
+        assert uwhscores.current_game['score_b'] == 3
+        
+        uwhscores.send_score(white=20, black=4)
+        wait_for_server(uwhscores)
+        uwhscores.get_game()
+        wait_for_server(uwhscores)
+
+        assert uwhscores.current_game['score_w'] == 20
+        assert uwhscores.current_game['score_b'] == 4
+
+    def test_login_and_update_required_before_send_score():
+        uwhscores = UWHScores(SERVER_ADDRESS)
+        uwhscores.current_tid = 14
+        uwhscores.current_gid = 6
+
+        with pytest.raises(ValueError):
+            uwhscores.send_score(white=14, black=8)
+
+        uwhscores.login(USERNAME, PASSWORD)
+        wait_for_server(uwhscores)
+        assert uwhscores.is_loggedin
+
+        with pytest.raises(ValueError):
+            uwhscores.send_score(white=15, black=9)
+
 def test_throw_errors_without_ids():
     uwhscores = UWHScores(SERVER_ADDRESS)
 
@@ -108,7 +157,12 @@ def test_throw_errors_without_ids():
         uwhscores.get_team_list()
     with pytest.raises(ValueError):
         uwhscores.get_standings()
+    with pytest.raises(ValueError):
+        uwhscores.send_score(white=16, black=10)
 
     uwhscores.current_tid = 14
     with pytest.raises(ValueError):
         uwhscores.get_game()
+    with pytest.raises(ValueError):
+        uwhscores.send_score(white=17, black=11)
+
