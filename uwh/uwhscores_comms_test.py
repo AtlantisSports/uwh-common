@@ -76,7 +76,7 @@ def test_get_team_list():
     uwhscores = UWHScores(SERVER_ADDRESS)
     uwhscores.current_tid = 14
     uwhscores.get_team_list()
-    wait_for_server(uwhscores) 
+    wait_for_server(uwhscores)
 
     assert uwhscores.team_list[1]['name'] == 'LA'
     assert uwhscores.team_list[3]['name'] == ' Rainbow Raptors'
@@ -122,7 +122,7 @@ if USE_LOCAL_SERVER:
         assert uwhscores.current_game['white_id'] == 17
         assert uwhscores.current_game['score_w'] == 2
         assert uwhscores.current_game['score_b'] == 3
-        
+
         uwhscores.send_score(white=20, black=4)
         wait_for_server(uwhscores)
         uwhscores.get_game()
@@ -195,7 +195,7 @@ def test_not_waiting_when_failed():
     uwhscores.get_game()
     wait_for_server(uwhscores)
     assert uwhscores.current_game is None
-    
+
     assert uwhscores.team_list is None
     uwhscores.get_team_list()
     wait_for_server(uwhscores)
@@ -205,7 +205,7 @@ def test_not_waiting_when_failed():
     uwhscores.get_standings()
     wait_for_server(uwhscores)
     assert uwhscores.standings is None
-    
+
     assert not uwhscores.is_loggedin
     uwhscores.login(USERNAME, PASSWORD)
     wait_for_server(uwhscores)
