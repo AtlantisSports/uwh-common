@@ -6,7 +6,7 @@ REPEAT_COUNT = 500
 REPEAT_DELAY = 0.01
 
 # Select either the local server or remote server below
-USE_LOCAL_SERVER = True
+USE_LOCAL_SERVER = False
 
 if USE_LOCAL_SERVER:
     SERVER_ADDRESS = 'http://127.0.0.1:5000/api/v1/'
@@ -15,7 +15,7 @@ if USE_LOCAL_SERVER:
 else:
     SERVER_ADDRESS = 'https://uwhscores.com/api/v1/'
 
-IMPOSSIBLE_SERVER_ADDRESS = 'http://127.0.0.1:83492'
+IMPOSSIBLE_SERVER_ADDRESS = 'http://127.0.0.1:83492/'
 
 def wait_for_server(uwhscores):
     for i in range(REPEAT_COUNT):
