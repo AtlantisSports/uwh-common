@@ -198,10 +198,13 @@ class UWHScores(object):
         object.__getattribute__(self, '_thread').start()
 
     def _get(self, loc, authorization=None):
-        if authorization is None:
-            self._reply = requests.get(loc)
-        else:
-            self._reply = requests.get(loc, auth=authorization)
+        try:
+            if authorization is None:
+                self._reply = requests.get(loc)
+            else:
+                self._reply = requests.get(loc, auth=authorization)
+        except requests.exceptions.ConnectionError:
+            self._reply = None
 
     def _post(self, loc, payload):
         self._reply = requests.post(loc, json=payload, auth=(self._user_token, ''))
