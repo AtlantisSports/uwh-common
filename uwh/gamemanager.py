@@ -212,6 +212,10 @@ class GameManager(object):
             if not p.servedCompletely(0):
                 p._start_time = self._duration
 
+    def deleteServedPenalties(self):
+        map(self.delPenalty, [p for p in self._penalties[TeamColor.white] if p.servedCompletely(0)]);
+        map(self.delPenalty, [p for p in self._penalties[TeamColor.black] if p.servedCompletely(0)]);
+
     def setPassive(self):
         self._is_passive = True
 
