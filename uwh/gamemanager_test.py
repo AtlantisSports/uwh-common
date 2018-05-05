@@ -1,4 +1,4 @@
-from .gamemanager import GameManager, GameState, TimeoutState, Penalty, TeamColor
+from .gamemanager import GameManager, GameState, TimeoutState, Penalty, TeamColor, PoolLayout
 
 import time
 
@@ -264,3 +264,10 @@ def test_penalty_halftime():
     assert p.timeRemaining(mgr.gameClock()) == 1 * 60
     mgr.setGameClock(6 * 60)
     assert p.timeRemaining(mgr.gameClock()) == 0
+
+def test_layout():
+    mgr = GameManager()
+    assert mgr.layout() == PoolLayout.white_on_right
+
+    mgr.setLayout(PoolLayout.white_on_left)
+    assert mgr.layout() == PoolLayout.white_on_left

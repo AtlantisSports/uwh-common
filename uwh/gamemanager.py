@@ -17,6 +17,10 @@ class TeamColor(object):
     black = 0
     white = 1
 
+class PoolLayout(object):
+    white_on_right = 0
+    white_on_left = 1
+
 
 def now():
     return math.floor(time.time())
@@ -33,6 +37,7 @@ class GameManager(object):
         self._penalties = [[],[]]
         self._observers = observers or []
         self._is_passive = False
+        self._layout = PoolLayout.white_on_right
 
     def gameClock(self):
         if not self.gameClockRunning() or self._is_passive:
@@ -193,6 +198,12 @@ class GameManager(object):
 
     def passive(self):
         return self._is_passive
+
+    def setLayout(self, layout):
+        self._layout = layout
+
+    def layout(self):
+        return self._layout
 
 class Penalty(object):
 

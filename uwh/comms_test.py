@@ -1,7 +1,7 @@
-from .comms import UWHProtoHandler, gs_to_proto_enum, gs_from_proto_enum, ts_to_proto_enum, ts_from_proto_enum
+from .comms import UWHProtoHandler, gs_to_proto_enum, gs_from_proto_enum, ts_to_proto_enum, ts_from_proto_enum, l_from_proto_enum, l_to_proto_enum
 
 from . import messages_pb2
-from .gamemanager import GameManager, TimeoutState, GameState, Penalty, TeamColor
+from .gamemanager import GameManager, TimeoutState, GameState, Penalty, TeamColor, PoolLayout
 
 def test_PingPong():
     class Client(UWHProtoHandler):
@@ -66,6 +66,7 @@ def test_GameKeyFrame():
     s_mgr.setBlackScore(7)
     s_mgr.setGameStateFirstHalf()
     s_mgr.setTimeoutStateRef()
+    s_mgr.setLayout(PoolLayout.white_on_right)
 
     sp = Penalty(24, TeamColor.white, 5 * 60)
     s_mgr.addPenalty(sp)
@@ -84,6 +85,7 @@ def test_GameKeyFrame():
     assert cp.player() == sp.player()
     assert cp.duration() == sp.duration()
     assert cp.startTime() == (sp.startTime() or 0)
+    assert c_mgr.layout() == s_mgr.layout()
 
 
 def test_pack_unpack():
@@ -131,3 +133,9 @@ def test_enum_conversion():
     assert gs_to_proto_enum(GameState.first_half) == messages_pb2.GameState_FirstHalf
     assert gs_to_proto_enum(GameState.half_time) == messages_pb2.GameState_HalfTime
     assert gs_to_proto_enum(GameState.second_half) == messages_pb2.GameState_SecondHalf
+
+    assert l_from_proto_enum(messages_pb2.WhiteOnRight) == PoolLayout.white_on_right
+    assert l_from_proto_enum(messages_pb2.WhiteOnLeft) == PoolLayout.white_on_left
+
+    assert l_to_proto_enum(PoolLayout.white_on_right) == messages_pb2.WhiteOnRight
+    assert l_to_proto_enum(PoolLayout.white_on_left) == messages_pb2.WhiteOnLeft

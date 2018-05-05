@@ -33,6 +33,11 @@ enum TimeoutState {
   TimeoutState_WhiteTimeout = 3;
 }
 
+enum PoolLayout {
+  WhiteOnLeft = 0;
+  WhiteOnRight = 1;
+}
+
 message Penalty {
   optional uint32 PlayerNo = 1;
   optional uint32 StartTime = 2;
@@ -48,5 +53,6 @@ message GameKeyFrame {
   optional TimeoutState Timeout = 6;
   repeated Penalty BlackPenalties = 7;
   repeated Penalty WhitePenalties = 8;
+  optional PoolLayout Layout = 9;
 }
 

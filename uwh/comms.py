@@ -1,5 +1,5 @@
 from . import messages_pb2
-from .gamemanager import GameState, TimeoutState, TeamColor, Penalty
+from .gamemanager import GameState, TimeoutState, TeamColor, Penalty, PoolLayout
 
 def gs_from_proto_enum(proto_enum):
     return { messages_pb2.GameState_GameOver        : GameState.game_over,
@@ -17,6 +17,12 @@ def ts_from_proto_enum(proto_enum):
              messages_pb2.TimeoutState_BlackTimeout : TimeoutState.ref # bold-faced lie
            }[proto_enum]
 
+def l_from_proto_enum(proto_enum):
+    return {
+             messages_pb2.WhiteOnRight : PoolLayout.white_on_right,
+             messages_pb2.WhiteOnLeft  : PoolLayout.white_on_left
+           }[proto_enum]
+
 def gs_to_proto_enum(gamemanager_enum):
     return { GameState.game_over   : messages_pb2.GameState_GameOver,
              GameState.first_half  : messages_pb2.GameState_FirstHalf,
@@ -27,6 +33,11 @@ def gs_to_proto_enum(gamemanager_enum):
 def ts_to_proto_enum(gamemanager_enum):
     return { TimeoutState.none     : messages_pb2.TimeoutState_None,
              TimeoutState.ref      : messages_pb2.TimeoutState_RefTimeout
+           }[gamemanager_enum]
+
+def l_to_proto_enum(gamemanager_enum):
+    return { PoolLayout.white_on_right : messages_pb2.WhiteOnRight,
+             PoolLayout.white_on_left  : messages_pb2.WhiteOnLeft
            }[gamemanager_enum]
 
 
@@ -112,6 +123,9 @@ class UWHProtoHandler(object):
                 self._mgr.addPenalty(Penalty(p.PlayerNo, TeamColor.white,
                                              p.Duration, p.StartTime))
 
+        if msg.Layout is not None:
+            self._mgr.setLayout(l_from_proto_enum(msg.Layout))
+
 
     def send_GameKeyFrame(self, recipient):
         kind = messages_pb2.MessageType_GameKeyFrame
@@ -122,6 +136,7 @@ class UWHProtoHandler(object):
         msg.WhiteScore = self._mgr.whiteScore()
         msg.Period = gs_to_proto_enum(self._mgr.gameState())
         msg.Timeout = ts_to_proto_enum(self._mgr.timeoutState())
+        msg.Layout = l_to_proto_enum(self._mgr.layout())
 
         for p in self._mgr.penalties(TeamColor.black):
             msg.BlackPenalties.add(PlayerNo=p.player(),
