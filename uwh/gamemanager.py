@@ -11,11 +11,14 @@ class GameState(object):
 class TimeoutState(object):
     none = 0
     ref = 1
+    white = 2
+    black = 3
 
 
 class TeamColor(object):
     black = 0
     white = 1
+
 
 class PoolLayout(object):
     white_on_right = 0
@@ -161,6 +164,22 @@ class GameManager(object):
         self._timeout_state = TimeoutState.ref
         for mgr in self._observers:
             mgr.setTimeoutStateRef()
+
+    def timeoutStateWhite(self):
+        return self._timeout_state == TimeoutState.white
+
+    def setTimeoutStateWhite(self):
+        self._timeout_state = TimeoutState.white
+        for mgr in self._observers:
+            mgr.setTimeoutStateWhite()
+
+    def timeoutStateBlack(self):
+        return self._timeout_state == TimeoutState.black
+
+    def setTimeoutStateBlack(self):
+        self._timeout_state = TimeoutState.black
+        for mgr in self._observers:
+            mgr.setTimeoutStateBlack()
 
     def addPenalty(self, p):
         self._penalties[p.team()].append(p)

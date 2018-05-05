@@ -114,6 +114,24 @@ def test_timeoutStateRef():
     assert mgr.timeoutStateRef() is False
 
 
+def test_timeoutStateWhite():
+    mgr = GameManager(_observers)
+    mgr.setTimeoutStateWhite()
+    assert mgr.timeoutStateWhite() is True
+
+    mgr.setTimeoutStateNone()
+    assert mgr.timeoutStateWhite() is False
+
+
+def test_timeoutStateBlack():
+    mgr = GameManager(_observers)
+    mgr.setTimeoutStateBlack()
+    assert mgr.timeoutStateBlack() is True
+
+    mgr.setTimeoutStateNone()
+    assert mgr.timeoutStateBlack() is False
+
+
 def test_gameState():
     mgr = GameManager(_observers)
     mgr.setGameState(GameState.first_half)
