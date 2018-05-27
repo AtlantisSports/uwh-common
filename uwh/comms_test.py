@@ -67,6 +67,8 @@ def test_GameKeyFrame():
     s_mgr.setGameStateFirstHalf()
     s_mgr.setTimeoutStateRef()
     s_mgr.setLayout(PoolLayout.white_on_right)
+    s_mgr.setTid(14)
+    s_mgr.setGid(6)
 
     sp = Penalty(24, TeamColor.white, 5 * 60)
     s_mgr.addPenalty(sp)
@@ -86,6 +88,8 @@ def test_GameKeyFrame():
     assert cp.duration() == sp.duration()
     assert cp.startTime() == (sp.startTime() or 0)
     assert c_mgr.layout() == s_mgr.layout()
+    assert c_mgr.gid() == s_mgr.gid()
+    assert c_mgr.tid() == s_mgr.tid()
 
 
 def test_pack_unpack():

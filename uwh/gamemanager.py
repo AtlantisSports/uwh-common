@@ -42,6 +42,8 @@ class GameManager(object):
         self._observers = observers or []
         self._is_passive = False
         self._layout = PoolLayout.white_on_right
+        self._tid = None
+        self._gid = None
 
     def gameClock(self):
         if not self.gameClockRunning() or self._is_passive:
@@ -251,6 +253,22 @@ class GameManager(object):
 
     def layout(self):
         return self._layout
+
+    def setTid(self, tid):
+        self._tid = tid
+        for mgr in self._observers:
+            mgr.setTid(tid)
+
+    def tid(self):
+        return self._tid
+
+    def setGid(self, gid):
+        self._gid = gid
+        for mgr in self._observers:
+            mgr.setGid(gid)
+
+    def gid(self):
+        return self._gid
 
 class Penalty(object):
 

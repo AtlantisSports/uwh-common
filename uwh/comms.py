@@ -130,6 +130,12 @@ class UWHProtoHandler(object):
         if msg.Layout is not None:
             self._mgr.setLayout(l_from_proto_enum(msg.Layout))
 
+        if msg.tid is not None:
+            self._mgr.setTid(msg.tid)
+
+        if msg.gid is not None:
+            self._mgr.setGid(msg.gid)
+
     def as_int(self, n):
         try:
             return int(n)
@@ -146,6 +152,8 @@ class UWHProtoHandler(object):
         msg.Period = gs_to_proto_enum(self._mgr.gameState())
         msg.Timeout = ts_to_proto_enum(self._mgr.timeoutState())
         msg.Layout = l_to_proto_enum(self._mgr.layout())
+        msg.tid = self._mgr.tid()
+        msg.gid = self._mgr.gid()
 
         for p in self._mgr.penalties(TeamColor.black):
             msg.BlackPenalties.add(PlayerNo=self.as_int(p.player()),

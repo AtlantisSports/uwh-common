@@ -55,5 +55,7 @@ message GameKeyFrame {
   repeated Penalty BlackPenalties = 7;
   repeated Penalty WhitePenalties = 8;
   optional PoolLayout Layout = 9;
+  optional int32 tid = 10;
+  optional int32 gid = 11;
 }
 

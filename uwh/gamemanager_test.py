@@ -247,3 +247,18 @@ def test_layout():
 
     mgr.setLayout(PoolLayout.white_on_left)
     assert mgr.layout() == PoolLayout.white_on_left
+
+def test_tid():
+    mgr = GameManager()
+    assert mgr.tid() is None
+
+    mgr.setTid(14)
+    assert mgr.tid() == 14
+
+def test_gid():
+    mgr = GameManager()
+    assert mgr.gid() is None
+
+    mgr.setGid(6)
+    assert mgr.gid() == 6
+

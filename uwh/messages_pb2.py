@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='messages.proto',
   package='',
   syntax='proto2',
-  serialized_pb=_b('\n\x0emessages.proto\"\x14\n\x04Ping\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"\x14\n\x04Pong\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"@\n\x07Penalty\x12\x10\n\x08PlayerNo\x18\x01 \x01(\r\x12\x11\n\tStartTime\x18\x02 \x01(\r\x12\x10\n\x08\x44uration\x18\x03 \x01(\x05\"\xfb\x01\n\x0cGameKeyFrame\x12\x14\n\x0c\x43lockRunning\x18\x01 \x01(\x08\x12\x10\n\x08TimeLeft\x18\x02 \x01(\r\x12\x12\n\nBlackScore\x18\x03 \x01(\r\x12\x12\n\nWhiteScore\x18\x04 \x01(\r\x12\x1a\n\x06Period\x18\x05 \x01(\x0e\x32\n.GameState\x12\x1e\n\x07Timeout\x18\x06 \x01(\x0e\x32\r.TimeoutState\x12 \n\x0e\x42lackPenalties\x18\x07 \x03(\x0b\x32\x08.Penalty\x12 \n\x0eWhitePenalties\x18\x08 \x03(\x0b\x32\x08.Penalty\x12\x1b\n\x06Layout\x18\t \x01(\x0e\x32\x0b.PoolLayout*W\n\x0bMessageType\x12\x14\n\x10MessageType_Ping\x10\x01\x12\x14\n\x10MessageType_Pong\x10\x02\x12\x1c\n\x18MessageType_GameKeyFrame\x10\x03*\x87\x01\n\tGameState\x12\x17\n\x13GameState_WallClock\x10\x00\x12\x17\n\x13GameState_FirstHalf\x10\x01\x12\x18\n\x14GameState_SecondHalf\x10\x02\x12\x16\n\x12GameState_HalfTime\x10\x03\x12\x16\n\x12GameState_GameOver\x10\x04*\x9e\x01\n\x0cTimeoutState\x12\x15\n\x11TimeoutState_None\x10\x00\x12\x1b\n\x17TimeoutState_RefTimeout\x10\x01\x12\x1d\n\x19TimeoutState_BlackTimeout\x10\x02\x12\x1d\n\x19TimeoutState_WhiteTimeout\x10\x03\x12\x1c\n\x18TimeoutState_PenaltyShot\x10\x04*/\n\nPoolLayout\x12\x0f\n\x0bWhiteOnLeft\x10\x00\x12\x10\n\x0cWhiteOnRight\x10\x01')
+  serialized_pb=_b('\n\x0emessages.proto\"\x14\n\x04Ping\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"\x14\n\x04Pong\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"@\n\x07Penalty\x12\x10\n\x08PlayerNo\x18\x01 \x01(\r\x12\x11\n\tStartTime\x18\x02 \x01(\r\x12\x10\n\x08\x44uration\x18\x03 \x01(\x05\"\x95\x02\n\x0cGameKeyFrame\x12\x14\n\x0c\x43lockRunning\x18\x01 \x01(\x08\x12\x10\n\x08TimeLeft\x18\x02 \x01(\r\x12\x12\n\nBlackScore\x18\x03 \x01(\r\x12\x12\n\nWhiteScore\x18\x04 \x01(\r\x12\x1a\n\x06Period\x18\x05 \x01(\x0e\x32\n.GameState\x12\x1e\n\x07Timeout\x18\x06 \x01(\x0e\x32\r.TimeoutState\x12 \n\x0e\x42lackPenalties\x18\x07 \x03(\x0b\x32\x08.Penalty\x12 \n\x0eWhitePenalties\x18\x08 \x03(\x0b\x32\x08.Penalty\x12\x1b\n\x06Layout\x18\t \x01(\x0e\x32\x0b.PoolLayout\x12\x0b\n\x03tid\x18\n \x01(\x05\x12\x0b\n\x03gid\x18\x0b \x01(\x05*W\n\x0bMessageType\x12\x14\n\x10MessageType_Ping\x10\x01\x12\x14\n\x10MessageType_Pong\x10\x02\x12\x1c\n\x18MessageType_GameKeyFrame\x10\x03*\x87\x01\n\tGameState\x12\x17\n\x13GameState_WallClock\x10\x00\x12\x17\n\x13GameState_FirstHalf\x10\x01\x12\x18\n\x14GameState_SecondHalf\x10\x02\x12\x16\n\x12GameState_HalfTime\x10\x03\x12\x16\n\x12GameState_GameOver\x10\x04*\x9e\x01\n\x0cTimeoutState\x12\x15\n\x11TimeoutState_None\x10\x00\x12\x1b\n\x17TimeoutState_RefTimeout\x10\x01\x12\x1d\n\x19TimeoutState_BlackTimeout\x10\x02\x12\x1d\n\x19TimeoutState_WhiteTimeout\x10\x03\x12\x1c\n\x18TimeoutState_PenaltyShot\x10\x04*/\n\nPoolLayout\x12\x0f\n\x0bWhiteOnLeft\x10\x00\x12\x10\n\x0cWhiteOnRight\x10\x01')
 )
 
 _MESSAGETYPE = _descriptor.EnumDescriptor(
@@ -44,8 +44,8 @@ _MESSAGETYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=382,
-  serialized_end=469,
+  serialized_start=408,
+  serialized_end=495,
 )
 _sym_db.RegisterEnumDescriptor(_MESSAGETYPE)
 
@@ -79,8 +79,8 @@ _GAMESTATE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=472,
-  serialized_end=607,
+  serialized_start=498,
+  serialized_end=633,
 )
 _sym_db.RegisterEnumDescriptor(_GAMESTATE)
 
@@ -114,8 +114,8 @@ _TIMEOUTSTATE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=610,
-  serialized_end=768,
+  serialized_start=636,
+  serialized_end=794,
 )
 _sym_db.RegisterEnumDescriptor(_TIMEOUTSTATE)
 
@@ -137,8 +137,8 @@ _POOLLAYOUT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=770,
-  serialized_end=817,
+  serialized_start=796,
+  serialized_end=843,
 )
 _sym_db.RegisterEnumDescriptor(_POOLLAYOUT)
 
@@ -338,6 +338,20 @@ _GAMEKEYFRAME = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='tid', full_name='GameKeyFrame.tid', index=9,
+      number=10, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='gid', full_name='GameKeyFrame.gid', index=10,
+      number=11, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -351,7 +365,7 @@ _GAMEKEYFRAME = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=129,
-  serialized_end=380,
+  serialized_end=406,
 )
 
 _GAMEKEYFRAME.fields_by_name['Period'].enum_type = _GAMESTATE
