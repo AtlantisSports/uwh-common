@@ -19,9 +19,9 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='messages.proto',
   package='',
-  serialized_pb=_b('\n\x0emessages.proto\"\x14\n\x04Ping\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"\x14\n\x04Pong\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"@\n\x07Penalty\x12\x10\n\x08PlayerNo\x18\x01 \x01(\r\x12\x11\n\tStartTime\x18\x02 \x01(\r\x12\x10\n\x08\x44uration\x18\x03 \x01(\r\"\xfb\x01\n\x0cGameKeyFrame\x12\x14\n\x0c\x43lockRunning\x18\x01 \x01(\x08\x12\x10\n\x08TimeLeft\x18\x02 \x01(\r\x12\x12\n\nBlackScore\x18\x03 \x01(\r\x12\x12\n\nWhiteScore\x18\x04 \x01(\r\x12\x1a\n\x06Period\x18\x05 \x01(\x0e\x32\n.GameState\x12\x1e\n\x07Timeout\x18\x06 \x01(\x0e\x32\r.TimeoutState\x12 \n\x0e\x42lackPenalties\x18\x07 \x03(\x0b\x32\x08.Penalty\x12 \n\x0eWhitePenalties\x18\x08 \x03(\x0b\x32\x08.Penalty\x12\x1b\n\x06Layout\x18\t \x01(\x0e\x32\x0b.PoolLayout*W\n\x0bMessageType\x12\x14\n\x10MessageType_Ping\x10\x01\x12\x14\n\x10MessageType_Pong\x10\x02\x12\x1c\n\x18MessageType_GameKeyFrame\x10\x03*\x87\x01\n\tGameState\x12\x17\n\x13GameState_WallClock\x10\x00\x12\x17\n\x13GameState_FirstHalf\x10\x01\x12\x18\n\x14GameState_SecondHalf\x10\x02\x12\x16\n\x12GameState_HalfTime\x10\x03\x12\x16\n\x12GameState_GameOver\x10\x04*\x9e\x01\n\x0cTimeoutState\x12\x15\n\x11TimeoutState_None\x10\x00\x12\x1b\n\x17TimeoutState_RefTimeout\x10\x01\x12\x1d\n\x19TimeoutState_BlackTimeout\x10\x02\x12\x1d\n\x19TimeoutState_WhiteTimeout\x10\x03\x12\x1c\n\x18TimeoutState_PenaltyShot\x10\x04*/\n\nPoolLayout\x12\x0f\n\x0bWhiteOnLeft\x10\x00\x12\x10\n\x0cWhiteOnRight\x10\x01')
+  syntax='proto2',
+  serialized_pb=_b('\n\x0emessages.proto\"\x14\n\x04Ping\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"\x14\n\x04Pong\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"@\n\x07Penalty\x12\x10\n\x08PlayerNo\x18\x01 \x01(\r\x12\x11\n\tStartTime\x18\x02 \x01(\r\x12\x10\n\x08\x44uration\x18\x03 \x01(\x05\"\xfb\x01\n\x0cGameKeyFrame\x12\x14\n\x0c\x43lockRunning\x18\x01 \x01(\x08\x12\x10\n\x08TimeLeft\x18\x02 \x01(\r\x12\x12\n\nBlackScore\x18\x03 \x01(\r\x12\x12\n\nWhiteScore\x18\x04 \x01(\r\x12\x1a\n\x06Period\x18\x05 \x01(\x0e\x32\n.GameState\x12\x1e\n\x07Timeout\x18\x06 \x01(\x0e\x32\r.TimeoutState\x12 \n\x0e\x42lackPenalties\x18\x07 \x03(\x0b\x32\x08.Penalty\x12 \n\x0eWhitePenalties\x18\x08 \x03(\x0b\x32\x08.Penalty\x12\x1b\n\x06Layout\x18\t \x01(\x0e\x32\x0b.PoolLayout*W\n\x0bMessageType\x12\x14\n\x10MessageType_Ping\x10\x01\x12\x14\n\x10MessageType_Pong\x10\x02\x12\x1c\n\x18MessageType_GameKeyFrame\x10\x03*\x87\x01\n\tGameState\x12\x17\n\x13GameState_WallClock\x10\x00\x12\x17\n\x13GameState_FirstHalf\x10\x01\x12\x18\n\x14GameState_SecondHalf\x10\x02\x12\x16\n\x12GameState_HalfTime\x10\x03\x12\x16\n\x12GameState_GameOver\x10\x04*\x9e\x01\n\x0cTimeoutState\x12\x15\n\x11TimeoutState_None\x10\x00\x12\x1b\n\x17TimeoutState_RefTimeout\x10\x01\x12\x1d\n\x19TimeoutState_BlackTimeout\x10\x02\x12\x1d\n\x19TimeoutState_WhiteTimeout\x10\x03\x12\x1c\n\x18TimeoutState_PenaltyShot\x10\x04*/\n\nPoolLayout\x12\x0f\n\x0bWhiteOnLeft\x10\x00\x12\x10\n\x0cWhiteOnRight\x10\x01')
 )
-_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 _MESSAGETYPE = _descriptor.EnumDescriptor(
   name='MessageType',
@@ -174,7 +174,7 @@ _PING = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -183,6 +183,7 @@ _PING = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
+  syntax='proto2',
   extension_ranges=[],
   oneofs=[
   ],
@@ -204,7 +205,7 @@ _PONG = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -213,6 +214,7 @@ _PONG = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
+  syntax='proto2',
   extension_ranges=[],
   oneofs=[
   ],
@@ -234,21 +236,21 @@ _PENALTY = _descriptor.Descriptor(
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='StartTime', full_name='Penalty.StartTime', index=1,
       number=2, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='Duration', full_name='Penalty.Duration', index=2,
-      number=3, type=13, cpp_type=3, label=1,
+      number=3, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -257,6 +259,7 @@ _PENALTY = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
+  syntax='proto2',
   extension_ranges=[],
   oneofs=[
   ],
@@ -278,63 +281,63 @@ _GAMEKEYFRAME = _descriptor.Descriptor(
       has_default_value=False, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='TimeLeft', full_name='GameKeyFrame.TimeLeft', index=1,
       number=2, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='BlackScore', full_name='GameKeyFrame.BlackScore', index=2,
       number=3, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='WhiteScore', full_name='GameKeyFrame.WhiteScore', index=3,
       number=4, type=13, cpp_type=3, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='Period', full_name='GameKeyFrame.Period', index=4,
       number=5, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='Timeout', full_name='GameKeyFrame.Timeout', index=5,
       number=6, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='BlackPenalties', full_name='GameKeyFrame.BlackPenalties', index=6,
       number=7, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='WhitePenalties', full_name='GameKeyFrame.WhitePenalties', index=7,
       number=8, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
       name='Layout', full_name='GameKeyFrame.Layout', index=8,
       number=9, type=14, cpp_type=8, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
-      options=None),
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -343,6 +346,7 @@ _GAMEKEYFRAME = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
+  syntax='proto2',
   extension_ranges=[],
   oneofs=[
   ],
@@ -363,6 +367,7 @@ DESCRIPTOR.enum_types_by_name['MessageType'] = _MESSAGETYPE
 DESCRIPTOR.enum_types_by_name['GameState'] = _GAMESTATE
 DESCRIPTOR.enum_types_by_name['TimeoutState'] = _TIMEOUTSTATE
 DESCRIPTOR.enum_types_by_name['PoolLayout'] = _POOLLAYOUT
+_sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Ping = _reflection.GeneratedProtocolMessageType('Ping', (_message.Message,), dict(
   DESCRIPTOR = _PING,

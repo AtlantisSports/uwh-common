@@ -118,11 +118,13 @@ def test_enum_conversion():
 
     assert ts_from_proto_enum(messages_pb2.TimeoutState_None) == TimeoutState.none
     assert ts_from_proto_enum(messages_pb2.TimeoutState_RefTimeout) == TimeoutState.ref
-    assert ts_from_proto_enum(messages_pb2.TimeoutState_BlackTimeout) == TimeoutState.ref
-    assert ts_from_proto_enum(messages_pb2.TimeoutState_WhiteTimeout) == TimeoutState.ref
+    assert ts_from_proto_enum(messages_pb2.TimeoutState_BlackTimeout) == TimeoutState.black
+    assert ts_from_proto_enum(messages_pb2.TimeoutState_WhiteTimeout) == TimeoutState.white
 
     assert ts_to_proto_enum(TimeoutState.none) == messages_pb2.TimeoutState_None
     assert ts_to_proto_enum(TimeoutState.ref) == messages_pb2.TimeoutState_RefTimeout
+    assert ts_to_proto_enum(TimeoutState.black) == messages_pb2.TimeoutState_BlackTimeout
+    assert ts_to_proto_enum(TimeoutState.white) == messages_pb2.TimeoutState_WhiteTimeout
 
     assert gs_from_proto_enum(messages_pb2.GameState_GameOver) == GameState.game_over
     assert gs_from_proto_enum(messages_pb2.GameState_FirstHalf) == GameState.first_half

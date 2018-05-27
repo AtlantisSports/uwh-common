@@ -143,29 +143,11 @@ def test_timeoutState():
     mgr.setTimeoutState(TimeoutState.ref)
     assert mgr.timeoutState() == TimeoutState.ref
 
-
-def test_penalty_timeRemaining():
-    p = Penalty(24, TeamColor.white, 5 * 60, 10 * 60)
-
-    assert p.timeRemaining(10 * 60) == 5 * 60
-    assert p.timeRemaining(9 * 60) == 4 * 60
-    assert p.timeRemaining(8 * 60) == 3 * 60
-    assert p.timeRemaining(7 * 60) == 2 * 60
-    assert p.timeRemaining(6 * 60) == 1 * 60
-    assert p.timeRemaining(5 * 60) == 0
-    assert p.timeRemaining(4 * 60) == 0
-    assert p.timeRemaining(3 * 60) == 0
-    assert p.timeRemaining(2 * 60) == 0
-    assert p.timeRemaining(1 * 60) == 0
-    assert p.timeRemaining(0) == 0
-
 def test_penalty_servedCompletely():
+    mgr = GameManager(_observers)
     p = Penalty(24, TeamColor.white, 5 * 60, 10 * 60)
 
-    assert not p.servedCompletely(10 * 60)
-    assert not p.servedCompletely(5 * 60 + 1)
-    assert p.servedCompletely(5 * 60)
-    assert p.servedCompletely(0)
+    assert p.servedCompletely(mgr)
 
 def test_penalty_dismissed():
     p = Penalty(24, TeamColor.white, -1, 10 * 60)
@@ -221,10 +203,6 @@ def test_penalty_start():
     mgr.setGameClockRunning(True)
     mgr.setGameClockRunning(False)
 
-    before = p.timeRemaining(mgr.gameClock())
-    mgr.setGameClock(mgr.gameClock() - 1)
-    assert 1 + p.timeRemaining(mgr.gameClock()) == before
-
 def test_penalty_setPlayer():
     p = Penalty(24, TeamColor.white, 5 * 60)
 
@@ -245,8 +223,6 @@ def test_penalty_addWhileRunning():
     mgr.setGameClockRunning(True)
     p = Penalty(24, TeamColor.white, 5 * 60)
     mgr.addPenalty(p)
-    before = p.timeRemaining(4 * 60)
-    assert p.timeRemaining(3 * 60) + 60 == before
 
 def test_penalty_halftime():
     mgr = GameManager()
@@ -258,30 +234,12 @@ def test_penalty_halftime():
     mgr.setGameClockRunning(False)
     mgr.setGameClock(0)
 
-    assert p.timeRemaining(mgr.gameClock()) == 4 * 60
-
     mgr.pauseOutstandingPenalties()
     mgr.setGameStateHalfTime()
-    assert p.timeRemaining(mgr.gameClock()) == 4 * 60
-    mgr.setGameClock(2 * 60)
-    assert p.timeRemaining(mgr.gameClock()) == 4 * 60
-    mgr.setGameClock(1 * 60)
-    assert p.timeRemaining(mgr.gameClock()) == 4 * 60
-    mgr.setGameClock(0 * 60)
-    assert p.timeRemaining(mgr.gameClock()) == 4 * 60
 
     mgr.setGameStateSecondHalf()
     mgr.setGameClock(10 * 60)
     mgr.restartOutstandingPenalties()
-    assert p.timeRemaining(mgr.gameClock()) == 4 * 60
-    mgr.setGameClock(9 * 60)
-    assert p.timeRemaining(mgr.gameClock()) == 3 * 60
-    mgr.setGameClock(8 * 60)
-    assert p.timeRemaining(mgr.gameClock()) == 2 * 60
-    mgr.setGameClock(7 * 60)
-    assert p.timeRemaining(mgr.gameClock()) == 1 * 60
-    mgr.setGameClock(6 * 60)
-    assert p.timeRemaining(mgr.gameClock()) == 0
 
 def test_layout():
     mgr = GameManager()

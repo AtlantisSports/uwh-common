@@ -42,7 +42,7 @@ enum PoolLayout {
 message Penalty {
   optional uint32 PlayerNo = 1;
   optional uint32 StartTime = 2;
-  optional uint32 Duration = 3;
+  optional int32 Duration = 3;
 }
 
 message GameKeyFrame {
