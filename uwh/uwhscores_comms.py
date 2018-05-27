@@ -130,6 +130,36 @@ class UWHScores(object):
                         13 : { 'name' : 'Colorado B' },
                         17 : { 'name' : 'US Elite Women' },
                     }
+                },
+                15 : {
+                    'tid' : 15,
+                    'name' : '2018 Worlds Mockup',
+                    'location' : 'Quebec',
+                    'is_active' : True,
+                    'games' : {
+                        1 : {
+                            'black' : 'Argentina Masters Men',
+                            'black_id' : 1,
+                            'pool' : 1,
+                            'white' : 'Australia Masters Men',
+                            'white_id' : 2,
+                            'start_time' : '2018-07-18T07:40:00'
+                        },
+                        2 : {
+                            'black' : 'USA Masters Men',
+                            'black_id' : 3,
+                            'pool' : 2,
+                            'white' : 'Columbia Masters Men',
+                            'white_id' : 4,
+                            'start_time' : '2018-07-18T07:40:00'
+                        }
+                    },
+                    'teams' : {
+                        1 : { 'name' : 'Argentina Masters Men', 'team_id' : 1 },
+                        2 : { 'name' : 'Australia Masters Men', 'team_id' : 2 },
+                        3 : { 'name' : 'USA Masters Men', 'team_id' : 3 },
+                        4 : { 'name' : 'Columbia Masters Men', 'team_id' : 4 },
+                    }
                 }
             }
         }}}
