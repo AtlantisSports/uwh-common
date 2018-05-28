@@ -9,8 +9,7 @@ class UWHScores(object):
     def get_tournament_list(self, callback):
         def success(reply):
             json = reply.json()
-            return callback({json[i]['tid']: json[i]
-                             for i in range(len(json))})
+            return callback(json['tournaments'])
 
         self._async_request('get', self._base_address + 'tournaments',
                             callback=success)
@@ -18,7 +17,7 @@ class UWHScores(object):
     def get_tournament(self, tid, callback):
         def success(reply):
             json = reply.json()
-            return callback(json)
+            return callback(json['tournament'])
 
         self._async_request('get', self._base_address + 'tournaments/' + str(tid),
                             callback=success)
@@ -26,7 +25,7 @@ class UWHScores(object):
     def get_game_list(self, tid, callback):
         def success(reply):
             json = reply.json()
-            return callback(json)
+            return callback(json['games'])
 
         self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/games',
                             callback=success)
@@ -34,7 +33,7 @@ class UWHScores(object):
     def get_game(self, tid, gid, callback):
         def success(reply):
             json = reply.json()
-            return callback(json)
+            return callback(json['game'])
 
         self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/games/' + str(gid),
                             callback=success)
@@ -42,7 +41,7 @@ class UWHScores(object):
     def get_team_list(self, tid, callback):
         def success(reply):
             json = reply.json()
-            return callback(json)
+            return callback(json['teams'])
 
         self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/teams',
                             callback=success)
@@ -50,20 +49,19 @@ class UWHScores(object):
     def get_standings(self, tid, callback):
         def success(reply):
             json = reply.json()
-            from pprint import pprint
-            pprint(json)
-            return callback(json)
+            return callback(json['standings'])
 
         self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/standings',
                             callback=success)
 
     def get_roster(self, tid, team_id, callback):
-        def success(reply):
-            json = reply.json()
-            callback(json)
-
-        self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/teams/' + str(team_id) + '/roster',
-                            callback=success)
+        pass
+        #def success(reply):
+        #    json = reply.json()
+        #    callback(json['roster'])
+        #
+        #self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/teams/' + str(team_id) + '/roster',
+        #                    callback=success)
 
     def _mock_api(self, endpoint, cb_success, cb_fail):
         mock = { 'api' : { 'v1' : {
@@ -81,6 +79,7 @@ class UWHScores(object):
                 10 : { 'tid' : 10 },
                 11 : { 'tid' : 11 },
                 12 : {
+                    'mock_name' : 'tournament',
                     'tid' : 12,
                     'standings' : {
                         0 : {
@@ -106,6 +105,7 @@ class UWHScores(object):
                 },
                 13 : { 'tid' : 13 },
                 14 : {
+                    'mock_name' : 'tournament',
                     'tid' : 14,
                     'name' : 'Battle@Altitude 2018',
                     'location' : 'Denver, CO',
@@ -140,12 +140,14 @@ class UWHScores(object):
                     }
                 },
                 15 : {
+                    'mock_name' : 'tournament',
                     'tid' : 15,
                     'name' : '2018 Worlds Mockup',
                     'location' : 'Quebec City, Canada',
                     'is_active' : True,
                     'games' : {
                         1 : {
+                            'mock_name' : 'game',
                             'black' : 'Argentina',
                             'black_id' : 1,
                             'pool' : 1,
@@ -154,6 +156,7 @@ class UWHScores(object):
                             'start_time' : '2018-07-18T07:40:00'
                         },
                         2 : {
+                            'mock_name' : 'game',
                             'black' : 'USA',
                             'black_id' : 3,
                             'pool' : 2,
@@ -164,6 +167,7 @@ class UWHScores(object):
                     },
                     'teams' : {
                         1 : {
+                            'mock_name' : 'team',
                             'name' : 'Argentina Masters Men',
                             'team_id' : 1,
                             'roster' : {
@@ -218,6 +222,7 @@ class UWHScores(object):
                             }
                         },
                         2 : {
+                            'mock_name' : 'team',
                             'name' : 'Australia Masters Men',
                             'team_id' : 2,
                             'roster' : {
@@ -305,7 +310,7 @@ class UWHScores(object):
                     self._wrap = wrap
 
                 def json(self):
-                    return self._wrap
+                    return { self._wrap['mock_name'] : self._wrap }
 
             cb_success(Wrap(mock))
         except KeyError as e:
