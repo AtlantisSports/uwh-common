@@ -239,21 +239,24 @@ class UWHScores(object):
         url_parsed = urllib.parse.urlparse( endpoint )
         path_parsed = path_parse(urllib.parse.unquote(url_parsed.path))
 
-        for idx, item in enumerate(path_parsed):
-            try:
-                item = int(item)
-            except ValueError:
-                pass
-            mock = mock[item]
+        try:
+            for idx, item in enumerate(path_parsed):
+                try:
+                    item = int(item)
+                except ValueError:
+                    pass
+                mock = mock[item]
 
-        class Wrap(object):
-            def __init__(self, wrap):
-                self._wrap = wrap
+            class Wrap(object):
+                def __init__(self, wrap):
+                    self._wrap = wrap
 
-            def json(self):
-                return self._wrap
+                def json(self):
+                    return self._wrap
 
-        cb_success(Wrap(mock))
+            cb_success(Wrap(mock))
+        except KeyError as e:
+            cb_fail(e)
 
     def _async_request(self, method, *args, callback,
                        callback_fail=lambda _ : None,
