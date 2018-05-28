@@ -57,6 +57,14 @@ class UWHScores(object):
         self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/standings',
                             callback=success)
 
+    def get_roster(self, tid, team_id, callback):
+        def success(reply):
+            json = reply.json()
+            callback(json)
+
+        self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/teams/' + str(team_id) + '/roster',
+                            callback=success)
+
     def _mock_api(self, endpoint, cb_success, cb_fail):
         mock = { 'api' : { 'v1' : {
             'tournaments' : {
@@ -138,24 +146,77 @@ class UWHScores(object):
                     'is_active' : True,
                     'games' : {
                         1 : {
-                            'black' : 'Argentina Masters Men',
+                            'black' : 'Argentina',
                             'black_id' : 1,
                             'pool' : 1,
-                            'white' : 'Australia Masters Men',
+                            'white' : 'Australia',
                             'white_id' : 2,
                             'start_time' : '2018-07-18T07:40:00'
                         },
                         2 : {
-                            'black' : 'USA Masters Men',
+                            'black' : 'USA',
                             'black_id' : 3,
                             'pool' : 2,
-                            'white' : 'Columbia Masters Men',
+                            'white' : 'Columbia',
                             'white_id' : 4,
                             'start_time' : '2018-07-18T07:40:00'
                         }
                     },
                     'teams' : {
-                        1 : { 'name' : 'Argentina Masters Men', 'team_id' : 1 },
+                        1 : {
+                            'name' : 'Argentina Masters Men',
+                            'team_id' : 1,
+                            'roster' : {
+                                1 : {
+                                    'player_id' : 1,
+                                    'name' : 'Schmoe, Joe',
+                                },
+                                2 : {
+                                    'player_id' : 2,
+                                    'name' : 'Doe, John'
+                                },
+                                3 : {
+                                    'player_id' : 3,
+                                    'name' : 'Bobby, Ricky'
+                                },
+                                4 : {
+                                    'player_id' : 4,
+                                    'name' : 'Georgeson, George'
+                                },
+                                5 : {
+                                    'player_id' : 5,
+                                    'name' : 'Steveson, Steve'
+                                },
+                                6 : {
+                                    'player_id' : 6,
+                                    'name' : 'Justinson, Justin'
+                                },
+                                7 : {
+                                    'player_id' : 7,
+                                    'name' : 'Pauly, Paul'
+                                },
+                                8 : {
+                                    'player_id' : 8,
+                                    'name' : 'Everett, Earnest'
+                                },
+                                9 : {
+                                    'player_id' : 9,
+                                    'name' : 'Clumboldt, Cletus'
+                                },
+                                10 : {
+                                    'player_id' : 10,
+                                    'name' : 'Miller, Milhouse'
+                                },
+                                11 : {
+                                    'player_id' : 11,
+                                    'name' : 'Thompson, Tucker'
+                                },
+                                12 : {
+                                    'player_id' : 12,
+                                    'name' : 'Richardson, Rich'
+                                }
+                            }
+                        },
                         2 : { 'name' : 'Australia Masters Men', 'team_id' : 2 },
                         3 : { 'name' : 'USA Masters Men', 'team_id' : 3 },
                         4 : { 'name' : 'Columbia Masters Men', 'team_id' : 4 },

@@ -90,3 +90,13 @@ def test_get_standings():
         assert standings[7]['team'] == 'George Mason'
 
     uwhscores.get_standings(12, success)
+
+def test_get_roster():
+    uwhscores = UWHScores(SERVER_ADDRESS, mock=MOCK)
+
+    def success(roster):
+        assert roster[1]['name'] == 'Schmoe, Joe'
+        assert roster[1]['player_id'] == 1
+        assert len(roster) == 12
+
+    uwhscores.get_roster(15, 1, success)
