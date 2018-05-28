@@ -5,6 +5,7 @@ class UWHScores(object):
     def __init__(self, base_address='https://uwhscores.com/api/v1/', mock=False):
         self._base_address = base_address
         self._mock = mock
+        self._fail_handler = lambda x : print(x)
 
     def get_tournament_list(self, callback):
         def success(reply):
@@ -55,16 +56,16 @@ class UWHScores(object):
                             callback=success)
 
     def get_roster(self, tid, team_id, callback):
-        pass
         #def success(reply):
         #    json = reply.json()
         #    callback(json['roster'])
         #
         #self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/teams/' + str(team_id) + '/roster',
         #                    callback=success)
+        callback(self._mock_data()['api']['v1']['tournaments'][tid]['teams'][team_id]['roster'])
 
-    def _mock_api(self, endpoint, cb_success, cb_fail):
-        mock = { 'api' : { 'v1' : {
+    def _mock_data(self):
+        return { 'api' : { 'v1' : {
             'tournaments' : {
                 0 : { 'tid' : 0 },
                 1 : { 'tid' : 1 },
@@ -283,6 +284,7 @@ class UWHScores(object):
             }
         }}}
 
+    def _mock_api(self, endpoint, cb_success, cb_fail):
         import urllib.parse
         import posixpath
 
@@ -298,6 +300,8 @@ class UWHScores(object):
         path_parsed = path_parse(urllib.parse.unquote(url_parsed.path))
 
         try:
+            mock = self._mock_data()
+
             for idx, item in enumerate(path_parsed):
                 try:
                     item = int(item)
@@ -317,8 +321,11 @@ class UWHScores(object):
             print('mock lookup fail for: ' + endpoint)
             cb_fail(e)
 
+    def set_fail_handler(self, callback):
+        self._fail_handler = callback
+
     def _async_request(self, method, *args, callback,
-                       callback_fail=lambda _ : None,
+                       callback_fail=None,
                        timeout=5, **kwargs):
         method = {
             'get' : requests.get,
@@ -329,6 +336,8 @@ class UWHScores(object):
             'options' : requests.options,
             'head' : requests.head
         }[method.lower()]
+
+        callback_fail = callback_fail or self._fail_handler
 
         def wrap_method(*args, **kwargs):
             try:
