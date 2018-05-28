@@ -142,7 +142,7 @@ class UWHScores(object):
                 15 : {
                     'tid' : 15,
                     'name' : '2018 Worlds Mockup',
-                    'location' : 'Quebec',
+                    'location' : 'Quebec City, Canada',
                     'is_active' : True,
                     'games' : {
                         1 : {
