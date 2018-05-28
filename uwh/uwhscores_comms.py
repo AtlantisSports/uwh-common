@@ -217,7 +217,60 @@ class UWHScores(object):
                                 }
                             }
                         },
-                        2 : { 'name' : 'Australia Masters Men', 'team_id' : 2 },
+                        2 : {
+                            'name' : 'Australia Masters Men',
+                            'team_id' : 2,
+                            'roster' : {
+                                1 : {
+                                    'player_id' : 1,
+                                    'name' : 'Speedwagon, Mario',
+                                },
+                                2 : {
+                                    'player_id' : 2,
+                                    'name' : 'Romer, Robby'
+                                },
+                                3 : {
+                                    'player_id' : 3,
+                                    'name' : 'Riker, Randolph'
+                                },
+                                4 : {
+                                    'player_id' : 4,
+                                    'name' : 'Tomlin, Teddy'
+                                },
+                                5 : {
+                                    'player_id' : 5,
+                                    'name' : 'Wolf, Warren'
+                                },
+                                6 : {
+                                    'player_id' : 6,
+                                    'name' : 'Pollard, Phillip'
+                                },
+                                7 : {
+                                    'player_id' : 7,
+                                    'name' : 'Bavaro, Buster'
+                                },
+                                8 : {
+                                    'player_id' : 8,
+                                    'name' : 'James, Joshua'
+                                },
+                                9 : {
+                                    'player_id' : 9,
+                                    'name' : 'Shin, Stewart'
+                                },
+                                10 : {
+                                    'player_id' : 10,
+                                    'name' : 'Hume, Huey'
+                                },
+                                11 : {
+                                    'player_id' : 11,
+                                    'name' : 'Vos, Valentine'
+                                },
+                                12 : {
+                                    'player_id' : 12,
+                                    'name' : 'Newburn, Noel'
+                                }
+                            }
+                        },
                         3 : { 'name' : 'USA Masters Men', 'team_id' : 3 },
                         4 : { 'name' : 'Columbia Masters Men', 'team_id' : 4 },
                     }
@@ -256,6 +309,7 @@ class UWHScores(object):
 
             cb_success(Wrap(mock))
         except KeyError as e:
+            print('mock lookup fail for: ' + endpoint)
             cb_fail(e)
 
     def _async_request(self, method, *args, callback,
