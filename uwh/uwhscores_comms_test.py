@@ -73,6 +73,17 @@ def test_get_team_list():
 
     uwhscores.get_team_list(14, success)
 
+def test_get_team():
+    uwhscores = UWHScores(SERVER_ADDRESS, mock=MOCK)
+
+    def success(team):
+        assert team['team_id'] == 20
+        assert team['name'] == 'Colorado'
+        assert team['short_name'] == 'CO'
+        assert team['flag_url'][-22:] == 'static/flags/16/20.png'
+
+    uwhscores.get_team(16, 20, success)
+
 #def test_get_standings():
 #    uwhscores = UWHScores(SERVER_ADDRESS, mock=MOCK)
 #

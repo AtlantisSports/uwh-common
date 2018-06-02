@@ -47,6 +47,14 @@ class UWHScores(object):
         self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/teams',
                             callback=success)
 
+    def get_team(self, tid, team_id, callback):
+        def success(reply):
+            json = reply.json()
+            return callback(json['team'])
+
+        self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/teams/' + str(team_id),
+                            callback=success)
+
     #def get_standings(self, tid, callback):
     #    def success(reply):
     #        json = reply.json()
