@@ -1,5 +1,6 @@
 import requests
 import threading
+from PIL import Image
 
 class UWHScores(object):
     def __init__(self, base_address='https://uwhscores.com/api/v1/', mock=False):
@@ -54,6 +55,18 @@ class UWHScores(object):
 
         self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/teams/' + str(team_id),
                             callback=success)
+
+    def get_team_flag(self, tid, team_id, callback):
+        def success(team):
+            flag_url = team['flag_url']
+
+            if not flag_url:
+                callback(None)
+                return
+
+            callback(Image.open(requests.get(flag_url, stream=True).raw))
+
+        self.get_team(tid, team_id, success)
 
     #def get_standings(self, tid, callback):
     #    def success(reply):
