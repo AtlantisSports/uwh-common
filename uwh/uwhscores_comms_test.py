@@ -3,7 +3,7 @@ from .uwhscores_comms import UWHScores
 REPEAT_COUNT = 500
 REPEAT_DELAY = 0.01
 
-USE_LOCAL_SERVER = False
+USE_LOCAL_SERVER = True
 
 if USE_LOCAL_SERVER:
     SERVER_ADDRESS = 'http://127.0.0.1:5000/api/v1/'
@@ -73,26 +73,26 @@ def test_get_team_list():
 
     uwhscores.get_team_list(14, success)
 
-def test_get_standings():
-    uwhscores = UWHScores(SERVER_ADDRESS, mock=MOCK)
-
-    def success(standings):
-        assert standings[0]['team'] == 'Team Sexy'
-        assert standings[0]['team_id'] == 2
-        assert standings[0]['stats']['points'] == 27
-        assert standings[2]['team'] == 'UF'
-        assert standings[4]['team'] == 'Hampton'
-        assert standings[6]['team'] == 'Swordfish'
-        assert standings[7]['team'] == 'George Mason'
-
-    uwhscores.get_standings(12, success)
+#def test_get_standings():
+#    uwhscores = UWHScores(SERVER_ADDRESS, mock=MOCK)
+#
+#    def success(standings):
+#        assert standings[0]['team'] == 'Team Sexy'
+#        assert standings[0]['team_id'] == 2
+#        assert standings[0]['stats']['points'] == 27
+#        assert standings[2]['team'] == 'UF'
+#        assert standings[4]['team'] == 'Hampton'
+#        assert standings[6]['team'] == 'Swordfish'
+#        assert standings[7]['team'] == 'George Mason'
+#
+#    uwhscores.get_standings(12, success)
 
 def test_get_roster():
     uwhscores = UWHScores(SERVER_ADDRESS, mock=MOCK)
 
     def success(roster):
-        assert roster[1]['name'] == 'Schmoe, Joe'
-        assert roster[1]['player_id'] == 1
-        assert len(roster.items()) == 12
+        assert roster[0]['name'] == 'McKenzie, Taryn'
+        assert roster[0]['number'] == 4
+        assert len(roster) == 10
 
-    uwhscores.get_roster(15, 1, success)
+    uwhscores.get_roster(16, 20, success)

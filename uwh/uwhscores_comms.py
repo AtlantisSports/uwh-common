@@ -47,22 +47,21 @@ class UWHScores(object):
         self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/teams',
                             callback=success)
 
-    def get_standings(self, tid, callback):
-        def success(reply):
-            json = reply.json()
-            return callback(json['standings'])
-
-        self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/standings',
-                            callback=success)
+    #def get_standings(self, tid, callback):
+    #    def success(reply):
+    #        json = reply.json()
+    #        return callback(json['standings'])
+    #
+    #    self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/standings',
+    #                        callback=success)
 
     def get_roster(self, tid, team_id, callback):
-        #def success(reply):
-        #    json = reply.json()
-        #    callback(json['roster'])
-        #
-        #self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/teams/' + str(team_id) + '/roster',
-        #                    callback=success)
-        callback(self._mock_data()['api']['v1']['tournaments'][tid]['teams'][team_id]['roster'])
+        def success(reply):
+            json = reply.json()
+            callback(json['team']['roster'])
+
+        self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/teams/' + str(team_id),
+                            callback=success)
 
     def _mock_data(self):
         return { 'api' : { 'v1' : {
