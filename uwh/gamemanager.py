@@ -286,6 +286,11 @@ class Penalty(object):
         # served in the first half)
         self._duration_remaining = duration
 
+    def __repr__(self):
+        return "Player({}, {}, {}, {}, {})".format(self._player, self._team,
+                                                   self._start_time, self._duration,
+                                                   self._duration_remaining)
+
     def setStartTime(self, start_time):
         self._start_time = start_time
 
