@@ -1,7 +1,7 @@
 import requests
 import threading
 from PIL import Image
-from functools import wraps
+from functools import wraps, lru_cache
 
 class UWHScores(object):
     def __init__(self, base_address='https://uwhscores.com/api/v1/', mock=False):
@@ -83,7 +83,11 @@ class UWHScores(object):
                 callback(None)
                 return
 
-            callback(Image.open(requests.get(flag_url, stream=True).raw))
+            @lru_cache(maxsize=16)
+            def fetch_flag(url):
+                callback(Image.open(requests.get(url, stream=True).raw))
+
+            fetch_flag(flag_url)
 
         self.get_team(tid, team_id, success)
 
