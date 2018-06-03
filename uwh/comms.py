@@ -118,14 +118,16 @@ class UWHProtoHandler(object):
         self._mgr.deleteAllPenalties()
 
         for p in msg.BlackPenalties:
-            if p.PlayerNo and p.Duration:
-                self._mgr.addPenalty(Penalty(self.as_int(p.PlayerNo), TeamColor.black,
-                                             p.Duration, p.StartTime))
+            if p.PlayerNo is not None and p.Duration is not None and p.StartTime is not None:
+                pp = Penalty(self.as_int(p.PlayerNo), TeamColor.black,
+                             p.Duration, p.StartTime)
+                self._mgr.addPenalty(pp)
 
         for p in msg.WhitePenalties:
-            if p.PlayerNo and p.Duration:
-                self._mgr.addPenalty(Penalty(self.as_int(p.PlayerNo), TeamColor.white,
-                                             p.Duration, p.StartTime))
+            if p.PlayerNo is not None and p.Duration is not None and p.StartTime is not None:
+                pp = Penalty(self.as_int(p.PlayerNo), TeamColor.white,
+                             p.Duration, p.StartTime)
+                self._mgr.addPenalty(pp)
 
         if msg.Layout is not None:
             self._mgr.setLayout(l_from_proto_enum(msg.Layout))
