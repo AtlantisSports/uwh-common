@@ -272,7 +272,8 @@ class GameManager(object):
 
 class Penalty(object):
 
-    def __init__(self, player, team, duration, start_time = None):
+    def __init__(self, player, team, duration, start_time=None,
+                 duration_remaining=None):
         self._player = player
         self._team = team
 
@@ -284,12 +285,11 @@ class Penalty(object):
 
         # Amount left to be served (might be less than duration if partially
         # served in the first half)
-        self._duration_remaining = duration
+        self._duration_remaining = duration_remaining or duration
 
     def __repr__(self):
-        return "Player({}, {}, {}, {}, {})".format(self._player, self._team,
-                                                   self._start_time, self._duration,
-                                                   self._duration_remaining)
+        return "Player(player={}, team={}, duration={}, start_time={}, duration_remaining={})".format(
+                       self._player, self._team, self._duration, self._start_time, self._duration_remaining)
 
     def setStartTime(self, start_time):
         self._start_time = start_time
@@ -323,6 +323,12 @@ class Penalty(object):
 
     def setDuration(self, duration):
         self._duration = duration
+        self._duration_remaining = self._duration_remaining or duration
+
+    def durationRemaining(self):
+        return self._duration_remaining
+
+    def setDurationRemaining(self, duration):
         self._duration_remaining = duration
 
     def dismissed(self):

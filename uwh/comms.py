@@ -120,13 +120,15 @@ class UWHProtoHandler(object):
         for p in msg.BlackPenalties:
             if p.PlayerNo is not None and p.Duration is not None and p.StartTime is not None:
                 pp = Penalty(self.as_int(p.PlayerNo), TeamColor.black,
-                             p.Duration, p.StartTime)
+                             p.Duration, start_time=p.StartTime,
+                             duration_remaining=p.DurationRemaining)
                 self._mgr.addPenalty(pp)
 
         for p in msg.WhitePenalties:
             if p.PlayerNo is not None and p.Duration is not None and p.StartTime is not None:
                 pp = Penalty(self.as_int(p.PlayerNo), TeamColor.white,
-                             p.Duration, p.StartTime)
+                             p.Duration, start_time=p.StartTime,
+                             duration_remaining=p.DurationRemaining)
                 self._mgr.addPenalty(pp)
 
         if msg.Layout is not None:
@@ -160,11 +162,13 @@ class UWHProtoHandler(object):
         for p in self._mgr.penalties(TeamColor.black):
             msg.BlackPenalties.add(PlayerNo=self.as_int(p.player()),
                                    Duration=p.duration(),
-                                   StartTime=p.startTime());
+                                   StartTime=p.startTime(),
+                                   DurationRemaining=p.durationRemaining());
 
         for p in self._mgr.penalties(TeamColor.white):
             msg.WhitePenalties.add(PlayerNo=self.as_int(p.player()),
                                    Duration=p.duration(),
-                                   StartTime=p.startTime());
+                                   StartTime=p.startTime(),
+                                   DurationRemaining=p.durationRemaining());
 
         self.send_message(recipient, kind, msg)
