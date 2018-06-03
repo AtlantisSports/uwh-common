@@ -29,6 +29,9 @@ class UWHScores(object):
 
     @failsafe
     def get_tournament(self, tid, callback):
+        if tid is None:
+            return
+
         def success(reply):
             json = reply.json()
             return callback(json['tournament'])
@@ -38,6 +41,9 @@ class UWHScores(object):
 
     @failsafe
     def get_game_list(self, tid, callback):
+        if tid is None:
+            return
+
         def success(reply):
             json = reply.json()
             return callback(json['games'])
@@ -47,6 +53,9 @@ class UWHScores(object):
 
     @failsafe
     def get_game(self, tid, gid, callback):
+        if tid is None or gid is None:
+            return
+
         def success(reply):
             json = reply.json()
             return callback(json['game'])
@@ -56,6 +65,9 @@ class UWHScores(object):
 
     @failsafe
     def get_team_list(self, tid, callback):
+        if tid is None:
+            return
+
         def success(reply):
             json = reply.json()
             return callback(json['teams'])
@@ -65,6 +77,9 @@ class UWHScores(object):
 
     @failsafe
     def get_team(self, tid, team_id, callback):
+        if tid is None or team_id is None:
+            return
+
         def success(reply):
             json = reply.json()
             return callback(json['team'])
@@ -74,6 +89,9 @@ class UWHScores(object):
 
     @failsafe
     def get_team_flag(self, tid, team_id, callback):
+        if tid is None or team_id is None:
+            return
+
         def success(team):
             flag_url = team['flag_url']
 
@@ -95,6 +113,9 @@ class UWHScores(object):
 
     @failsafe
     def get_roster(self, tid, team_id, callback):
+        if tid is None or team_id is None:
+            return
+
         def success(reply):
             json = reply.json()
             callback(json['team']['roster'])
