@@ -1,6 +1,16 @@
 import requests
 import threading
 from PIL import Image
+from functools import wraps
+
+def failsafe(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except Exception as e:
+            print(e)
+    return decorated_function
 
 class UWHScores(object):
     def __init__(self, base_address='https://uwhscores.com/api/v1/', mock=False):
@@ -8,6 +18,7 @@ class UWHScores(object):
         self._mock = mock
         self._fail_handler = lambda x : print(x)
 
+    @failsafe
     def get_tournament_list(self, callback):
         def success(reply):
             json = reply.json()
@@ -16,6 +27,7 @@ class UWHScores(object):
         self._async_request('get', self._base_address + 'tournaments',
                             callback=success)
 
+    @failsafe
     def get_tournament(self, tid, callback):
         def success(reply):
             json = reply.json()
@@ -24,6 +36,7 @@ class UWHScores(object):
         self._async_request('get', self._base_address + 'tournaments/' + str(tid),
                             callback=success)
 
+    @failsafe
     def get_game_list(self, tid, callback):
         def success(reply):
             json = reply.json()
@@ -32,6 +45,7 @@ class UWHScores(object):
         self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/games',
                             callback=success)
 
+    @failsafe
     def get_game(self, tid, gid, callback):
         def success(reply):
             json = reply.json()
@@ -40,6 +54,7 @@ class UWHScores(object):
         self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/games/' + str(gid),
                             callback=success)
 
+    @failsafe
     def get_team_list(self, tid, callback):
         def success(reply):
             json = reply.json()
@@ -48,6 +63,7 @@ class UWHScores(object):
         self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/teams',
                             callback=success)
 
+    @failsafe
     def get_team(self, tid, team_id, callback):
         def success(reply):
             json = reply.json()
@@ -56,6 +72,7 @@ class UWHScores(object):
         self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/teams/' + str(team_id),
                             callback=success)
 
+    @failsafe
     def get_team_flag(self, tid, team_id, callback):
         def success(team):
             flag_url = team['flag_url']
@@ -76,6 +93,7 @@ class UWHScores(object):
     #    self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/standings',
     #                        callback=success)
 
+    @failsafe
     def get_roster(self, tid, team_id, callback):
         def success(reply):
             json = reply.json()
