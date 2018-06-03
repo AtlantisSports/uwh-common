@@ -196,7 +196,7 @@ class GameManager(object):
 
     def addPenalty(self, p):
         self._penalties[p.team()].append(p)
-        if self.gameClockRunning():
+        if self.gameClockRunning() and not self.passive():
             p.setStartTime(self.gameClock())
         for mgr in self._observers:
             mgr.addPenalty(p)
