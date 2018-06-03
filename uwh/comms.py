@@ -120,14 +120,14 @@ class UWHProtoHandler(object):
         for p in msg.BlackPenalties:
             if p.PlayerNo is not None and p.Duration is not None and p.StartTime is not None:
                 pp = Penalty(self.as_int(p.PlayerNo), TeamColor.black,
-                             p.Duration, start_time=p.StartTime,
+                             p.Duration, start_time=p.StartTime or None,
                              duration_remaining=p.DurationRemaining)
                 self._mgr.addPenalty(pp)
 
         for p in msg.WhitePenalties:
             if p.PlayerNo is not None and p.Duration is not None and p.StartTime is not None:
                 pp = Penalty(self.as_int(p.PlayerNo), TeamColor.white,
-                             p.Duration, start_time=p.StartTime,
+                             p.Duration, start_time=p.StartTime or None,
                              duration_remaining=p.DurationRemaining)
                 self._mgr.addPenalty(pp)
 
