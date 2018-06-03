@@ -3,22 +3,12 @@ import threading
 from PIL import Image
 from functools import wraps
 
-def failsafe(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        try:
-            return f(*args, **kwargs)
-        except Exception as e:
-            print(e)
-    return decorated_function
-
 class UWHScores(object):
     def __init__(self, base_address='https://uwhscores.com/api/v1/', mock=False):
         self._base_address = base_address
         self._mock = mock
         self._fail_handler = lambda x : print(x)
 
-    @failsafe
     def get_tournament_list(self, callback):
         def success(reply):
             json = reply.json()
@@ -27,7 +17,6 @@ class UWHScores(object):
         self._async_request('get', self._base_address + 'tournaments',
                             callback=success)
 
-    @failsafe
     def get_tournament(self, tid, callback):
         if tid is None:
             return
@@ -39,7 +28,6 @@ class UWHScores(object):
         self._async_request('get', self._base_address + 'tournaments/' + str(tid),
                             callback=success)
 
-    @failsafe
     def get_game_list(self, tid, callback):
         if tid is None:
             return
@@ -51,7 +39,6 @@ class UWHScores(object):
         self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/games',
                             callback=success)
 
-    @failsafe
     def get_game(self, tid, gid, callback):
         if tid is None or gid is None:
             return
@@ -63,7 +50,6 @@ class UWHScores(object):
         self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/games/' + str(gid),
                             callback=success)
 
-    @failsafe
     def get_team_list(self, tid, callback):
         if tid is None:
             return
@@ -75,7 +61,6 @@ class UWHScores(object):
         self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/teams',
                             callback=success)
 
-    @failsafe
     def get_team(self, tid, team_id, callback):
         if tid is None or team_id is None:
             return
@@ -87,7 +72,6 @@ class UWHScores(object):
         self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/teams/' + str(team_id),
                             callback=success)
 
-    @failsafe
     def get_team_flag(self, tid, team_id, callback):
         if tid is None or team_id is None:
             return
@@ -111,7 +95,6 @@ class UWHScores(object):
     #    self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/standings',
     #                        callback=success)
 
-    @failsafe
     def get_roster(self, tid, team_id, callback):
         if tid is None or team_id is None:
             return
@@ -403,10 +386,16 @@ class UWHScores(object):
                 method(*args, **kwargs)
             except requests.exceptions.ConnectionError as e:
                 callback_fail(e)
+            except Exception as e:
+                callback_fail(e)
 
+        parent_args = args
         if callback:
             def callback_with_args(response, *args, **kwargs):
-                callback(response)
+                try:
+                    callback(response)
+                except Exception as e:
+                    callback_fail((parent_args[0], e))
             kwargs['hooks'] = {'response': callback_with_args}
         kwargs['timeout'] = timeout
 
