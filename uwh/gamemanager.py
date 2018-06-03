@@ -6,6 +6,7 @@ class GameState(object):
     first_half = 1
     half_time = 2
     second_half = 3
+    pre_game = 4
 
 
 class TimeoutState(object):
@@ -116,6 +117,15 @@ class GameManager(object):
 
         for mgr in self._observers:
             mgr.setTimeoutState(state)
+
+    def gameStatePreGame(self):
+        return self._game_state == GameState.pre_game
+
+    def setGameStatePreGame(self):
+        self.setGameState(GameState.pre_game)
+
+        for mgr in self._observers:
+            mgr.setGameStatePreGame()
 
     def gameStateFirstHalf(self):
         return self._game_state == GameState.first_half

@@ -24,6 +24,7 @@ enum GameState {
   GameState_SecondHalf = 2;
   GameState_HalfTime = 3;
   GameState_GameOver = 4;
+  GameState_PreGame = 5;
 }
 
 enum TimeoutState {

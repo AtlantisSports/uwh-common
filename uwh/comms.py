@@ -3,6 +3,7 @@ from .gamemanager import GameState, TimeoutState, TeamColor, Penalty, PoolLayout
 
 def gs_from_proto_enum(proto_enum):
     return { messages_pb2.GameState_GameOver        : GameState.game_over,
+             messages_pb2.GameState_PreGame         : GameState.pre_game,
              messages_pb2.GameState_FirstHalf       : GameState.first_half,
              messages_pb2.GameState_HalfTime        : GameState.half_time,
              messages_pb2.GameState_SecondHalf      : GameState.second_half,
@@ -26,6 +27,7 @@ def l_from_proto_enum(proto_enum):
 
 def gs_to_proto_enum(gamemanager_enum):
     return { GameState.game_over   : messages_pb2.GameState_GameOver,
+             GameState.pre_game    : messages_pb2.GameState_PreGame,
              GameState.first_half  : messages_pb2.GameState_FirstHalf,
              GameState.half_time   : messages_pb2.GameState_HalfTime,
              GameState.second_half : messages_pb2.GameState_SecondHalf,
