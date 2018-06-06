@@ -86,7 +86,7 @@ def test_GameKeyFrame():
     cp = c_mgr.penalties(TeamColor.white)[0]
     assert cp.player() == sp.player()
     assert cp.duration() == sp.duration()
-    assert cp.startTime() == (sp.startTime() or 0)
+    assert cp.startTime() == sp.startTime()
     assert c_mgr.layout() == s_mgr.layout()
     assert c_mgr.gid() == s_mgr.gid()
     assert c_mgr.tid() == s_mgr.tid()
