@@ -1,6 +1,5 @@
 import requests
 import threading
-from PIL import Image
 from functools import wraps, lru_cache
 
 class UWHScores(object):
@@ -85,7 +84,7 @@ class UWHScores(object):
 
             @lru_cache(maxsize=16)
             def fetch_flag(url):
-                callback(Image.open(requests.get(url, stream=True).raw))
+                callback(requests.get(url, stream=True).raw)
 
             fetch_flag(flag_url)
 
