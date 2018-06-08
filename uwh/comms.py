@@ -148,7 +148,7 @@ class UWHProtoHandler(object):
         except ValueError:
             return -1
 
-    def send_GameKeyFrame(self, recipient):
+    def get_GameKeyFrame(self):
         kind = messages_pb2.MessageType_GameKeyFrame
         msg = self.message_for_msg_kind(kind)
         msg.ClockRunning = self._mgr.gameClockRunning()
@@ -173,4 +173,5 @@ class UWHProtoHandler(object):
                                    StartTime=p.startTime(),
                                    DurationRemaining=p.durationRemaining());
 
-        self.send_message(recipient, kind, msg)
+        return (kind, msg)
+

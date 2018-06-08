@@ -109,9 +109,10 @@ class XBeeServer(UWHProtoHandler):
         return results
 
     def multicast_GameKeyFrame(self, client_addrs):
+        (kind, msg) = self.get_GameKeyFrame()
         for addr in client_addrs:
             client = self.recipient_from_address(addr)
-            self.send_GameKeyFrame(client)
+            self.send_message(client, kind, msg)
 
     def broadcast_loop(self, client_addrs):
         while True:
