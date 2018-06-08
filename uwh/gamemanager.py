@@ -206,7 +206,10 @@ class GameManager(object):
 
     def addPenalty(self, p):
         self._penalties[p.team()].append(p)
-        if self.gameClockRunning() and not self.passive():
+        if (self.gameClockRunning() and not self.passive()
+            and not self.gameStatePreGame()
+            and not self.gameStateHalfTime()
+            and not self.gameStateGameOver()):
             p.setStartTime(self.gameClock())
         for mgr in self._observers:
             mgr.addPenalty(p)
