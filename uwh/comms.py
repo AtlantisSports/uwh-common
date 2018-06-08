@@ -161,13 +161,21 @@ class UWHProtoHandler(object):
         msg.tid = self._mgr.tid()
         msg.gid = self._mgr.gid()
 
-        for p in self._mgr.penalties(TeamColor.black)[:2]:
+        count = 0
+        for p in self._mgr.penalties(TeamColor.black):
+            if p.servedCompletely(self._mgr) or 2 <= count:
+                continue
+            count += 1
             msg.BlackPenalties.add(PlayerNo=self.as_int(p.player()),
                                    Duration=p.duration(),
                                    StartTime=p.startTime(),
                                    DurationRemaining=p.durationRemaining());
 
-        for p in self._mgr.penalties(TeamColor.white)[:2]:
+        count = 0
+        for p in self._mgr.penalties(TeamColor.white):
+            if p.servedCompletely(self._mgr) or 2 <= count:
+                continue
+            count += 1
             msg.WhitePenalties.add(PlayerNo=self.as_int(p.player()),
                                    Duration=p.duration(),
                                    StartTime=p.startTime(),
