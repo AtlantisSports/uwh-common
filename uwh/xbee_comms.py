@@ -111,8 +111,9 @@ class XBeeServer(UWHProtoHandler):
 
     def broadcast_loop(self, client_addrs):
         while True:
+            self._xbee.flush_queues()
             self.multicast_GameKeyFrame(client_addrs)
-            time.sleep(0.25)
+            time.sleep(0.5)
 
     def broadcast_thread(self, client_addrs):
         thread = threading.Thread(target=self.broadcast_loop,
