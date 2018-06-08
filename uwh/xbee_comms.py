@@ -40,20 +40,14 @@ class XBeeClient(UWHProtoHandler):
     def send_raw(self, recipient, data):
         self._xbee.send_data_async(recipient, data)
 
-    def listen_loop(self):
-        while True:
-            xbee_msg = self._xbee.read_data()
-            if xbee_msg:
-                try:
-                    self.recv_raw(xbee_msg.remote_device, xbee_msg.data)
-                except ValueError:
-                    logging.exception("Problem parsing xbee packet")
-            time.sleep(0.1)
-
     def listen_thread(self):
-        thread = threading.Thread(target=self.listen_loop, args=())
-        thread.daemon = True
-        thread.start()
+        def callback(xbee_msg):
+            try:
+                self.recv_raw(xbee_msg.remote_device, xbee_msg.data)
+            except ValueError:
+                logging.exception("Problem parsing xbee packet")
+
+        self._xbee.add_data_received_callback(callback)
 
 class XBeeServer(UWHProtoHandler):
     def __init__(self, mgr, serial_port, baud):
