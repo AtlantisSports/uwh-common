@@ -10,7 +10,7 @@ clients = s.find_clients()
 for client in clients:
     print("Found {}".format(client.get_64bit_addr()))
 
-reps = 1000
+reps = 60 * 60
 for c in clients:
     attempts = []
     durations = []
@@ -21,5 +21,5 @@ for c in clients:
     for x in range(0, reps):
         duration = s.time_ping(c, x)
         plt.scatter(x, duration or 0, marker = '.' if duration else 'x', c=0.01)
-        plt.pause(0.05);
+        plt.pause(1);
     plt.show()
