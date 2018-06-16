@@ -63,6 +63,8 @@ class UWHProtoHandler(object):
             self.handle_Ping(sender, msg)
         elif kind == messages_pb2.MessageType_GameKeyFrame:
             self.handle_GameKeyFrame(sender, msg)
+        elif kind == messages_pb2.MessageType_Penalty:
+            self.handle_Penalty(sender, msg)
 
     def recv_raw(self, sender, data):
         (kind, msg) = self.unpack_message(data)
@@ -77,7 +79,8 @@ class UWHProtoHandler(object):
     def message_for_msg_kind(self, msg_kind):
         return { messages_pb2.MessageType_Ping : messages_pb2.Ping,
                  messages_pb2.MessageType_Pong : messages_pb2.Pong,
-                 messages_pb2.MessageType_GameKeyFrame : messages_pb2.GameKeyFrame
+                 messages_pb2.MessageType_GameKeyFrame : messages_pb2.GameKeyFrame,
+                 messages_pb2.MessageType_Penalty : messages_pb2.Penalty,
                }[msg_kind]()
 
     def pack_message(self, msg_kind, msg):
@@ -123,22 +126,6 @@ class UWHProtoHandler(object):
         if msg.Timeout is not None:
             self._mgr.setTimeoutState(ts_from_proto_enum(msg.Timeout))
 
-        self._mgr.deleteAllPenalties()
-
-        for p in msg.BlackPenalties:
-            if p.PlayerNo is not None and p.Duration is not None and p.StartTime is not None:
-                pp = Penalty(self.as_int(p.PlayerNo), TeamColor.black,
-                             p.Duration, start_time=p.StartTime or None,
-                             duration_remaining=p.DurationRemaining)
-                self._mgr.addPenalty(pp)
-
-        for p in msg.WhitePenalties:
-            if p.PlayerNo is not None and p.Duration is not None and p.StartTime is not None:
-                pp = Penalty(self.as_int(p.PlayerNo), TeamColor.white,
-                             p.Duration, start_time=p.StartTime or None,
-                             duration_remaining=p.DurationRemaining)
-                self._mgr.addPenalty(pp)
-
         if msg.Layout is not None:
             self._mgr.setLayout(l_from_proto_enum(msg.Layout))
 
@@ -147,6 +134,18 @@ class UWHProtoHandler(object):
 
         if msg.gid is not None:
             self._mgr.setGid(msg.gid)
+
+    def handle_Penalty(self, sender, msg):
+        if (msg.PlayerNo is not None and
+            msg.Duration is not None and
+            msg.StartTime is not None):
+            team = TeamColor.white if msg.IsWhite else TeamColor.black
+            player_no = self.as_int(msg.PlayerNo)
+            pp = Penalty(player_no, team,
+                         msg.Duration, start_time=msg.StartTime or None,
+                         duration_remaining=msg.DurationRemaining)
+            self._mgr.delPenaltyByPlayer(player_no, team)
+            self._mgr.addPenalty(pp)
 
     def as_int(self, n):
         try:
@@ -167,25 +166,28 @@ class UWHProtoHandler(object):
         msg.tid = self._mgr.tid()
         msg.gid = self._mgr.gid()
 
-        count = 0
-        for p in self._mgr.penalties(TeamColor.black):
-            if p.servedCompletely(self._mgr) or 2 <= count:
-                continue
-            count += 1
-            msg.BlackPenalties.add(PlayerNo=self.as_int(p.player()),
-                                   Duration=p.duration(),
-                                   StartTime=p.startTime(),
-                                   DurationRemaining=p.durationRemaining());
-
-        count = 0
-        for p in self._mgr.penalties(TeamColor.white):
-            if p.servedCompletely(self._mgr) or 2 <= count:
-                continue
-            count += 1
-            msg.WhitePenalties.add(PlayerNo=self.as_int(p.player()),
-                                   Duration=p.duration(),
-                                   StartTime=p.startTime(),
-                                   DurationRemaining=p.durationRemaining());
-
         return (kind, msg)
 
+    def get_Penalties(self):
+        kind = messages_pb2.MessageType_Penalty
+        msgs = []
+
+        for p in self._mgr.penalties(TeamColor.black):
+            msg = self.message_for_msg_kind(kind)
+            msg.PlayerNo = self.as_int(p.player())
+            msg.Duration = p.duration()
+            msg.StartTime = p.startTime() or 0
+            msg.DurationRemaining = p.durationRemaining()
+            msg.IsWhite = False
+            msgs += [msg]
+
+        for p in self._mgr.penalties(TeamColor.white):
+            msg = self.message_for_msg_kind(kind)
+            msg.PlayerNo = self.as_int(p.player())
+            msg.Duration = p.duration()
+            msg.StartTime = p.startTime() or 0
+            msg.DurationRemaining = p.durationRemaining()
+            msg.IsWhite = True
+            msgs += [msg]
+
+        return (kind, msgs)

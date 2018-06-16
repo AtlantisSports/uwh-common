@@ -44,7 +44,7 @@ class XBeeClient(UWHProtoHandler):
         def callback(xbee_msg):
             try:
                 self.recv_raw(xbee_msg.remote_device, xbee_msg.data)
-                self._xbee.flush_queues()
+                #self._xbee.flush_queues()
             except ValueError:
                 logging.exception("Problem parsing xbee packet")
 
@@ -108,10 +108,18 @@ class XBeeServer(UWHProtoHandler):
             client = self.recipient_from_address(addr)
             self.send_message(client, kind, msg)
 
+    def multicast_Penalties(self, client_addrs):
+        (kind, msgs) = self.get_Penalties()
+        for addr in client_addrs:
+            client = self.recipient_from_address(addr)
+            for msg in msgs:
+                self.send_message(client, kind, msg)
+
     def broadcast_loop(self, client_addrs):
         while True:
             self._xbee.flush_queues()
             self.multicast_GameKeyFrame(client_addrs)
+            self.multicast_Penalties(client_addrs)
             time.sleep(0.5)
 
     def broadcast_thread(self, client_addrs):

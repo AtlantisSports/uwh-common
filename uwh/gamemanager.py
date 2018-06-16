@@ -220,6 +220,11 @@ class GameManager(object):
         for mgr in self._observers:
             mgr.delPenalty(p)
 
+    def delPenaltyByPlayer(self, player_no, team_color):
+        self._penalties[team_color] = [p for p in self._penalties[team_color] if p.player() != player_no]
+        for mgr in self._observers:
+            mgr.delPenaltyByPlayer(player_no)
+
     def penalties(self, team_color):
         return self._penalties[team_color]
 

@@ -73,7 +73,14 @@ def test_GameKeyFrame():
     sp = Penalty(24, TeamColor.white, 5 * 60)
     s_mgr.addPenalty(sp)
 
-    s.send_GameKeyFrame(c)
+    (kind, msg) = s.get_GameKeyFrame()
+    raw_msg = s.pack_message(kind, msg)
+    c.recv_raw(s, raw_msg)
+
+    (kind, msgs) = s.get_Penalties()
+    for msg in msgs:
+        raw_msg = s.pack_message(kind, msg)
+        c.recv_raw(s, raw_msg)
 
     assert c_mgr.gameClockRunning() == False
     assert c_mgr.gameClock() == 42
