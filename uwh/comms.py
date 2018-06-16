@@ -1,5 +1,5 @@
 from . import messages_pb2
-from .gamemanager import GameState, TimeoutState, TeamColor, Penalty, PoolLayout
+from .gamemanager import GameState, TimeoutState, TeamColor, Goal, Penalty, PoolLayout
 
 def gs_from_proto_enum(proto_enum):
     return { messages_pb2.GameState_GameOver        : GameState.game_over,
@@ -65,6 +65,8 @@ class UWHProtoHandler(object):
             self.handle_GameKeyFrame(sender, msg)
         elif kind == messages_pb2.MessageType_Penalty:
             self.handle_Penalty(sender, msg)
+        elif kind == messages_pb2.MessageType_Goal:
+            self.handle_Goal(sender, msg)
 
     def recv_raw(self, sender, data):
         (kind, msg) = self.unpack_message(data)
@@ -81,6 +83,7 @@ class UWHProtoHandler(object):
                  messages_pb2.MessageType_Pong : messages_pb2.Pong,
                  messages_pb2.MessageType_GameKeyFrame : messages_pb2.GameKeyFrame,
                  messages_pb2.MessageType_Penalty : messages_pb2.Penalty,
+                 messages_pb2.MessageType_Goal : messages_pb2.Goal,
                }[msg_kind]()
 
     def pack_message(self, msg_kind, msg):
@@ -147,6 +150,18 @@ class UWHProtoHandler(object):
             self._mgr.delPenaltyByPlayer(player_no, team)
             self._mgr.addPenalty(pp)
 
+    def handle_Goal(self, sender, msg):
+        if (msg.GoalNo is not None and
+            msg.PlayerNo is not None and
+            msg.IsWhite is not None and
+            msg.TimeLeft is not None and
+            msg.Period is not None):
+            team = TeamColor.white if msg.IsWhite else TeamColor.black
+            player_no = self.as_int(msg.PlayerNo)
+            gg = Goal(msg.GoalNo, player_no, team,
+                      msg.TimeLeft, gs_from_proto_enum(msg.Period))
+            self._mgr.addGoal(gg)
+
     def as_int(self, n):
         try:
             return int(n)
@@ -191,3 +206,18 @@ class UWHProtoHandler(object):
             msgs += [msg]
 
         return (kind, msgs)
+
+    def get_Goals(self):
+        kind = messages_pb2.MessageType_Goal
+        msgs = []
+
+        for g in self._mgr.goals():
+            msg = self._message_for_msg_kind(kind)
+            msg.GoalNo = g.goal_no()
+            msg.PlayerNo = g.player()
+            msg.IsWhite = g.team() == TeamColor.white
+            msg.TimeLeft = g.time()
+            msg.Period = g.state()
+            msgs += [msg]
+
+        return (kind, msg)

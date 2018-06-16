@@ -20,6 +20,20 @@ def test_whiteScore():
     assert mgr.whiteScore() == 1
 
 
+def test_whiteGoal():
+    mgr = GameManager(_observers)
+    assert mgr.whiteScore() == 0
+
+    mgr.setGameClock(42)
+    mgr.addWhiteGoal(5)
+    assert mgr.whiteScore() == 1
+    assert len(mgr.goals()) == 1
+    assert mgr.goals()[0].goal_no() == 1
+    assert mgr.goals()[0].player() == 5
+    assert mgr.goals()[0].state() == GameState.first_half
+    assert mgr.goals()[0].team() == TeamColor.white
+    assert mgr.goals()[0].time() == 42
+
 def test_blackScore():
     mgr = GameManager(_observers)
     assert mgr.blackScore() == 0
@@ -27,6 +41,20 @@ def test_blackScore():
     mgr.setBlackScore(1)
     assert mgr.blackScore() == 1
 
+
+def test_blackGoal():
+    mgr = GameManager(_observers)
+    assert mgr.blackScore() == 0
+
+    mgr.setGameClock(42)
+    mgr.addBlackGoal(4)
+    assert mgr.blackScore() == 1
+    assert len(mgr.goals()) == 1
+    assert mgr.goals()[0].goal_no() == 1
+    assert mgr.goals()[0].player() == 4
+    assert mgr.goals()[0].state() == GameState.first_half
+    assert mgr.goals()[0].team() == TeamColor.black
+    assert mgr.goals()[0].time() == 42
 
 def test_gameClockRunning():
     mgr = GameManager(_observers)
@@ -46,6 +74,7 @@ def test_gameClockRunning():
     mgr.setGameClock(1)
     assert mgr._time_at_start
 
+
 def test_passive():
     mgr = GameManager(_observers)
     mgr.setPassive()
@@ -59,6 +88,7 @@ def test_passive():
     time.sleep(1)
 
     assert mgr.gameClock() == 42
+
 
 def test_gameStateFirstHalf():
     mgr = GameManager(_observers)
@@ -143,16 +173,19 @@ def test_timeoutState():
     mgr.setTimeoutState(TimeoutState.ref)
     assert mgr.timeoutState() == TimeoutState.ref
 
+
 def test_penalty_servedCompletely():
     mgr = GameManager(_observers)
     p = Penalty(24, TeamColor.white, 5 * 60, 10 * 60)
 
     assert p.servedCompletely(mgr)
 
+
 def test_penalty_dismissed():
     p = Penalty(24, TeamColor.white, -1, 10 * 60)
 
     assert p.dismissed()
+
 
 def test_penalty_getters():
     p = Penalty(24, TeamColor.white, 5 * 60, 10 * 60)
@@ -193,6 +226,7 @@ def test_penaltyStateChange():
     mgr.deleteAllPenalties()
     assert len(mgr.penalties(TeamColor.white)) == 0
 
+
 def test_penalty_start():
     p = Penalty(24, TeamColor.white, 5 * 60)
     mgr = GameManager(_observers)
@@ -210,6 +244,7 @@ def test_penalty_setPlayer():
     p.setPlayer(42)
     assert p.player() == 42
 
+
 def test_penalty_duration():
     p = Penalty(24, TeamColor.white, 5 * 60)
 
@@ -217,12 +252,14 @@ def test_penalty_duration():
     p.setDuration(4 * 60)
     assert p.duration() == 4 * 60
 
+
 def test_penalty_addWhileRunning():
     mgr = GameManager(_observers)
     mgr.setGameClock(5*60)
     mgr.setGameClockRunning(True)
     p = Penalty(24, TeamColor.white, 5 * 60)
     mgr.addPenalty(p)
+
 
 def test_penalty_halftime():
     mgr = GameManager()
@@ -241,6 +278,7 @@ def test_penalty_halftime():
     mgr.setGameClock(10 * 60)
     mgr.restartOutstandingPenalties()
 
+
 def test_layout():
     mgr = GameManager()
     assert mgr.layout() == PoolLayout.white_on_right
@@ -248,12 +286,14 @@ def test_layout():
     mgr.setLayout(PoolLayout.white_on_left)
     assert mgr.layout() == PoolLayout.white_on_left
 
+
 def test_tid():
     mgr = GameManager()
     assert mgr.tid() is None
 
     mgr.setTid(14)
     assert mgr.tid() == 14
+
 
 def test_gid():
     mgr = GameManager()

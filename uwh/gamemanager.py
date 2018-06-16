@@ -42,6 +42,7 @@ class GameManager(object):
     def __init__(self, observers=None):
         self._white_score = 0
         self._black_score = 0
+        self._goals = []
         self._duration = 0
         self._time_at_start = None
         self._game_state = GameState.first_half
@@ -74,12 +75,30 @@ class GameManager(object):
     def setWhiteScore(self, n):
         self._white_score = n
 
+    @observed
+    def addWhiteGoal(self, player_no):
+        self._white_score += 1
+        self._goals += [Goal(self._white_score, player_no, TeamColor.white,
+                             self.gameClock(), self._game_state)]
+
     def blackScore(self):
         return self._black_score
 
     @observed
     def setBlackScore(self, n):
         self._black_score = n
+
+    @observed
+    def addBlackGoal(self, player_no):
+        self._black_score += 1
+        self._goals += [Goal(self._black_score, player_no, TeamColor.black,
+                             self.gameClock(), self._game_state)]
+
+    def goals(self):
+        return self._goals
+
+    def addGoal(self, goal):
+        self._goals += [goal]
 
     def gameClockRunning(self):
         return bool(self._time_at_start)
@@ -327,4 +346,33 @@ class Penalty(object):
     def restart(self, mgr):
         if self._start_time is None:
             self._start_time = mgr.gameClock()
+
+
+class Goal(object):
+
+    def __init__(self, goal_no, player, team, time, state):
+        self._goal_no = goal_no
+        self._player = player
+        self._team = team
+        self._time = time
+        self._state = state
+
+    def __repr__(self):
+        return "Goal(goal_no={}, player={}, team={}, time={}, state={})".format(
+                     self._goal_no, self._player, self._team, self._time, self._state)
+
+    def goal_no(self):
+        return self._goal_no
+
+    def player(self):
+        return self._player
+
+    def team(self):
+        return self._team
+
+    def time(self):
+        return self._time
+
+    def state(self):
+        return self._state
 

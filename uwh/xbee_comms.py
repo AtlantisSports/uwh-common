@@ -115,11 +115,19 @@ class XBeeServer(UWHProtoHandler):
             for msg in msgs:
                 self.send_message(client, kind, msg)
 
+    def multicast_Goals(self, client_addrs):
+        (kind, msgs) = self.get_Goals()
+        for addr in client_addrs:
+            client = self.recipient_from_address(addr)
+            for msg in msgs:
+                self.send_message(client, kind, msg)
+
     def broadcast_loop(self, client_addrs):
         while True:
             self._xbee.flush_queues()
             self.multicast_GameKeyFrame(client_addrs)
             self.multicast_Penalties(client_addrs)
+            self.multicast_Goals(client_addrs)
             time.sleep(0.5)
 
     def broadcast_thread(self, client_addrs):
