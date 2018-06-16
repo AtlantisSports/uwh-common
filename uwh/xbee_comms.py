@@ -67,7 +67,7 @@ class XBeeServer(UWHProtoHandler):
         xnet.start_discovery_process()
 
         while xnet.is_discovery_running():
-            time.sleep(0.1)
+            time.sleep(0.5)
 
     def recipient_from_address(self, address):
         return RemoteXBeeDevice(self._xbee,
@@ -80,28 +80,27 @@ class XBeeServer(UWHProtoHandler):
         ping_kind = messages_pb2.MessageType_Ping
         ping = self.message_for_msg_kind(ping_kind)
         ping.Data = val
+        start = time.time()
         self.send_message(remote, ping_kind, ping)
 
         try:
-            self._xbee.read_data_from(remote, 5)
+            xbee_msg = self._xbee.read_data_from(remote, 2)
+            end = time.time()
+            data = self.expect_Pong(xbee_msg.remote_device, xbee_msg.data)
+            if data != val:
+                # Data mismatch
+                return None
+            return end - start
         except TimeoutException:
-            return -1
+            return None
 
-    def ping_clients(self, repetitions):
+    def find_clients(self):
         clients = []
         def found_client(remote):
             clients.append(remote)
 
         self.client_discovery(found_client)
-
-        results = []
-        for c in clients:
-            start = time.time()
-            for x in range(0, repetitions):
-                self.time_ping(c, x)
-            end = time.time()
-            results.append((c, (end - start) / repetitions))
-        return results
+        return clients
 
     def multicast_GameKeyFrame(self, client_addrs):
         (kind, msg) = self.get_GameKeyFrame()

@@ -68,6 +68,12 @@ class UWHProtoHandler(object):
         (kind, msg) = self.unpack_message(data)
         self.recv_message(sender, kind, msg)
 
+    def expect_Pong(self, sender, data):
+        (kind, msg) = self.unpack_message(data)
+        if kind != messages_pb2.MessageType_Pong:
+            raise ValueError("Message received wasn't pong")
+        return msg.Data
+
     def message_for_msg_kind(self, msg_kind):
         return { messages_pb2.MessageType_Ping : messages_pb2.Ping,
                  messages_pb2.MessageType_Pong : messages_pb2.Pong,
