@@ -30,6 +30,13 @@ class PoolLayout(object):
 def now():
     return math.floor(time.time())
 
+def observed(function):
+    def wrapper(self, *args, **kwargs):
+        function(self, *args, **kwargs)
+        for mgr in self._observers:
+            function(mgr, *args, **kwargs)
+    return wrapper
+
 class GameManager(object):
 
     def __init__(self, observers=None):
@@ -53,32 +60,26 @@ class GameManager(object):
         game_clock = self._duration - (now() - self._time_at_start)
         return game_clock
 
+    @observed
     def setGameClock(self, n):
         self._duration = n
 
         if self.gameClockRunning():
             self._time_at_start = now()
 
-        for mgr in self._observers:
-            mgr.setGameClock(n)
-
     def whiteScore(self):
         return self._white_score
 
+    @observed
     def setWhiteScore(self, n):
         self._white_score = n
-
-        for mgr in self._observers:
-            mgr.setWhiteScore(n)
 
     def blackScore(self):
         return self._black_score
 
+    @observed
     def setBlackScore(self, n):
         self._black_score = n
-
-        for mgr in self._observers:
-            mgr.setBlackScore(n)
 
     def gameClockRunning(self):
         return bool(self._time_at_start)
@@ -97,113 +98,90 @@ class GameManager(object):
             self._duration -= now() - self._time_at_start
             self._time_at_start = None
 
-        for mgr in self._observers:
-            mgr.setGameClockRunning(b)
-
     def gameState(self):
         return self._game_state
 
+    @observed
     def setGameState(self, state):
         self._game_state = state
-
-        for mgr in self._observers:
-            mgr.setGameState(state)
 
     def timeoutState(self):
         return self._timeout_state
 
+    @observed
     def setTimeoutState(self, state):
         self._timeout_state = state
-
-        for mgr in self._observers:
-            mgr.setTimeoutState(state)
 
     def gameStatePreGame(self):
         return self._game_state == GameState.pre_game
 
+    @observed
     def setGameStatePreGame(self):
         self.setGameState(GameState.pre_game)
-
-        for mgr in self._observers:
-            mgr.setGameStatePreGame()
 
     def gameStateFirstHalf(self):
         return self._game_state == GameState.first_half
 
+    @observed
     def setGameStateFirstHalf(self):
         self.setGameState(GameState.first_half)
-
-        for mgr in self._observers:
-            mgr.setGameStateFirstHalf()
 
     def gameStateHalfTime(self):
         return self._game_state == GameState.half_time
 
+    @observed
     def setGameStateHalfTime(self):
         self.setGameState(GameState.half_time)
-
-        for mgr in self._observers:
-            mgr.setGameStateHalfTime()
 
     def gameStateSecondHalf(self):
         return self._game_state == GameState.second_half
 
+    @observed
     def setGameStateSecondHalf(self):
         self.setGameState(GameState.second_half)
-
-        for mgr in self._observers:
-            mgr.setGameStateSecondHalf()
 
     def gameStateGameOver(self):
         return self._game_state == GameState.game_over
 
+    @observed
     def setGameStateGameOver(self):
         self.setGameState(GameState.game_over)
-
-        for mgr in self._observers:
-            mgr.setGameStateGameOver()
 
     def timeoutStateNone(self):
         return self._timeout_state == TimeoutState.none
 
+    @observed
     def setTimeoutStateNone(self):
         self._timeout_state = TimeoutState.none
-
-        for mgr in self._observers:
-            mgr.setTimeoutStateNone()
 
     def timeoutStateRef(self):
         return self._timeout_state == TimeoutState.ref
 
+    @observed
     def setTimeoutStateRef(self):
         self._timeout_state = TimeoutState.ref
-        for mgr in self._observers:
-            mgr.setTimeoutStateRef()
 
     def timeoutStatePenaltyShot(self):
         return self._timeout_state == TimeoutState.penalty_shot
 
+    @observed
     def setTimeoutStatePenaltyShot(self):
         self._timeout_state = TimeoutState.penalty_shot
-        for mgr in self._observers:
-            mgr.setTimeoutStatePenaltyShot()
 
     def timeoutStateWhite(self):
         return self._timeout_state == TimeoutState.white
 
+    @observed
     def setTimeoutStateWhite(self):
         self._timeout_state = TimeoutState.white
-        for mgr in self._observers:
-            mgr.setTimeoutStateWhite()
 
     def timeoutStateBlack(self):
         return self._timeout_state == TimeoutState.black
 
     def setTimeoutStateBlack(self):
         self._timeout_state = TimeoutState.black
-        for mgr in self._observers:
-            mgr.setTimeoutStateBlack()
 
+    @observed
     def addPenalty(self, p):
         self._penalties[p.team()].append(p)
         if (self.gameClockRunning() and not self.passive()
@@ -211,52 +189,44 @@ class GameManager(object):
             and not self.gameStateHalfTime()
             and not self.gameStateGameOver()):
             p.setStartTime(self.gameClock())
-        for mgr in self._observers:
-            mgr.addPenalty(p)
 
+    @observed
     def delPenalty(self, p):
         if p in self._penalties[p.team()]:
             self._penalties[p.team()].remove(p)
-        for mgr in self._observers:
-            mgr.delPenalty(p)
 
+    @observed
     def delPenaltyByPlayer(self, player_no, team_color):
         self._penalties[team_color] = [p for p in self._penalties[team_color] if p.player() != player_no]
-        for mgr in self._observers:
-            mgr.delPenaltyByPlayer(player_no)
 
     def penalties(self, team_color):
         return self._penalties[team_color]
 
+    @observed
     def deleteAllPenalties(self):
         self._penalties = [[],[]]
-        for mgr in self._observers:
-            mgr.deleteAllPenalties()
 
     def _start_unstarted_penalties(self, game_clock):
         for p in self._penalties[TeamColor.white] + self._penalties[TeamColor.black]:
             if not p.startTime():
                 p.setStartTime(game_clock)
 
+    @observed
     def pauseOutstandingPenalties(self):
         for p in self._penalties[TeamColor.white] + self._penalties[TeamColor.black]:
             if not p.servedCompletely(self):
                 p.pause(self)
-        for mgr in self._observers:
-            mgr.pauseOutstandingPenalties()
 
+    @observed
     def restartOutstandingPenalties(self):
         for p in self._penalties[TeamColor.white] + self._penalties[TeamColor.black]:
             if not p.servedCompletely(self):
                 p.restart(self)
-        for mgr in self._observers:
-            mgr.restartOutstandingPenalties()
 
+    @observed
     def deleteServedPenalties(self):
         self._penalties[TeamColor.white] = [p for p in self._penalties[TeamColor.white] if not p.servedCompletely(self)]
         self._penalties[TeamColor.black] = [p for p in self._penalties[TeamColor.black] if not p.servedCompletely(self)]
-        for mgr in self._observers:
-            mgr.deleteServedPenalties()
 
     def setPassive(self):
         self._is_passive = True
@@ -264,26 +234,23 @@ class GameManager(object):
     def passive(self):
         return self._is_passive
 
+    @observed
     def setLayout(self, layout):
         self._layout = layout
-        for mgr in self._observers:
-            mgr.setLayout(layout)
 
     def layout(self):
         return self._layout
 
+    @observed
     def setTid(self, tid):
         self._tid = tid
-        for mgr in self._observers:
-            mgr.setTid(tid)
 
     def tid(self):
         return self._tid
 
+    @observed
     def setGid(self, gid):
         self._gid = gid
-        for mgr in self._observers:
-            mgr.setGid(gid)
 
     def gid(self):
         return self._gid
