@@ -1,6 +1,6 @@
 import requests
 import threading
-from functools import wraps, lru_cache
+from functools import lru_cache
 
 class UWHScores(object):
     def __init__(self, base_address='https://uwhscores.com/api/v1/', mock=False):
