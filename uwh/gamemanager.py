@@ -109,9 +109,9 @@ class GameManager(object):
 
         if b:
             self._time_at_start = now()
-            if (not self.gameStateHalfTime() and
-                not self.timeoutStateWhite() and
-                not self.timeoutStateBlack()):
+            if (not self.gameState() == GameState.half_time and
+                not self.timeoutState() == TimeoutState.white and
+                not self.timeoutState() == TimeoutState.black):
                 self._start_unstarted_penalties(self.gameClock())
         else:
             self._duration -= now() - self._time_at_start
@@ -131,82 +131,13 @@ class GameManager(object):
     def setTimeoutState(self, state):
         self._timeout_state = state
 
-    def gameStatePreGame(self):
-        return self._game_state == GameState.pre_game
-
-    @observed
-    def setGameStatePreGame(self):
-        self.setGameState(GameState.pre_game)
-
-    def gameStateFirstHalf(self):
-        return self._game_state == GameState.first_half
-
-    @observed
-    def setGameStateFirstHalf(self):
-        self.setGameState(GameState.first_half)
-
-    def gameStateHalfTime(self):
-        return self._game_state == GameState.half_time
-
-    @observed
-    def setGameStateHalfTime(self):
-        self.setGameState(GameState.half_time)
-
-    def gameStateSecondHalf(self):
-        return self._game_state == GameState.second_half
-
-    @observed
-    def setGameStateSecondHalf(self):
-        self.setGameState(GameState.second_half)
-
-    def gameStateGameOver(self):
-        return self._game_state == GameState.game_over
-
-    @observed
-    def setGameStateGameOver(self):
-        self.setGameState(GameState.game_over)
-
-    def timeoutStateNone(self):
-        return self._timeout_state == TimeoutState.none
-
-    @observed
-    def setTimeoutStateNone(self):
-        self._timeout_state = TimeoutState.none
-
-    def timeoutStateRef(self):
-        return self._timeout_state == TimeoutState.ref
-
-    @observed
-    def setTimeoutStateRef(self):
-        self._timeout_state = TimeoutState.ref
-
-    def timeoutStatePenaltyShot(self):
-        return self._timeout_state == TimeoutState.penalty_shot
-
-    @observed
-    def setTimeoutStatePenaltyShot(self):
-        self._timeout_state = TimeoutState.penalty_shot
-
-    def timeoutStateWhite(self):
-        return self._timeout_state == TimeoutState.white
-
-    @observed
-    def setTimeoutStateWhite(self):
-        self._timeout_state = TimeoutState.white
-
-    def timeoutStateBlack(self):
-        return self._timeout_state == TimeoutState.black
-
-    def setTimeoutStateBlack(self):
-        self._timeout_state = TimeoutState.black
-
     @observed
     def addPenalty(self, p):
         self._penalties[p.team()].append(p)
         if (self.gameClockRunning() and not self.passive()
-            and not self.gameStatePreGame()
-            and not self.gameStateHalfTime()
-            and not self.gameStateGameOver()):
+            and not self.gameState() == GameState.pre_game
+            and not self.gameState() == GameState.half_time
+            and not self.gameState() == GameState.game_over):
             p.setStartTime(self.gameClock())
 
     @observed

@@ -90,78 +90,6 @@ def test_passive():
     assert mgr.gameClock() == 42
 
 
-def test_gameStateFirstHalf():
-    mgr = GameManager(_observers)
-    assert mgr.gameStateFirstHalf() is True
-
-    mgr.setGameStateFirstHalf()
-    assert mgr.gameStateFirstHalf() is True
-
-    mgr.setGameStateSecondHalf()
-    assert mgr.gameStateFirstHalf() is False
-
-
-def test_gameStateHalfTime():
-    mgr = GameManager(_observers)
-    assert mgr.gameStateHalfTime() is False
-
-    mgr.setGameStateHalfTime()
-    assert mgr.gameStateHalfTime() is True
-
-
-def test_gameStateSecondHalf():
-    mgr = GameManager(_observers)
-    assert mgr.gameStateSecondHalf() is False
-
-    mgr.setGameStateSecondHalf()
-    assert mgr.gameStateSecondHalf() is True
-
-
-def test_gameStateGameOver():
-    mgr = GameManager(_observers)
-    mgr.setGameStateSecondHalf()
-    assert mgr.gameStateGameOver() is False
-
-    mgr.setGameStateGameOver()
-    assert mgr.gameStateGameOver() is True
-
-
-def test_timeoutStateNone():
-    mgr = GameManager(_observers)
-    mgr.setTimeoutStateNone()
-    assert mgr.timeoutStateNone() is True
-
-    mgr.setTimeoutStateRef()
-    assert mgr.timeoutStateNone() is False
-
-
-def test_timeoutStateRef():
-    mgr = GameManager(_observers)
-    mgr.setTimeoutStateRef()
-    assert mgr.timeoutStateRef() is True
-
-    mgr.setTimeoutStateNone()
-    assert mgr.timeoutStateRef() is False
-
-
-def test_timeoutStateWhite():
-    mgr = GameManager(_observers)
-    mgr.setTimeoutStateWhite()
-    assert mgr.timeoutStateWhite() is True
-
-    mgr.setTimeoutStateNone()
-    assert mgr.timeoutStateWhite() is False
-
-
-def test_timeoutStateBlack():
-    mgr = GameManager(_observers)
-    mgr.setTimeoutStateBlack()
-    assert mgr.timeoutStateBlack() is True
-
-    mgr.setTimeoutStateNone()
-    assert mgr.timeoutStateBlack() is False
-
-
 def test_gameState():
     mgr = GameManager(_observers)
     mgr.setGameState(GameState.first_half)
@@ -215,14 +143,14 @@ def test_penaltyStateChange():
     mgr.addPenalty(p)
 
     mgr.pauseOutstandingPenalties()
-    mgr.setGameStateHalfTime()
+    mgr.setGameState(GameState.half_time)
     assert len(mgr.penalties(TeamColor.white)) == 1
 
-    mgr.setGameStateSecondHalf()
+    mgr.setGameState(GameState.second_half)
     mgr.restartOutstandingPenalties()
     assert len(mgr.penalties(TeamColor.white)) == 1
 
-    mgr.setGameStateGameOver()
+    mgr.setGameState(GameState.game_over)
     mgr.deleteAllPenalties()
     assert len(mgr.penalties(TeamColor.white)) == 0
 
@@ -272,9 +200,9 @@ def test_penalty_halftime():
     mgr.setGameClock(0)
 
     mgr.pauseOutstandingPenalties()
-    mgr.setGameStateHalfTime()
+    mgr.setGameState(GameState.half_time)
 
-    mgr.setGameStateSecondHalf()
+    mgr.setGameState(GameState.second_half)
     mgr.setGameClock(10 * 60)
     mgr.restartOutstandingPenalties()
 

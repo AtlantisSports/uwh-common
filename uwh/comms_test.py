@@ -64,8 +64,8 @@ def test_GameKeyFrame():
     s_mgr.setGameClock(42)
     s_mgr.setWhiteScore(15)
     s_mgr.setBlackScore(7)
-    s_mgr.setGameStateFirstHalf()
-    s_mgr.setTimeoutStateRef()
+    s_mgr.setGameState(GameState.first_half)
+    s_mgr.setTimeoutState(TimeoutState.ref)
     s_mgr.setLayout(PoolLayout.white_on_right)
     s_mgr.setTid(14)
     s_mgr.setGid(6)
@@ -86,8 +86,8 @@ def test_GameKeyFrame():
     assert c_mgr.gameClock() == 42
     assert c_mgr.whiteScore() == 15
     assert c_mgr.blackScore() == 7
-    assert c_mgr.gameStateFirstHalf()
-    assert c_mgr.timeoutStateRef()
+    assert c_mgr.gameState() == GameState.first_half
+    assert c_mgr.timeoutState() == TimeoutState.ref
     assert len(c_mgr.penalties(TeamColor.black)) == 0
     assert len(c_mgr.penalties(TeamColor.white)) == 1
     cp = c_mgr.penalties(TeamColor.white)[0]
