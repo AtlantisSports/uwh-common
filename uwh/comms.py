@@ -7,7 +7,11 @@ def gs_from_proto_enum(proto_enum):
              messages_pb2.GameState_FirstHalf       : GameState.first_half,
              messages_pb2.GameState_HalfTime        : GameState.half_time,
              messages_pb2.GameState_SecondHalf      : GameState.second_half,
-             messages_pb2.GameState_WallClock       : GameState.game_over # bold-faced lie
+             messages_pb2.GameState_WallClock       : GameState.game_over, # bold-faced lie
+             messages_pb2.GameState_OTFirst         : GameState.ot_first,
+             messages_pb2.GameState_OTHalf          : GameState.ot_half,
+             messages_pb2.GameState_OTSecond        : GameState.ot_second,
+             messages_pb2.GameState_SuddenDeath     : GameState.sudden_death,
            }[proto_enum]
 
 def ts_from_proto_enum(proto_enum):
@@ -26,18 +30,22 @@ def l_from_proto_enum(proto_enum):
            }[proto_enum]
 
 def gs_to_proto_enum(gamemanager_enum):
-    return { GameState.game_over   : messages_pb2.GameState_GameOver,
-             GameState.pre_game    : messages_pb2.GameState_PreGame,
-             GameState.first_half  : messages_pb2.GameState_FirstHalf,
-             GameState.half_time   : messages_pb2.GameState_HalfTime,
-             GameState.second_half : messages_pb2.GameState_SecondHalf,
+    return { GameState.game_over    : messages_pb2.GameState_GameOver,
+             GameState.pre_game     : messages_pb2.GameState_PreGame,
+             GameState.first_half   : messages_pb2.GameState_FirstHalf,
+             GameState.half_time    : messages_pb2.GameState_HalfTime,
+             GameState.second_half  : messages_pb2.GameState_SecondHalf,
+             GameState.ot_first     : messages_pb2.GameState_OTFirst,
+             GameState.ot_half      : messages_pb2.GameState_OTHalf,
+             GameState.ot_second    : messages_pb2.GameState_OTSecond,
+             GameState.sudden_death : messages_pb2.GameState_SuddenDeath,
            }[gamemanager_enum]
 
 def ts_to_proto_enum(gamemanager_enum):
-    return { TimeoutState.none     : messages_pb2.TimeoutState_None,
-             TimeoutState.ref      : messages_pb2.TimeoutState_RefTimeout,
-             TimeoutState.white    : messages_pb2.TimeoutState_WhiteTimeout,
-             TimeoutState.black    : messages_pb2.TimeoutState_BlackTimeout,
+    return { TimeoutState.none         : messages_pb2.TimeoutState_None,
+             TimeoutState.ref          : messages_pb2.TimeoutState_RefTimeout,
+             TimeoutState.white        : messages_pb2.TimeoutState_WhiteTimeout,
+             TimeoutState.black        : messages_pb2.TimeoutState_BlackTimeout,
              TimeoutState.penalty_shot : messages_pb2.TimeoutState_PenaltyShot,
            }[gamemanager_enum]
 

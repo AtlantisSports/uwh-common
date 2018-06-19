@@ -7,7 +7,10 @@ class GameState(object):
     half_time = 2
     second_half = 3
     pre_game = 4
-
+    ot_first = 6
+    ot_half = 7
+    ot_second = 8
+    sudden_death = 9
 
 class TimeoutState(object):
     none = 0
