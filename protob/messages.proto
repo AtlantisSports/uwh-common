@@ -31,6 +31,8 @@ enum GameState {
   GameState_OTHalf = 7;
   GameState_OTSecond = 8;
   GameState_SuddenDeath = 9;
+  GameState_PreOT = 10;
+  GameState_PreSuddenDeath = 11;
 }
 
 enum TimeoutState {
