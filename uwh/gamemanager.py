@@ -104,12 +104,17 @@ class GameManager(object):
     def goals(self):
         return self._goals
 
+    @observed
     def addGoal(self, goal):
         self._goals += [goal]
 
     @observed
     def delGoalByNo(self, goal_no, team):
         self._goals = [g for g in self._goals if (g.goal_no() != goal_no or g.team() != team)]
+
+    @observed
+    def delAllGoals(self):
+        self._goals = []
 
     def gameClockRunning(self):
         return bool(self._time_at_start)
