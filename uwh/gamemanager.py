@@ -119,6 +119,7 @@ class GameManager(object):
     def gameClockRunning(self):
         return bool(self._time_at_start)
 
+    @observed
     def setGameClockRunning(self, b):
         if b == self.gameClockRunning():
             return
