@@ -136,7 +136,11 @@ class UWHProtoHandler(object):
             self._mgr.setWhiteScore(msg.WhiteScore)
 
         if msg.Period is not None:
-            self._mgr.setGameState(gs_from_proto_enum(msg.Period))
+            period = gs_from_proto_enum(msg.Period)
+            if period == GameState.pre_game:
+                self._mgr.deleteAllPenalties()
+                self._mgr.delAllGoals()
+            self._mgr.setGameState(period)
 
         if msg.Timeout is not None:
             self._mgr.setTimeoutState(ts_from_proto_enum(msg.Timeout))
