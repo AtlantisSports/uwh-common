@@ -172,6 +172,7 @@ class UWHProtoHandler(object):
             player_no = self.as_int(msg.PlayerNo)
             gg = Goal(msg.GoalNo, player_no, team,
                       msg.TimeLeft, gs_from_proto_enum(msg.Period))
+            self._mgr.delGoalByNo(msg.GoalNo, team)
             self._mgr.addGoal(gg)
 
     def as_int(self, n):
