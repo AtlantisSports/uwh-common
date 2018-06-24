@@ -83,7 +83,8 @@ class GameManager(object):
     @observed
     def addWhiteGoal(self, player_no):
         self._white_score += 1
-        self._goals += [Goal(self._white_score, player_no, TeamColor.white,
+        self._goals += [Goal(self._white_score + self._black_score,
+                             player_no, TeamColor.white,
                              self.gameClock(), self._game_state)]
 
     def blackScore(self):
@@ -96,7 +97,8 @@ class GameManager(object):
     @observed
     def addBlackGoal(self, player_no):
         self._black_score += 1
-        self._goals += [Goal(self._black_score, player_no, TeamColor.black,
+        self._goals += [Goal(self._white_score + self._black_score,
+                             player_no, TeamColor.black,
                              self.gameClock(), self._game_state)]
 
     def goals(self):
