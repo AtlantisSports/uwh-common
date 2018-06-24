@@ -225,12 +225,12 @@ class UWHProtoHandler(object):
         msgs = []
 
         for g in self._mgr.goals():
-            msg = self._message_for_msg_kind(kind)
+            msg = self.message_for_msg_kind(kind)
             msg.GoalNo = g.goal_no()
-            msg.PlayerNo = g.player()
+            msg.PlayerNo = self.as_int(g.player())
             msg.IsWhite = g.team() == TeamColor.white
             msg.TimeLeft = g.time()
             msg.Period = g.state()
             msgs += [msg]
 
-        return (kind, msg)
+        return (kind, msgs)
