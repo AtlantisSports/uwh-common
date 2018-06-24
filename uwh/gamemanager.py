@@ -109,7 +109,7 @@ class GameManager(object):
 
     @observed
     def delGoalByNo(self, goal_no, team):
-        self._goals = [g for g in self._goals if (g.goal_no() != goal_no and g.team() != team)]
+        self._goals = [g for g in self._goals if (g.goal_no() != goal_no or g.team() != team)]
 
     def gameClockRunning(self):
         return bool(self._time_at_start)
