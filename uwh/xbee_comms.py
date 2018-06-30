@@ -38,7 +38,10 @@ class XBeeClient(UWHProtoHandler):
         self._xbee.open()
 
     def send_raw(self, recipient, data):
-        self._xbee.send_data_async(recipient, data)
+        try:
+            self._xbee.send_data(recipient, data)
+        except TimeoutException:
+            pass
 
     def listen_thread(self):
         def callback(xbee_msg):
@@ -74,7 +77,10 @@ class XBeeServer(UWHProtoHandler):
                                 XBee64BitAddress.from_hex_string(address))
 
     def send_raw(self, recipient, data):
-        self._xbee.send_data_async(recipient, data)
+        try:
+            self._xbee.send_data(recipient, data)
+        except TimeoutException:
+            pass
 
     def time_ping(self, remote, val):
         ping_kind = messages_pb2.MessageType_Ping
@@ -124,11 +130,9 @@ class XBeeServer(UWHProtoHandler):
 
     def broadcast_loop(self, client_addrs):
         while True:
-            self._xbee.flush_queues()
             self.multicast_GameKeyFrame(client_addrs)
             self.multicast_Penalties(client_addrs)
             self.multicast_Goals(client_addrs)
-            time.sleep(0.5)
 
     def broadcast_thread(self, client_addrs):
         thread = threading.Thread(target=self.broadcast_loop,
