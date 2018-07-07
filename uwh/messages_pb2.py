@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='messages.proto',
   package='',
   syntax='proto2',
-  serialized_pb=_b('\n\x0emessages.proto\"\x14\n\x04Ping\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"\x14\n\x04Pong\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"l\n\x07Penalty\x12\x10\n\x08PlayerNo\x18\x01 \x01(\x05\x12\x11\n\tStartTime\x18\x02 \x01(\r\x12\x10\n\x08\x44uration\x18\x03 \x01(\x05\x12\x19\n\x11\x44urationRemaining\x18\x04 \x01(\x05\x12\x0f\n\x07IsWhite\x18\x05 \x01(\x08\"g\n\x04Goal\x12\x0e\n\x06GoalNo\x18\x01 \x01(\x05\x12\x10\n\x08PlayerNo\x18\x02 \x01(\x05\x12\x0f\n\x07IsWhite\x18\x03 \x01(\x08\x12\x10\n\x08TimeLeft\x18\x04 \x01(\r\x12\x1a\n\x06Period\x18\x05 \x01(\x0e\x32\n.GameState\"\xdd\x01\n\x0cGameKeyFrame\x12\x14\n\x0c\x43lockRunning\x18\x01 \x01(\x08\x12\x10\n\x08TimeLeft\x18\x02 \x01(\r\x12\x12\n\nBlackScore\x18\x03 \x01(\r\x12\x12\n\nWhiteScore\x18\x04 \x01(\r\x12\x1a\n\x06Period\x18\x05 \x01(\x0e\x32\n.GameState\x12\x1e\n\x07Timeout\x18\x06 \x01(\x0e\x32\r.TimeoutState\x12\x1b\n\x06Layout\x18\t \x01(\x0e\x32\x0b.PoolLayout\x12\x0b\n\x03tid\x18\n \x01(\x05\x12\x0b\n\x03gid\x18\x0b \x01(\x05J\x04\x08\x07\x10\x08J\x04\x08\x08\x10\t*\x86\x01\n\x0bMessageType\x12\x14\n\x10MessageType_Ping\x10\x01\x12\x14\n\x10MessageType_Pong\x10\x02\x12\x1c\n\x18MessageType_GameKeyFrame\x10\x03\x12\x17\n\x13MessageType_Penalty\x10\x04\x12\x14\n\x10MessageType_Goal\x10\x05*\xb1\x02\n\tGameState\x12\x17\n\x13GameState_WallClock\x10\x00\x12\x17\n\x13GameState_FirstHalf\x10\x01\x12\x18\n\x14GameState_SecondHalf\x10\x02\x12\x16\n\x12GameState_HalfTime\x10\x03\x12\x16\n\x12GameState_GameOver\x10\x04\x12\x15\n\x11GameState_PreGame\x10\x05\x12\x15\n\x11GameState_OTFirst\x10\x06\x12\x14\n\x10GameState_OTHalf\x10\x07\x12\x16\n\x12GameState_OTSecond\x10\x08\x12\x19\n\x15GameState_SuddenDeath\x10\t\x12\x13\n\x0fGameState_PreOT\x10\n\x12\x1c\n\x18GameState_PreSuddenDeath\x10\x0b*\x9e\x01\n\x0cTimeoutState\x12\x15\n\x11TimeoutState_None\x10\x00\x12\x1b\n\x17TimeoutState_RefTimeout\x10\x01\x12\x1d\n\x19TimeoutState_BlackTimeout\x10\x02\x12\x1d\n\x19TimeoutState_WhiteTimeout\x10\x03\x12\x1c\n\x18TimeoutState_PenaltyShot\x10\x04*/\n\nPoolLayout\x12\x0f\n\x0bWhiteOnLeft\x10\x00\x12\x10\n\x0cWhiteOnRight\x10\x01')
+  serialized_pb=_b('\n\x0emessages.proto\"\x14\n\x04Ping\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"\x14\n\x04Pong\x12\x0c\n\x04\x44\x61ta\x18\x01 \x02(\r\"l\n\x07Penalty\x12\x10\n\x08PlayerNo\x18\x01 \x01(\x05\x12\x11\n\tStartTime\x18\x02 \x01(\r\x12\x10\n\x08\x44uration\x18\x03 \x01(\x05\x12\x19\n\x11\x44urationRemaining\x18\x04 \x01(\x05\x12\x0f\n\x07IsWhite\x18\x05 \x01(\x08\"g\n\x04Goal\x12\x0e\n\x06GoalNo\x18\x01 \x01(\x05\x12\x10\n\x08PlayerNo\x18\x02 \x01(\x05\x12\x0f\n\x07IsWhite\x18\x03 \x01(\x08\x12\x10\n\x08TimeLeft\x18\x04 \x01(\r\x12\x1a\n\x06Period\x18\x05 \x01(\x0e\x32\n.GameState\"\x1c\n\x08GameTime\x12\x10\n\x08TimeLeft\x18\x01 \x02(\r\"\xdd\x01\n\x0cGameKeyFrame\x12\x14\n\x0c\x43lockRunning\x18\x01 \x01(\x08\x12\x10\n\x08TimeLeft\x18\x02 \x01(\r\x12\x12\n\nBlackScore\x18\x03 \x01(\r\x12\x12\n\nWhiteScore\x18\x04 \x01(\r\x12\x1a\n\x06Period\x18\x05 \x01(\x0e\x32\n.GameState\x12\x1e\n\x07Timeout\x18\x06 \x01(\x0e\x32\r.TimeoutState\x12\x1b\n\x06Layout\x18\t \x01(\x0e\x32\x0b.PoolLayout\x12\x0b\n\x03tid\x18\n \x01(\x05\x12\x0b\n\x03gid\x18\x0b \x01(\x05J\x04\x08\x07\x10\x08J\x04\x08\x08\x10\t*\xa0\x01\n\x0bMessageType\x12\x14\n\x10MessageType_Ping\x10\x01\x12\x14\n\x10MessageType_Pong\x10\x02\x12\x1c\n\x18MessageType_GameKeyFrame\x10\x03\x12\x17\n\x13MessageType_Penalty\x10\x04\x12\x14\n\x10MessageType_Goal\x10\x05\x12\x18\n\x14MessageType_GameTime\x10\x06*\xb1\x02\n\tGameState\x12\x17\n\x13GameState_WallClock\x10\x00\x12\x17\n\x13GameState_FirstHalf\x10\x01\x12\x18\n\x14GameState_SecondHalf\x10\x02\x12\x16\n\x12GameState_HalfTime\x10\x03\x12\x16\n\x12GameState_GameOver\x10\x04\x12\x15\n\x11GameState_PreGame\x10\x05\x12\x15\n\x11GameState_OTFirst\x10\x06\x12\x14\n\x10GameState_OTHalf\x10\x07\x12\x16\n\x12GameState_OTSecond\x10\x08\x12\x19\n\x15GameState_SuddenDeath\x10\t\x12\x13\n\x0fGameState_PreOT\x10\n\x12\x1c\n\x18GameState_PreSuddenDeath\x10\x0b*\x9e\x01\n\x0cTimeoutState\x12\x15\n\x11TimeoutState_None\x10\x00\x12\x1b\n\x17TimeoutState_RefTimeout\x10\x01\x12\x1d\n\x19TimeoutState_BlackTimeout\x10\x02\x12\x1d\n\x19TimeoutState_WhiteTimeout\x10\x03\x12\x1c\n\x18TimeoutState_PenaltyShot\x10\x04*/\n\nPoolLayout\x12\x0f\n\x0bWhiteOnLeft\x10\x00\x12\x10\n\x0cWhiteOnRight\x10\x01')
 )
 
 _MESSAGETYPE = _descriptor.EnumDescriptor(
@@ -49,11 +49,15 @@ _MESSAGETYPE = _descriptor.EnumDescriptor(
       name='MessageType_Goal', index=4, number=5,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='MessageType_GameTime', index=5, number=6,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=502,
-  serialized_end=636,
+  serialized_start=532,
+  serialized_end=692,
 )
 _sym_db.RegisterEnumDescriptor(_MESSAGETYPE)
 
@@ -115,8 +119,8 @@ _GAMESTATE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=639,
-  serialized_end=944,
+  serialized_start=695,
+  serialized_end=1000,
 )
 _sym_db.RegisterEnumDescriptor(_GAMESTATE)
 
@@ -150,8 +154,8 @@ _TIMEOUTSTATE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=947,
-  serialized_end=1105,
+  serialized_start=1003,
+  serialized_end=1161,
 )
 _sym_db.RegisterEnumDescriptor(_TIMEOUTSTATE)
 
@@ -173,8 +177,8 @@ _POOLLAYOUT = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1107,
-  serialized_end=1154,
+  serialized_start=1163,
+  serialized_end=1210,
 )
 _sym_db.RegisterEnumDescriptor(_POOLLAYOUT)
 
@@ -184,6 +188,7 @@ MessageType_Pong = 2
 MessageType_GameKeyFrame = 3
 MessageType_Penalty = 4
 MessageType_Goal = 5
+MessageType_GameTime = 6
 GameState_WallClock = 0
 GameState_FirstHalf = 1
 GameState_SecondHalf = 2
@@ -386,6 +391,37 @@ _GOAL = _descriptor.Descriptor(
 )
 
 
+_GAMETIME = _descriptor.Descriptor(
+  name='GameTime',
+  full_name='GameTime',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='TimeLeft', full_name='GameTime.TimeLeft', index=0,
+      number=1, type=13, cpp_type=3, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto2',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=277,
+  serialized_end=305,
+)
+
+
 _GAMEKEYFRAME = _descriptor.Descriptor(
   name='GameKeyFrame',
   full_name='GameKeyFrame',
@@ -468,8 +504,8 @@ _GAMEKEYFRAME = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=278,
-  serialized_end=499,
+  serialized_start=308,
+  serialized_end=529,
 )
 
 _GOAL.fields_by_name['Period'].enum_type = _GAMESTATE
@@ -480,6 +516,7 @@ DESCRIPTOR.message_types_by_name['Ping'] = _PING
 DESCRIPTOR.message_types_by_name['Pong'] = _PONG
 DESCRIPTOR.message_types_by_name['Penalty'] = _PENALTY
 DESCRIPTOR.message_types_by_name['Goal'] = _GOAL
+DESCRIPTOR.message_types_by_name['GameTime'] = _GAMETIME
 DESCRIPTOR.message_types_by_name['GameKeyFrame'] = _GAMEKEYFRAME
 DESCRIPTOR.enum_types_by_name['MessageType'] = _MESSAGETYPE
 DESCRIPTOR.enum_types_by_name['GameState'] = _GAMESTATE
@@ -514,6 +551,13 @@ Goal = _reflection.GeneratedProtocolMessageType('Goal', (_message.Message,), dic
   # @@protoc_insertion_point(class_scope:Goal)
   ))
 _sym_db.RegisterMessage(Goal)
+
+GameTime = _reflection.GeneratedProtocolMessageType('GameTime', (_message.Message,), dict(
+  DESCRIPTOR = _GAMETIME,
+  __module__ = 'messages_pb2'
+  # @@protoc_insertion_point(class_scope:GameTime)
+  ))
+_sym_db.RegisterMessage(GameTime)
 
 GameKeyFrame = _reflection.GeneratedProtocolMessageType('GameKeyFrame', (_message.Message,), dict(
   DESCRIPTOR = _GAMEKEYFRAME,

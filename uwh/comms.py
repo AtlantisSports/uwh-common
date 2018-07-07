@@ -79,6 +79,8 @@ class UWHProtoHandler(object):
             self.handle_Penalty(sender, msg)
         elif kind == messages_pb2.MessageType_Goal:
             self.handle_Goal(sender, msg)
+        elif kind == messages_pb2.MessageType_GameTime:
+            self.handle_GameTime(sender, msg)
 
     def recv_raw(self, sender, data):
         (kind, msg) = self.unpack_message(data)
@@ -96,6 +98,7 @@ class UWHProtoHandler(object):
                  messages_pb2.MessageType_GameKeyFrame : messages_pb2.GameKeyFrame,
                  messages_pb2.MessageType_Penalty : messages_pb2.Penalty,
                  messages_pb2.MessageType_Goal : messages_pb2.Goal,
+                 messages_pb2.MessageType_GameTime : messages_pb2.GameTime,
                }[msg_kind]()
 
     def pack_message(self, msg_kind, msg):
@@ -179,6 +182,9 @@ class UWHProtoHandler(object):
             self._mgr.delGoalByNo(msg.GoalNo, team)
             self._mgr.addGoal(gg)
 
+    def handle_GameTime(self, sender, msg):
+        self._mgr.setGameClock(msg.TimeLeft)
+
     def as_int(self, n):
         try:
             return int(n)
@@ -238,3 +244,10 @@ class UWHProtoHandler(object):
             msgs += [msg]
 
         return (kind, msgs)
+
+    def get_GameTime(self):
+        kind = messages_pb2.MessageType_GameTime
+        msg = self.message_for_msg_kind(kind)
+        msg.TimeLeft = self._mgr.gameClock()
+
+        return (kind, msg)

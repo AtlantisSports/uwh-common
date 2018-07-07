@@ -9,6 +9,7 @@ enum MessageType {
   MessageType_GameKeyFrame = 3;
   MessageType_Penalty = 4;
   MessageType_Goal = 5;
+  MessageType_GameTime = 6;
 }
 
 message Ping {
@@ -62,6 +63,10 @@ message Goal {
   optional bool IsWhite = 3;
   optional uint32 TimeLeft = 4;
   optional GameState Period = 5;
+}
+
+message GameTime {
+  required uint32 TimeLeft = 1;
 }
 
 message GameKeyFrame {
