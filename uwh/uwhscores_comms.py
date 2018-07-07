@@ -8,6 +8,10 @@ class UWHScores(object):
         self._mock = mock
         self._fail_handler = lambda x : print(x)
 
+    def login(self, username, password):
+        self._username = username
+        self._password = password
+
     def get_tournament_list(self, callback):
         def success(reply):
             json = reply.json()
@@ -70,6 +74,29 @@ class UWHScores(object):
 
         self._async_request('get', self._base_address + 'tournaments/' + str(tid) + '/teams/' + str(team_id),
                             callback=success)
+
+    def post_score(self, tid, gid, score_b, score_w, black_id, white_id):
+        def login_success(response):
+            token = response.json()['token']
+
+            score = {
+                "game_score": {
+                    'tid': tid,
+                    'gid': gid,
+                    'score_w': score_w,
+                    'score_b': score_b,
+                    'black_id': black_id,
+                    'white_id': white_id
+                }
+            }
+
+            self._async_request('post', self._base_address + 'tournaments/' + str(tid) + '/games/' + str(gid),
+                                json=score, callback=lambda _:None, auth=(token, ''))
+
+        self._async_request('get', self._base_address + 'login',
+                            auth=(self._username, self._password),
+                            callback=login_success)
+
 
     def get_team_flag(self, tid, team_id, callback):
         if tid is None or team_id is None:
