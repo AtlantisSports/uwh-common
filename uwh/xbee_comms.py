@@ -108,40 +108,44 @@ class XBeeServer(UWHProtoHandler):
         self.client_discovery(found_client)
         return clients
 
-    def multicast_GameKeyFrame(self, client_addrs):
-        (kind, msg) = self.get_GameKeyFrame()
-        for addr in client_addrs:
-            client = self.recipient_from_address(addr)
-            self.send_message(client, kind, msg)
-
-    def multicast_Penalties(self, client_addrs):
-        (kind, msgs) = self.get_Penalties()
-        for addr in client_addrs:
-            client = self.recipient_from_address(addr)
-            for msg in msgs:
-                self.send_message(client, kind, msg)
-
-    def multicast_Goals(self, client_addrs):
-        (kind, msgs) = self.get_Goals()
-        for addr in client_addrs:
-            client = self.recipient_from_address(addr)
-            for msg in msgs:
-                self.send_message(client, kind, msg)
-
-    def multicast_GameTime(self, client_addrs):
-        (kind, msg) = self.get_GameTime()
-        for addr in client_addrs:
-            client = self.recipient_from_address(addr)
-            self.send_message(client, kind, msg)
-
     def broadcast_loop(self, client_addrs):
         while True:
-            for i in range(0, 10):
-                self.multicast_GameTime(client_addrs)
+            # Try to spread out the parts of the broadcast across several time
+            # update messages. The idea here being that we care way more about
+            # fidelity/latency of the time, and a lot less about latency of the
+            # scores/penalties.
+
+            (kind, msg) = self.get_GameKeyFrame()
+            for addr in client_addrs:
+                client = self.recipient_from_address(addr)
+                self.send_message(client, kind, msg)
+
+            for i in range(0, 20):
+                (t_kind, t_msg) = self.get_GameTime()
+                for addr in client_addrs:
+                    client = self.recipient_from_address(addr)
+                    self.send_message(client, t_kind, t_msg)
+                    time.sleep(0.01)
                 time.sleep(0.1)
-            self.multicast_GameKeyFrame(client_addrs)
-            self.multicast_Penalties(client_addrs)
-            self.multicast_Goals(client_addrs)
+
+            (t_kind, t_msg) = self.get_GameTime()
+            (kind, msgs) = self.get_Penalties()
+            for addr in client_addrs:
+                client = self.recipient_from_address(addr)
+                for msg in msgs:
+                    self.send_message(client, t_kind, t_msg)
+                    self.send_message(client, kind, msg)
+                    time.sleep(0.01)
+
+            (t_kind, t_msg) = self.get_GameTime()
+            (kind, msgs) = self.get_Goals()
+            for addr in client_addrs:
+                client = self.recipient_from_address(addr)
+                for msg in msgs:
+                    self.send_message(client, t_kind, t_msg)
+                    self.send_message(client, kind, msg)
+                    time.sleep(0.01)
+
             time.sleep(0.1)
 
     def broadcast_thread(self, client_addrs):
