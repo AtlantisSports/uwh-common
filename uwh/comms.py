@@ -123,41 +123,41 @@ class UWHProtoHandler(object):
         self.send_message(sender, kind, pong)
 
     def handle_GameKeyFrame(self, sender, msg):
-        if msg.ClockRunning is not None:
+        if msg.HasField('ClockRunning'):
             self._mgr.setGameClockRunning(msg.ClockRunning)
 
-        if msg.TimeLeft is not None:
+        if msg.HasField('TimeLeft'):
             self._mgr.setGameClock(msg.TimeLeft)
 
-        if msg.BlackScore is not None:
+        if msg.HasField('BlackScore'):
             self._mgr.setBlackScore(msg.BlackScore)
 
-        if msg.WhiteScore is not None:
+        if msg.HasField('WhiteScore'):
             self._mgr.setWhiteScore(msg.WhiteScore)
 
-        if msg.Period is not None:
+        if msg.HasField('Period'):
             period = gs_from_proto_enum(msg.Period)
             if period == GameState.pre_game:
                 self._mgr.deleteAllPenalties()
                 self._mgr.delAllGoals()
             self._mgr.setGameState(period)
 
-        if msg.Timeout is not None:
+        if msg.HasField('Timeout'):
             self._mgr.setTimeoutState(ts_from_proto_enum(msg.Timeout))
 
-        if msg.Layout is not None:
+        if msg.HasField('Layout'):
             self._mgr.setLayout(l_from_proto_enum(msg.Layout))
 
-        if msg.tid is not None:
+        if msg.HasField('tid'):
             self._mgr.setTid(msg.tid)
 
-        if msg.gid is not None:
+        if msg.HasField('gid'):
             self._mgr.setGid(msg.gid)
 
     def handle_Penalty(self, sender, msg):
-        if (msg.PlayerNo is not None and
-            msg.Duration is not None and
-            msg.StartTime is not None):
+        if (msg.HasField('PlayerNo') and
+            msg.HasField('Duration') and
+            msg.HasField('StartTime')):
             team = TeamColor.white if msg.IsWhite else TeamColor.black
             player_no = self.as_int(msg.PlayerNo)
             pp = Penalty(player_no, team,
@@ -167,11 +167,11 @@ class UWHProtoHandler(object):
             self._mgr.addPenalty(pp)
 
     def handle_Goal(self, sender, msg):
-        if (msg.GoalNo is not None and
-            msg.PlayerNo is not None and
-            msg.IsWhite is not None and
-            msg.TimeLeft is not None and
-            msg.Period is not None):
+        if (msg.HasField('GoalNo') and
+            msg.HasField('PlayerNo') and
+            msg.HasField('IsWhite') and
+            msg.HasField('TimeLeft') and
+            msg.HasField('Period')):
             team = TeamColor.white if msg.IsWhite else TeamColor.black
             player_no = self.as_int(msg.PlayerNo)
             gg = Goal(msg.GoalNo, player_no, team,
