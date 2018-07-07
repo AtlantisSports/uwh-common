@@ -43,6 +43,10 @@ class XBeeClient(UWHProtoHandler):
         except TimeoutException:
             pass
 
+    def handle_GameTime(self, sender, msg):
+        self._mgr.setGameClock(msg.TimeLeft)
+        self.send_message(sender, kind, msg)
+
     def listen_thread(self):
         def callback(xbee_msg):
             try:
