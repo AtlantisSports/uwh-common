@@ -51,6 +51,7 @@ class XBeeClient(UWHProtoHandler):
         self._xbee.set_parameter('CH', binascii.unhexlify(atch))
         self._xbee.set_node_id(atni)
         self._xbee.write_changes()
+        self._xbee.apply_changes()
 
     def send_raw(self, recipient, data):
         try:
@@ -79,6 +80,7 @@ class XBeeServer(UWHProtoHandler):
         self._xbee.set_parameter('CH', binascii.unhexlify(atch))
         self._xbee.set_node_id(atni)
         self._xbee.write_changes()
+        self._xbee.apply_changes()
 
     def client_discovery(self, cb_found_client):
         xnet = self._xbee.get_network()
