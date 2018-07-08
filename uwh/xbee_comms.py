@@ -120,14 +120,6 @@ class XBeeServer(UWHProtoHandler):
                 client = self.recipient_from_address(addr)
                 self.send_message(client, kind, msg)
 
-            for i in range(0, 20):
-                (t_kind, t_msg) = self.get_GameTime()
-                for addr in client_addrs:
-                    client = self.recipient_from_address(addr)
-                    self.send_message(client, t_kind, t_msg)
-                    time.sleep(0.01)
-                time.sleep(0.1)
-
             (t_kind, t_msg) = self.get_GameTime()
             (kind, msgs) = self.get_Penalties()
             for addr in client_addrs:
@@ -135,7 +127,6 @@ class XBeeServer(UWHProtoHandler):
                 for msg in msgs:
                     self.send_message(client, t_kind, t_msg)
                     self.send_message(client, kind, msg)
-                    time.sleep(0.01)
 
             (t_kind, t_msg) = self.get_GameTime()
             (kind, msgs) = self.get_Goals()
@@ -144,9 +135,7 @@ class XBeeServer(UWHProtoHandler):
                 for msg in msgs:
                     self.send_message(client, t_kind, t_msg)
                     self.send_message(client, kind, msg)
-                    time.sleep(0.01)
 
-            time.sleep(0.1)
 
     def broadcast_thread(self, client_addrs):
         thread = threading.Thread(target=self.broadcast_loop,
