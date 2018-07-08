@@ -62,6 +62,8 @@ class XBeeServer(UWHProtoHandler):
         UWHProtoHandler.__init__(self, mgr)
         self._xbee = XBeeDevice(serial_port, baud)
         self._xbee.open()
+        self._start = time.time()
+        self._data = 0
 
     def client_discovery(self, cb_found_client):
         xnet = self._xbee.get_network()
@@ -81,6 +83,13 @@ class XBeeServer(UWHProtoHandler):
                                 XBee64BitAddress.from_hex_string(address))
 
     def send_raw(self, recipient, data):
+        now = time.time()
+        delta = now - self._start
+        if delta > 5:
+            self._data = 0
+            self._start = now
+        print("%d bytes/s %d" % (self._data / delta, len(data)))
+        self._data += len(data)
         try:
             self._xbee.send_data(recipient, data)
         except TimeoutException:
