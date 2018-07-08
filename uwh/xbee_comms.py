@@ -45,6 +45,7 @@ class XBeeClient(UWHProtoHandler):
 
     def handle_GameTime(self, sender, msg):
         self._mgr.setGameClock(msg.TimeLeft)
+        kind = messages_pb2.MessageType_GameTime
         self.send_message(sender, kind, msg)
 
     def listen_thread(self):

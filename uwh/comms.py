@@ -182,9 +182,6 @@ class UWHProtoHandler(object):
             self._mgr.delGoalByNo(msg.GoalNo, team)
             self._mgr.addGoal(gg)
 
-    def handle_GameTime(self, sender, msg):
-        self._mgr.setGameClock(msg.TimeLeft)
-
     def as_int(self, n):
         try:
             return int(n)
