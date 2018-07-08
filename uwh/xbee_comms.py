@@ -10,12 +10,15 @@ import json
 import logging
 import threading
 import time
+import binascii
 
 def XBeeConfigParser():
     defaults = {
         'port': '/dev/tty.usbserial-DN03ZRU8',
         'baud': '9600',
         'clients': '[]',
+        'ch': '000C',
+        'id': '000D',
     }
     parser = ConfigParser(defaults=defaults)
     parser.add_section('xbee')
@@ -30,12 +33,24 @@ def xbee_baud(cfg):
 def xbee_clients(cfg):
     return json.loads(cfg.get('xbee', 'clients'))
 
+def xbee_ch(cfg):
+    return cfg.get('xbee', 'ch')
+
+def xbee_id(cfg):
+    return cfg.get('xbee', 'id')
+
 
 class XBeeClient(UWHProtoHandler):
     def __init__(self, mgr, serial_port, baud):
         UWHProtoHandler.__init__(self, mgr)
         self._xbee = XBeeDevice(serial_port, baud)
         self._xbee.open()
+
+    def setup(self, atid, atch, atni):
+        self._xbee.set_parameter('ID', binascii.unhexlify(atid))
+        self._xbee.set_parameter('CH', binascii.unhexlify(atch))
+        self._xbee.set_node_id(atni)
+        self._xbee.write_changes()
 
     def send_raw(self, recipient, data):
         try:
@@ -58,6 +73,12 @@ class XBeeServer(UWHProtoHandler):
         UWHProtoHandler.__init__(self, mgr)
         self._xbee = XBeeDevice(serial_port, baud)
         self._xbee.open()
+
+    def setup(self, atid, atch, atni):
+        self._xbee.set_parameter('ID', binascii.unhexlify(atid))
+        self._xbee.set_parameter('CH', binascii.unhexlify(atch))
+        self._xbee.set_node_id(atni)
+        self._xbee.write_changes()
 
     def client_discovery(self, cb_found_client):
         xnet = self._xbee.get_network()
