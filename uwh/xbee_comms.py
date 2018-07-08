@@ -89,12 +89,26 @@ class XBeeServer(UWHProtoHandler):
         if delta > 5:
             self._data = 0
             self._start = now
-        print("%d bytes/s %d" % (self._data / delta, len(data)))
+        #print("%d bytes/s %d" % (self._data / delta, len(data)))
         self._data += len(data)
         try:
             self._xbee.send_data(recipient, data)
         except TimeoutException:
             pass
+
+    def handle_GameTime(self, sender, msg):
+        now = self._mgr.gameClock()
+        print("{} : refbox: {} display: {} delta: {}".format(sender.get_64bit_addr(), now, msg.TimeLeft, msg.TimeLeft - now))
+
+    def listen_thread(self):
+        def callback(xbee_msg):
+            try:
+                self.recv_raw(xbee_msg.remote_device, xbee_msg.data)
+                #self._xbee.flush_queues()
+            except ValueError:
+                logging.exception("Problem parsing xbee packet")
+
+        self._xbee.add_data_received_callback(callback)
 
     def time_ping(self, remote, val):
         ping_kind = messages_pb2.MessageType_Ping
@@ -129,9 +143,11 @@ class XBeeServer(UWHProtoHandler):
             # fidelity/latency of the time, and a lot less about latency of the
             # scores/penalties.
 
+            (t_kind, t_msg) = self.get_GameTime()
             (kind, msg) = self.get_GameKeyFrame()
             for addr in client_addrs:
                 client = self.recipient_from_address(addr)
+                self.send_message(client, t_kind, t_msg)
                 self.send_message(client, kind, msg)
 
             (t_kind, t_msg) = self.get_GameTime()
