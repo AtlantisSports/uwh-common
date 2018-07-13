@@ -1,5 +1,5 @@
 from digi.xbee.devices import XBeeDevice, RemoteXBeeDevice
-from digi.xbee.exception import TimeoutException
+from digi.xbee.exception import TimeoutException, XBeeException
 from digi.xbee.models.address import XBee64BitAddress
 
 from . import messages_pb2
@@ -58,6 +58,8 @@ class XBeeClient(UWHProtoHandler):
             self._xbee.send_data(recipient, data)
         except TimeoutException:
             pass
+        except XBeeException as e:
+            print(e)
 
     def listen_thread(self):
         def callback(xbee_msg):
@@ -104,6 +106,8 @@ class XBeeServer(UWHProtoHandler):
             self._xbee.send_data(recipient, data)
         except TimeoutException:
             pass
+        except XBeeException as e:
+            print(e)
 
     def time_ping(self, remote, val):
         ping_kind = messages_pb2.MessageType_Ping
