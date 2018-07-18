@@ -52,7 +52,7 @@ class GameManager(object):
         self._time_at_start = None
         self._game_state = GameState.first_half
         self._timeout_state = TimeoutState.none
-        self._penalties = [[],[]]
+        self._penalties = []
         self._observers = observers or []
         self._is_passive = False
         self._layout = PoolLayout.white_on_right
@@ -150,7 +150,7 @@ class GameManager(object):
 
     @observed
     def addPenalty(self, p):
-        self._penalties[p.team()].append(p)
+        self._penalties.append(p)
         if (self.gameClockRunning() and not self.passive()
             and not self.gameState() == GameState.pre_game
             and not self.gameState() == GameState.half_time
@@ -159,41 +159,40 @@ class GameManager(object):
 
     @observed
     def delPenalty(self, p):
-        if p in self._penalties[p.team()]:
-            self._penalties[p.team()].remove(p)
+        if p in self._penalties:
+            self._penalties.remove(p)
 
     @observed
     def delPenaltyByPlayer(self, player_no, team_color):
-        self._penalties[team_color] = [p for p in self._penalties[team_color] if p.player() != player_no]
+        self._penalties = [p for p in self._penalties if p.team() != team_color or p.player() != player_no]
 
     def penalties(self, team_color):
-        return self._penalties[team_color]
+        return [p for p in self._penalties if p.team() == team_color]
 
     @observed
     def deleteAllPenalties(self):
-        self._penalties = [[],[]]
+        self._penalties = []
 
     def _start_unstarted_penalties(self, game_clock):
-        for p in self._penalties[TeamColor.white] + self._penalties[TeamColor.black]:
+        for p in self._penalties:
             if not p.startTime():
                 p.setStartTime(game_clock)
 
     @observed
     def pauseOutstandingPenalties(self):
-        for p in self._penalties[TeamColor.white] + self._penalties[TeamColor.black]:
+        for p in self._penalties:
             if not p.servedCompletely(self):
                 p.pause(self)
 
     @observed
     def restartOutstandingPenalties(self):
-        for p in self._penalties[TeamColor.white] + self._penalties[TeamColor.black]:
+        for p in self._penalties:
             if not p.servedCompletely(self):
                 p.restart(self)
 
     @observed
     def deleteServedPenalties(self):
-        self._penalties[TeamColor.white] = [p for p in self._penalties[TeamColor.white] if not p.servedCompletely(self)]
-        self._penalties[TeamColor.black] = [p for p in self._penalties[TeamColor.black] if not p.servedCompletely(self)]
+        self._penalties = [p for p in self._penalties if not p.servedCompletely(self)]
 
     def setPassive(self):
         self._is_passive = True
@@ -239,6 +238,9 @@ class Penalty(object):
         # served in the first half)
         self._duration_remaining = duration_remaining or duration
 
+    def __eq__(self, other):
+        return self._player == other._player and self._team == other._team
+
     def __repr__(self):
         return "Player(player={}, team={}, duration={}, start_time={}, duration_remaining={})".format(
                        self._player, self._team, self._duration, self._start_time, self._duration_remaining)
@@ -269,6 +271,9 @@ class Penalty(object):
 
     def team(self):
         return self._team
+
+    def setTeam(self, team):
+        self._team = team
 
     def duration(self):
         return self._duration
