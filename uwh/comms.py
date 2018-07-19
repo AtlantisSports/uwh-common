@@ -157,6 +157,9 @@ class UWHProtoHandler(object):
         if msg.HasField('gid'):
             self._mgr.setGid(msg.gid)
 
+        if msg.HasField('TimeAtPause'):
+            self._mgr.setGameClockAtPause(msg.TimeAtPause)
+
     def handle_Penalty(self, sender, msg):
         if (msg.HasField('PlayerNo') and
             msg.HasField('Duration') and
@@ -203,6 +206,7 @@ class UWHProtoHandler(object):
         msg.Layout = l_to_proto_enum(self._mgr.layout())
         msg.tid = self._mgr.tid()
         msg.gid = self._mgr.gid()
+        msg.TimeAtPause = self._mgr.gameClockAtPause()
 
         return (kind, msg)
 

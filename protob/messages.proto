@@ -81,5 +81,6 @@ message GameKeyFrame {
   optional PoolLayout Layout = 9;
   optional int32 tid = 10;
   optional int32 gid = 11;
+  optional uint32 TimeAtPause = 12;
 }
 
