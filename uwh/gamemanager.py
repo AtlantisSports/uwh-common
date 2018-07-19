@@ -58,6 +58,7 @@ class GameManager(object):
         self._layout = PoolLayout.white_on_right
         self._tid = None
         self._gid = None
+        self._clock_at_pause = 0
 
     def gameClock(self):
         if not self.gameClockRunning() or self._is_passive:
@@ -72,6 +73,23 @@ class GameManager(object):
 
         if self.gameClockRunning():
             self._time_at_start = now()
+
+    def gameClockAtPause(self):
+        if (self._game_state == GameState.half_time or
+            self._game_state == GameState.ot_half or
+            self._game_state == GameState.pre_ot or
+            self._game_state == GameState.pre_sudden_death):
+            return 1
+        elif (self._timeout_state == TimeoutState.ref or
+                 self._timeout_state == TimeoutState.black or
+                 self._timeout_state == TimeoutState.white):
+            return self._clock_at_pause
+        else:
+            return self.gameClock()
+
+    @observed
+    def setGameClockAtPause(self, val):
+        self._clock_at_pause = val
 
     def whiteScore(self):
         return self._white_score
@@ -155,7 +173,7 @@ class GameManager(object):
             and not self.gameState() == GameState.pre_game
             and not self.gameState() == GameState.half_time
             and not self.gameState() == GameState.game_over):
-            p.setStartTime(self.gameClock())
+            p.setStartTime(self.gameClockAtPause())
 
     @observed
     def delPenalty(self, p):
@@ -254,7 +272,7 @@ class Penalty(object):
     def timeRemaining(self, mgr):
         if self._start_time is None:
             return self._duration_remaining
-        game_clock = mgr.gameClock()
+        game_clock = mgr.gameClockAtPause()
         remaining = self._duration_remaining - (self._start_time - game_clock)
         return max(remaining, 0)
 
