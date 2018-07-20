@@ -198,7 +198,7 @@ class UWHProtoHandler(object):
         kind = messages_pb2.MessageType_GameKeyFrame
         msg = self.message_for_msg_kind(kind)
         msg.ClockRunning = self._mgr.gameClockRunning()
-        msg.TimeLeft = self._mgr.gameClock()
+        msg.TimeLeft = max(0, self._mgr.gameClock())
         msg.BlackScore = self._mgr.blackScore()
         msg.WhiteScore = self._mgr.whiteScore()
         msg.Period = gs_to_proto_enum(self._mgr.gameState())
@@ -206,7 +206,7 @@ class UWHProtoHandler(object):
         msg.Layout = l_to_proto_enum(self._mgr.layout())
         msg.tid = self._mgr.tid()
         msg.gid = self._mgr.gid()
-        msg.TimeAtPause = self._mgr.gameClockAtPause()
+        msg.TimeAtPause = max(0, self._mgr.gameClockAtPause())
 
         return (kind, msg)
 
@@ -252,6 +252,6 @@ class UWHProtoHandler(object):
     def get_GameTime(self):
         kind = messages_pb2.MessageType_GameTime
         msg = self.message_for_msg_kind(kind)
-        msg.TimeLeft = self._mgr.gameClock()
+        msg.TimeLeft = max(0, self._mgr.gameClock())
 
         return (kind, msg)
