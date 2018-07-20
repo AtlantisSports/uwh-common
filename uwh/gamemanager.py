@@ -103,7 +103,7 @@ class GameManager(object):
         self._white_score += 1
         self._goals += [Goal(self._white_score + self._black_score,
                              player_no, TeamColor.white,
-                             self.gameClock(), self._game_state)]
+                             self.gameClockAtPause(), self._game_state)]
 
     def blackScore(self):
         return self._black_score
@@ -117,7 +117,7 @@ class GameManager(object):
         self._black_score += 1
         self._goals += [Goal(self._white_score + self._black_score,
                              player_no, TeamColor.black,
-                             self.gameClock(), self._game_state)]
+                             self.gameClockAtPause(), self._game_state)]
 
     def goals(self):
         return self._goals
