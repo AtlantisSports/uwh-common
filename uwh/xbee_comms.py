@@ -137,32 +137,38 @@ class XBeeServer(UWHProtoHandler):
 
     def broadcast_loop(self, client_addrs):
         while True:
-            # Try to spread out the parts of the broadcast across several time
-            # update messages. The idea here being that we care way more about
-            # fidelity/latency of the time, and a lot less about latency of the
-            # scores/penalties.
+            try:
+                while True:
+                    # Try to spread out the parts of the broadcast across several time
+                    # update messages. The idea here being that we care way more about
+                    # fidelity/latency of the time, and a lot less about latency of the
+                    # scores/penalties.
 
-            (kind, msg) = self.get_GameKeyFrame()
-            for addr in client_addrs:
-                client = self.recipient_from_address(addr)
-                self.send_message(client, kind, msg)
+                    (kind, msg) = self.get_GameKeyFrame()
+                    for addr in client_addrs:
+                        client = self.recipient_from_address(addr)
+                        self.send_message(client, kind, msg)
 
-            (t_kind, t_msg) = self.get_GameTime()
-            (kind, msgs) = self.get_Penalties()
-            for addr in client_addrs:
-                client = self.recipient_from_address(addr)
-                for msg in msgs:
-                    self.send_message(client, t_kind, t_msg)
-                    self.send_message(client, kind, msg)
+                    (t_kind, t_msg) = self.get_GameTime()
+                    (kind, msgs) = self.get_Penalties()
+                    for addr in client_addrs:
+                        client = self.recipient_from_address(addr)
+                        for msg in msgs:
+                            self.send_message(client, t_kind, t_msg)
+                            self.send_message(client, kind, msg)
 
-            (t_kind, t_msg) = self.get_GameTime()
-            (kind, msgs) = self.get_Goals()
-            for addr in client_addrs:
-                client = self.recipient_from_address(addr)
-                for msg in msgs:
-                    self.send_message(client, t_kind, t_msg)
-                    self.send_message(client, kind, msg)
-
+                    (t_kind, t_msg) = self.get_GameTime()
+                    (kind, msgs) = self.get_Goals()
+                    for addr in client_addrs:
+                        client = self.recipient_from_address(addr)
+                        for msg in msgs:
+                            self.send_message(client, t_kind, t_msg)
+                            self.send_message(client, kind, msg)
+            except Exception as e:
+                import traceback
+                print(e)
+                traceback.print_tb(e.__traceback__)
+                time.sleep(1)
 
     def broadcast_thread(self, client_addrs):
         thread = threading.Thread(target=self.broadcast_loop,
