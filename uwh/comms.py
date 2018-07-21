@@ -140,12 +140,13 @@ class UWHProtoHandler(object):
 
         if msg.HasField('Period'):
             period = gs_from_proto_enum(msg.Period)
-            if (period == GameState.pre_game or
-                period == GameState.half_time or
-                period == GameState.ot_half or
-                period == GameState.pre_sudden_death):
+            if period == GameState.pre_game:
                 self._mgr.deleteAllPenalties()
                 self._mgr.delAllGoals()
+            elif (period == GameState.half_time or
+                  period == GameState.ot_half or
+                  period == GameState.pre_sudden_death):
+                self._mgr.deleteServedPenalties()
             self._mgr.setGameState(period)
 
         if msg.HasField('Timeout'):
