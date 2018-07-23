@@ -79,7 +79,7 @@ class GameManager(object):
             self._game_state == GameState.ot_half or
             self._game_state == GameState.pre_ot or
             self._game_state == GameState.pre_sudden_death):
-            return 1
+            return self.gameClock()
         elif (self._timeout_state == TimeoutState.ref or
                  self._timeout_state == TimeoutState.black or
                  self._timeout_state == TimeoutState.white):
