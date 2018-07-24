@@ -139,31 +139,20 @@ class XBeeServer(UWHProtoHandler):
         while True:
             try:
                 while True:
-                    # Try to spread out the parts of the broadcast across several time
-                    # update messages. The idea here being that we care way more about
-                    # fidelity/latency of the time, and a lot less about latency of the
-                    # scores/penalties.
-
-                    (kind, msg) = self.get_GameKeyFrame()
+                    (gkf_kind, gkf_msg) = self.get_GameKeyFrame()
+                    (pen_kind, pen_msgs) = self.get_Penalties()
+                    (gol_kind, gol_msgs) = self.get_Goals()
                     for addr in client_addrs:
                         client = self.recipient_from_address(addr)
-                        self.send_message(client, kind, msg)
 
-                    (t_kind, t_msg) = self.get_GameTime()
-                    (kind, msgs) = self.get_Penalties()
-                    for addr in client_addrs:
-                        client = self.recipient_from_address(addr)
-                        for msg in msgs:
-                            self.send_message(client, t_kind, t_msg)
-                            self.send_message(client, kind, msg)
+                        self.send_message(client, gkf_kind, gkf_msg)
 
-                    (t_kind, t_msg) = self.get_GameTime()
-                    (kind, msgs) = self.get_Goals()
-                    for addr in client_addrs:
-                        client = self.recipient_from_address(addr)
-                        for msg in msgs:
-                            self.send_message(client, t_kind, t_msg)
-                            self.send_message(client, kind, msg)
+                        for msg in pen_msgs:
+                            self.send_message(client, pen_kind, msg)
+
+                        for msg in gol_msgs:
+                            self.send_message(client, gol_kind, msg)
+
             except Exception as e:
                 import traceback
                 print(e)
