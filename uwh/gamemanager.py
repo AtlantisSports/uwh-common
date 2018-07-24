@@ -65,11 +65,11 @@ class GameManager(object):
             return self._duration
 
         game_clock = self._duration - (now() - self._time_at_start)
-        return game_clock
+        return int(game_clock)
 
     @observed
     def setGameClock(self, n):
-        self._duration = n
+        self._duration = int(n)
 
         if self.gameClockRunning():
             self._time_at_start = now()
@@ -89,7 +89,7 @@ class GameManager(object):
 
     @observed
     def setGameClockAtPause(self, val):
-        self._clock_at_pause = val
+        self._clock_at_pause = int(val)
 
     def whiteScore(self):
         return self._white_score
@@ -247,14 +247,14 @@ class Penalty(object):
         self._team = team
 
         # Game time when the penalty started
-        self._start_time = start_time
+        self._start_time = None if start_time is None else int(start_time)
 
         # Total time of the penalty
-        self._duration = duration
+        self._duration = int(duration)
 
         # Amount left to be served (might be less than duration if partially
         # served in the first half)
-        self._duration_remaining = duration_remaining or duration
+        self._duration_remaining = int(duration_remaining or duration)
 
     def __eq__(self, other):
         return self._player == other._player and self._team == other._team
@@ -264,7 +264,7 @@ class Penalty(object):
                        self._player, self._team, self._duration, self._start_time, self._duration_remaining)
 
     def setStartTime(self, start_time):
-        self._start_time = start_time
+        self._start_time = None if start_time is None else int(start_time)
 
     def startTime(self):
         return self._start_time
@@ -274,7 +274,7 @@ class Penalty(object):
             return self._duration_remaining
         game_clock = mgr.gameClockAtPause()
         remaining = self._duration_remaining - (self._start_time - game_clock)
-        return max(remaining, 0)
+        return int(max(remaining, 0))
 
     def servedCompletely(self, mgr):
         if self._duration == -1:
@@ -297,8 +297,8 @@ class Penalty(object):
         return self._duration
 
     def setDuration(self, duration):
-        self._duration = duration
-        self._duration_remaining = self._duration_remaining or duration
+        self._duration = int(duration)
+        self._duration_remaining = int(self._duration_remaining or duration)
 
     def durationRemaining(self):
         return self._duration_remaining
@@ -311,7 +311,7 @@ class Penalty(object):
 
     def pause(self, mgr):
         if self._start_time is not None:
-            self._duration_remaining = self.timeRemaining(mgr)
+            self._duration_remaining = int(self.timeRemaining(mgr))
             self._start_time = None
 
     def restart(self, mgr):
@@ -325,7 +325,7 @@ class Goal(object):
         self._goal_no = goal_no
         self._player = player
         self._team = team
-        self._time = time
+        self._time = int(time)
         self._state = state
 
     def __repr__(self):
