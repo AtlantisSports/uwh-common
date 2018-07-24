@@ -65,7 +65,6 @@ class XBeeClient(UWHProtoHandler):
         def callback(xbee_msg):
             try:
                 self.recv_raw(xbee_msg.remote_device, xbee_msg.data)
-                #self._xbee.flush_queues()
             except ValueError:
                 logging.exception("Problem parsing xbee packet")
 
