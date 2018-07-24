@@ -83,8 +83,13 @@ class UWHProtoHandler(object):
             self.handle_GameTime(sender, msg)
 
     def recv_raw(self, sender, data):
-        (kind, msg) = self.unpack_message(data)
-        self.recv_message(sender, kind, msg)
+        try:
+            (kind, msg) = self.unpack_message(data)
+            self.recv_message(sender, kind, msg)
+        except ValueError as e:
+            print("had ValueError, recovering gracefully... ish")
+            print(e)
+            print(e.__traceback__)
 
     def expect_Pong(self, sender, data):
         (kind, msg) = self.unpack_message(data)
