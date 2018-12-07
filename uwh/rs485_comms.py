@@ -30,7 +30,7 @@ def baud(cfg):
 class RS485Client(UWHProtoHandler):
     def __init__(self, mgr, serial_port, baud):
         UWHProtoHandler.__init__(self, mgr)
-        self.ser = serial.Serial(serial_port, baud, timeout=0)
+        self.ser = serial.Serial(serial_port, baud, timeout=None)
 
     def send_raw(self, recipient, data):
         # TODO: chechsum? length?
@@ -44,7 +44,6 @@ class RS485Client(UWHProtoHandler):
                 if len(recv) > 0 and recv[-1] == b'\n'[0]:
                     self.recv_raw('', binascii.unhexlify(recv[:-1]))
                     recv = b''
-                    time.sleep(0.1)
             except Exception:
                 recv = b''
                 time.sleep(1)
