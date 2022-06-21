@@ -2,11 +2,12 @@ import requests
 import threading
 from functools import lru_cache
 
+
 class UWHScores(object):
     def __init__(self, base_address='https://uwhscores.com/api/v1/', mock=False):
         self._base_address = base_address
         self._mock = mock
-        self._fail_handler = lambda x : print(x)
+        self._fail_handler = lambda x: print(x)
 
     def login(self, username, password):
         self._username = username
@@ -91,12 +92,11 @@ class UWHScores(object):
             }
 
             self._async_request('post', self._base_address + 'tournaments/' + str(tid) + '/games/' + str(gid),
-                                json=score, callback=lambda _:None, auth=(token, ''))
+                                json=score, callback=lambda _: None, auth=(token, ''))
 
         self._async_request('get', self._base_address + 'login',
                             auth=(self._username, self._password),
                             callback=login_success)
-
 
     def get_team_flag(self, tid, team_id, callback):
         if tid is None or team_id is None:
@@ -117,7 +117,7 @@ class UWHScores(object):
 
         self.get_team(tid, team_id, success)
 
-    #def get_standings(self, tid, callback):
+    # def get_standings(self, tid, callback):
     #    def success(reply):
     #        json = reply.json()
     #        return callback(json['standings'])
@@ -137,220 +137,220 @@ class UWHScores(object):
                             callback=success)
 
     def _mock_data(self):
-        return { 'api' : { 'v1' : {
-            'tournaments' : {
-                0 : { 'tid' : 0 },
-                1 : { 'tid' : 1 },
-                2 : { 'tid' : 2 },
-                3 : { 'tid' : 3 },
-                4 : { 'tid' : 4 },
-                5 : { 'tid' : 5 },
-                6 : { 'tid' : 6 },
-                7 : { 'tid' : 7 },
-                8 : { 'tid' : 8 },
-                9 : { 'tid' : 9 },
-                10 : { 'tid' : 10 },
-                11 : { 'tid' : 11 },
-                12 : {
-                    'mock_name' : 'tournament',
-                    'tid' : 12,
-                    'standings' : {
-                        0 : {
-                            'team' : 'Team Sexy',
-                            'team_id' : 2,
-                            'stats' : {
-                                'points' : 27
+        return {'api': {'v1': {
+            'tournaments': {
+                0: {'tid': 0},
+                1: {'tid': 1},
+                2: {'tid': 2},
+                3: {'tid': 3},
+                4: {'tid': 4},
+                5: {'tid': 5},
+                6: {'tid': 6},
+                7: {'tid': 7},
+                8: {'tid': 8},
+                9: {'tid': 9},
+                10: {'tid': 10},
+                11: {'tid': 11},
+                12: {
+                    'mock_name': 'tournament',
+                    'tid': 12,
+                    'standings': {
+                        0: {
+                            'team': 'Team Sexy',
+                            'team_id': 2,
+                            'stats': {
+                                'points': 27
                             },
                         },
-                        2 : {
-                            'team' : 'UF',
+                        2: {
+                            'team': 'UF',
                         },
-                        4 : {
-                            'team' : 'Hampton'
+                        4: {
+                            'team': 'Hampton'
                         },
-                        6 : {
-                            'team' : 'Swordfish'
+                        6: {
+                            'team': 'Swordfish'
                         },
-                        7 : {
-                            'team' : 'George Mason'
+                        7: {
+                            'team': 'George Mason'
                         }
                     }
                 },
-                13 : { 'tid' : 13 },
-                14 : {
-                    'mock_name' : 'tournament',
-                    'tid' : 14,
-                    'name' : 'Battle@Altitude 2018',
-                    'location' : 'Denver, CO',
-                    'is_active' : False,
-                    'games' : {
-                        1 : {
-                            'black' : 'LA',
-                            'black_id' : 1,
-                            'pool' : '1',
+                13: {'tid': 13},
+                14: {
+                    'mock_name': 'tournament',
+                    'tid': 14,
+                    'name': 'Battle@Altitude 2018',
+                    'location': 'Denver, CO',
+                    'is_active': False,
+                    'games': {
+                        1: {
+                            'black': 'LA',
+                            'black_id': 1,
+                            'pool': '1',
                         },
-                        4 : {
-                            'white' : 'Seattle',
-                            'white_id' : 6,
-                            'start_time' : '2018-01-27T09:02:00',
+                        4: {
+                            'white': 'Seattle',
+                            'white_id': 6,
+                            'start_time': '2018-01-27T09:02:00',
                         },
-                        6 : {
-                            'black' : 'U19 Girls',
-                            'black_id' : 14,
-                            'day' : 'Sat',
-                            'start_time' : '2018-01-27T09:34:00',
-                            'white' : 'US Elite Women',
-                            'white_id' : 17,
+                        6: {
+                            'black': 'U19 Girls',
+                            'black_id': 14,
+                            'day': 'Sat',
+                            'start_time': '2018-01-27T09:34:00',
+                            'white': 'US Elite Women',
+                            'white_id': 17,
                         }
                     },
-                    'teams' : {
-                        1 : { 'name' : 'LA' },
-                        3 : { 'name' : 'Rainbow Raptors' },
-                        7 : { 'name' : 'Cupcake Crocodiles' },
-                        11 : { 'name' : 'Chicago' },
-                        13 : { 'name' : 'Colorado B' },
-                        17 : { 'name' : 'US Elite Women' },
+                    'teams': {
+                        1: {'name': 'LA'},
+                        3: {'name': 'Rainbow Raptors'},
+                        7: {'name': 'Cupcake Crocodiles'},
+                        11: {'name': 'Chicago'},
+                        13: {'name': 'Colorado B'},
+                        17: {'name': 'US Elite Women'},
                     }
                 },
-                15 : {
-                    'mock_name' : 'tournament',
-                    'tid' : 15,
-                    'name' : '2018 Worlds Mockup',
-                    'location' : 'Quebec City, Canada',
-                    'is_active' : True,
-                    'games' : {
-                        1 : {
-                            'mock_name' : 'game',
-                            'black' : 'Argentina',
-                            'black_id' : 1,
-                            'pool' : 1,
-                            'white' : 'Australia',
-                            'white_id' : 2,
-                            'start_time' : '2018-07-18T07:40:00'
+                15: {
+                    'mock_name': 'tournament',
+                    'tid': 15,
+                    'name': '2018 Worlds Mockup',
+                    'location': 'Quebec City, Canada',
+                    'is_active': True,
+                    'games': {
+                        1: {
+                            'mock_name': 'game',
+                            'black': 'Argentina',
+                            'black_id': 1,
+                            'pool': 1,
+                            'white': 'Australia',
+                            'white_id': 2,
+                            'start_time': '2018-07-18T07:40:00'
                         },
-                        2 : {
-                            'mock_name' : 'game',
-                            'black' : 'USA',
-                            'black_id' : 3,
-                            'pool' : 2,
-                            'white' : 'Columbia',
-                            'white_id' : 4,
-                            'start_time' : '2018-07-18T07:40:00'
+                        2: {
+                            'mock_name': 'game',
+                            'black': 'USA',
+                            'black_id': 3,
+                            'pool': 2,
+                            'white': 'Columbia',
+                            'white_id': 4,
+                            'start_time': '2018-07-18T07:40:00'
                         }
                     },
-                    'teams' : {
-                        1 : {
-                            'mock_name' : 'team',
-                            'name' : 'Argentina Masters Men',
-                            'team_id' : 1,
-                            'roster' : {
-                                1 : {
-                                    'player_id' : 1,
-                                    'name' : 'Schmoe, Joe',
+                    'teams': {
+                        1: {
+                            'mock_name': 'team',
+                            'name': 'Argentina Masters Men',
+                            'team_id': 1,
+                            'roster': {
+                                1: {
+                                    'player_id': 1,
+                                    'name': 'Schmoe, Joe',
                                 },
-                                2 : {
-                                    'player_id' : 2,
-                                    'name' : 'Doe, John'
+                                2: {
+                                    'player_id': 2,
+                                    'name': 'Doe, John'
                                 },
-                                3 : {
-                                    'player_id' : 3,
-                                    'name' : 'Bobby, Ricky'
+                                3: {
+                                    'player_id': 3,
+                                    'name': 'Bobby, Ricky'
                                 },
-                                4 : {
-                                    'player_id' : 4,
-                                    'name' : 'Georgeson, George'
+                                4: {
+                                    'player_id': 4,
+                                    'name': 'Georgeson, George'
                                 },
-                                5 : {
-                                    'player_id' : 5,
-                                    'name' : 'Steveson, Steve'
+                                5: {
+                                    'player_id': 5,
+                                    'name': 'Steveson, Steve'
                                 },
-                                6 : {
-                                    'player_id' : 6,
-                                    'name' : 'Justinson, Justin'
+                                6: {
+                                    'player_id': 6,
+                                    'name': 'Justinson, Justin'
                                 },
-                                7 : {
-                                    'player_id' : 7,
-                                    'name' : 'Pauly, Paul'
+                                7: {
+                                    'player_id': 7,
+                                    'name': 'Pauly, Paul'
                                 },
-                                8 : {
-                                    'player_id' : 8,
-                                    'name' : 'Everett, Earnest'
+                                8: {
+                                    'player_id': 8,
+                                    'name': 'Everett, Earnest'
                                 },
-                                9 : {
-                                    'player_id' : 9,
-                                    'name' : 'Clumboldt, Cletus'
+                                9: {
+                                    'player_id': 9,
+                                    'name': 'Clumboldt, Cletus'
                                 },
-                                10 : {
-                                    'player_id' : 10,
-                                    'name' : 'Miller, Milhouse'
+                                10: {
+                                    'player_id': 10,
+                                    'name': 'Miller, Milhouse'
                                 },
-                                11 : {
-                                    'player_id' : 11,
-                                    'name' : 'Thompson, Tucker'
+                                11: {
+                                    'player_id': 11,
+                                    'name': 'Thompson, Tucker'
                                 },
-                                12 : {
-                                    'player_id' : 12,
-                                    'name' : 'Richardson, Rich'
+                                12: {
+                                    'player_id': 12,
+                                    'name': 'Richardson, Rich'
                                 }
                             }
                         },
-                        2 : {
-                            'mock_name' : 'team',
-                            'name' : 'Australia Masters Men',
-                            'team_id' : 2,
-                            'roster' : {
-                                1 : {
-                                    'player_id' : 1,
-                                    'name' : 'Speedwagon, Mario',
+                        2: {
+                            'mock_name': 'team',
+                            'name': 'Australia Masters Men',
+                            'team_id': 2,
+                            'roster': {
+                                1: {
+                                    'player_id': 1,
+                                    'name': 'Speedwagon, Mario',
                                 },
-                                2 : {
-                                    'player_id' : 2,
-                                    'name' : 'Romer, Robby'
+                                2: {
+                                    'player_id': 2,
+                                    'name': 'Romer, Robby'
                                 },
-                                3 : {
-                                    'player_id' : 3,
-                                    'name' : 'Riker, Randolph'
+                                3: {
+                                    'player_id': 3,
+                                    'name': 'Riker, Randolph'
                                 },
-                                4 : {
-                                    'player_id' : 4,
-                                    'name' : 'Tomlin, Teddy'
+                                4: {
+                                    'player_id': 4,
+                                    'name': 'Tomlin, Teddy'
                                 },
-                                5 : {
-                                    'player_id' : 5,
-                                    'name' : 'Wolf, Warren'
+                                5: {
+                                    'player_id': 5,
+                                    'name': 'Wolf, Warren'
                                 },
-                                6 : {
-                                    'player_id' : 6,
-                                    'name' : 'Pollard, Phillip'
+                                6: {
+                                    'player_id': 6,
+                                    'name': 'Pollard, Phillip'
                                 },
-                                7 : {
-                                    'player_id' : 7,
-                                    'name' : 'Bavaro, Buster'
+                                7: {
+                                    'player_id': 7,
+                                    'name': 'Bavaro, Buster'
                                 },
-                                8 : {
-                                    'player_id' : 8,
-                                    'name' : 'James, Joshua'
+                                8: {
+                                    'player_id': 8,
+                                    'name': 'James, Joshua'
                                 },
-                                9 : {
-                                    'player_id' : 9,
-                                    'name' : 'Shin, Stewart'
+                                9: {
+                                    'player_id': 9,
+                                    'name': 'Shin, Stewart'
                                 },
-                                10 : {
-                                    'player_id' : 10,
-                                    'name' : 'Hume, Huey'
+                                10: {
+                                    'player_id': 10,
+                                    'name': 'Hume, Huey'
                                 },
-                                11 : {
-                                    'player_id' : 11,
-                                    'name' : 'Vos, Valentine'
+                                11: {
+                                    'player_id': 11,
+                                    'name': 'Vos, Valentine'
                                 },
-                                12 : {
-                                    'player_id' : 12,
-                                    'name' : 'Newburn, Noel'
+                                12: {
+                                    'player_id': 12,
+                                    'name': 'Newburn, Noel'
                                 }
                             }
                         },
-                        3 : { 'name' : 'USA Masters Men', 'team_id' : 3 },
-                        4 : { 'name' : 'Columbia Masters Men', 'team_id' : 4 },
+                        3: {'name': 'USA Masters Men', 'team_id': 3},
+                        4: {'name': 'Columbia Masters Men', 'team_id': 4},
                     }
                 }
             }
@@ -368,7 +368,7 @@ class UWHScores(object):
                 result.insert(0, item)
             return result
 
-        url_parsed = urllib.parse.urlparse( endpoint )
+        url_parsed = urllib.parse.urlparse(endpoint)
         path_parsed = path_parse(urllib.parse.unquote(url_parsed.path))
 
         try:
@@ -386,7 +386,7 @@ class UWHScores(object):
                     self._wrap = wrap
 
                 def json(self):
-                    return { self._wrap['mock_name'] : self._wrap }
+                    return {self._wrap['mock_name']: self._wrap}
 
             cb_success(Wrap(mock))
         except KeyError as e:
@@ -400,13 +400,13 @@ class UWHScores(object):
                        callback_fail=None,
                        timeout=5, **kwargs):
         method = {
-            'get' : requests.get,
-            'post' : requests.post,
-            'put' : requests.put,
-            'patch' : requests.patch,
-            'delete' : requests.delete,
-            'options' : requests.options,
-            'head' : requests.head
+            'get': requests.get,
+            'post': requests.post,
+            'put': requests.put,
+            'patch': requests.patch,
+            'delete': requests.delete,
+            'options': requests.options,
+            'head': requests.head
         }[method.lower()]
 
         callback_fail = callback_fail or self._fail_handler
@@ -432,5 +432,6 @@ class UWHScores(object):
         if self._mock:
             self._mock_api(args[0], callback, callback_fail)
         else:
-            thread = threading.Thread(target=wrap_method, args=args, kwargs=kwargs)
+            thread = threading.Thread(
+                target=wrap_method, args=args, kwargs=kwargs)
             thread.start()
