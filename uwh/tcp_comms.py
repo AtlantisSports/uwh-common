@@ -104,7 +104,8 @@ class TcpClient():
                 "SuddenDeath": GameState.sudden_death,
             }[json_msg["current_period"]])
 
-            self._mgr.setTid(json_msg["tournament_id"])
+            if json_msg["tournament_id"] != 0:
+                self._mgr.setTid(json_msg["tournament_id"])
 
             if json_msg["current_period"] == "BetweenGames" and not json_msg["is_old_game"]:
                 self._mgr.setGid(json_msg["next_game_number"])
